@@ -21,8 +21,10 @@
         <linear-template :item="browsers" />
       </div>
       <div class="stats-right">
-        <block-template :item="timer" :develop="true" />
+        <block-template :item="timer" />
+        <!-- :develop=true - convertion into developer mode and hiding the data from server -->
         <views-template :item="pageViews" :develop="true" />
+        <!-- :develop=true - convertion into developer mode and hiding the data from server -->
       </div>
     </div>
   </div>
@@ -111,7 +113,7 @@ const browsers = reactive({
 });
 
 const fetchData = async () => {
-  
+
   await apiDataFetch("/api/stats", "GET")
     .then((response) => response.json())
     .then((response) => {
@@ -145,8 +147,20 @@ const fetchData = async () => {
     });
 };
 
+const timeCount = () => {
+  const startTime = new Date().getTime()
+
+  window.onbeforeunload = () => {
+    const endTime = new Date().getTime()
+    const overall = endTime - startTime
+
+    localStorage.setItem("Time", overall.toString())
+  }
+}
+
 onMounted(async () => {
   toggleBtns();
+  timeCount()
   await fetchData();
 });
 </script>

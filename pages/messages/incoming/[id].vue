@@ -106,27 +106,36 @@ const getList = async () => {
 const send = async () => {
   const index = messages.items.findIndex((msg: any) => msg.id === id);
 
-  area.reply_to = Number(useRoute().params.id);
-  area.id = messages.items.length + 1;
-  area.type = "outgoing";
+  const message = {
+    id: area.id,
+    author: "support@neotech.uz",
+    message: area.message,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    email: area.reply_to.email,
+    date: `${new Date().getDate()}/${new Date().getMonth()}/${new Date().getFullYear()}`,
+    type: "outgoing",
+    reply_to: area.reply_to.id,
+    phone: area.reply_to.phone,
+  }
 
   const options = {
     method: "POST",
     headers: {
-      "Content-Language": "ru",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${await checkToken()}`
+      "Content-Language": "en",
+      "Authorization": `Bearer ${await checkToken()}`
     },
-    body: JSON.stringify(area),
-  };
+    body: JSON.stringify(message)
+  }
 
-  await apiDataFetch(`/api/messages`, options)
-    .then((res) => res.json())
-    .then((res) => {
-      const data = res;
-      console.log(data);
-      $router.push({ path: "/messages/incoming" });
-    });
+  await apiDataFetch("/api/messages", options)
+    .then((response: Response | any) => response.json())
+    .then((response: Response | any) => {
+      console.log(response)
+    })
+
+
+  console.log(message)
 };
 
 const favourite = async (id: Number | String) => {

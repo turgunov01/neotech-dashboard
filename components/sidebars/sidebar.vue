@@ -10,7 +10,8 @@
             Дашбоард</nuxt-link>
         </li>
         <li class="sidebar-item">
-          <nuxt-link to="/messages" class="sidebar-link">
+          <nuxt-link to="/messages" class="sidebar-link"
+            :class="$router.currentRoute.value.path.includes('messages') ? 'router-link-exact-active' : ''">
             <img src="../../src/assets/images/sidebar-icons/chat.svg" class="inactive" alt="">
             <img src="../../src/assets/images/sidebar-icons/active/chat.svg" class="active" alt="">
             Сообщение</nuxt-link>
@@ -63,6 +64,8 @@ const changeMessages = (e: any) => {
 
 const logout = () => {
   const store = localStorage.getItem("Authorization")
+  const user = localStorage.getItem("username")
+  const pass = localStorage.getItem("password")
 
   Swal.fire({
     title: "Вы точно хотите выйти с системы?",
@@ -71,8 +74,10 @@ const logout = () => {
     denyButtonText: `Отмена`
   }).then((result: any) => {
     /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed && store) {
+    if (result.isConfirmed && store && user && pass) {
       localStorage.removeItem("Authorization")
+      localStorage.removeItem("username")
+      localStorage.removeItem("password")
       $router.push({ path: "/login" })
     } else {
       return
@@ -177,8 +182,13 @@ a.active {
 .sidebar-link.router-link-active .active {
   display: block;
 }
+
 .sidebar-link.router-link-active .inactive {
   display: none;
+}
+
+.sidebar-item.router-link-active {
+  background: unset;
 }
 
 

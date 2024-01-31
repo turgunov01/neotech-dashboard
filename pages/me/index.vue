@@ -5,11 +5,12 @@
         <h1 class="profile-current-title">Безопасность аккаунта</h1>
         <div class="profile-current-box">
           <p class="profile-login-title">Пользователь</p>
-          <p class="profile-login-name">sardorceeksamurai@gmail.com</p>
+          <p class="profile-login-name">{{ user.username }}</p>
         </div>
         <div class="profile-current-box">
           <p class="profile-login-title">Пароль</p>
-          <p class="profile-login-password">*******</p>
+          <p class="profile-login-password" @dblclick="getPass" v-if="pass"> {{ user.password }} </p>
+          <p class="profile-login-password" @dblclick="getPass" v-else>*******</p>
         </div>
       </div>
       <div class="profile-current">
@@ -17,16 +18,10 @@
         <div class="profile-check-box">
           <div class="profile-check-value">
             <p class="profile-check-name">Пользователь 1</p>
-            <p class="profile-check-email">sardorceeksamurai@gmail.com</p>
+            <p class="profile-check-email">{{ user.username }}</p>
           </div>
           <label class="profile-check-label" for="checkbox-1">
-            <input
-              @change="ask($event)"
-              type="checkbox"
-              name="checkbox-1"
-              checked
-              id="1"
-            />
+            <input type="checkbox" name="checkbox-1" checked id="1" />
           </label>
         </div>
       </div>
@@ -61,19 +56,27 @@
 </template>
 
 <script setup lang="ts">
-const ask = (e: any) => {
-  if (!e.target.checked) {
-    const text = `Вы хотите удалить доступ ${e.target.id} - пользователя к админке?`;
+const pass = ref(false)
+const user = ref({
+  username: "",
+  password: "",
+  token: "",
+})
 
-    let confirmed = confirm(text);
+const getPass = () => {
+  pass.value = !pass.value
+}
 
-    if(confirmed) {
-      removeLocalData("Authorization")
-    } else {
-      return
-    }
-  }
-};
+const fetchUser = async () => {
+  user.value.username = await (await getStoreData("username")).toString()
+  user.value.password = await (await getStoreData("password")).toString()
+  user.value.token = await (await getStoreData("Authorization")).toString()
+}
+
+onMounted(async () => {
+  fetchUser()
+})
+
 </script>
 
 <style scoped lang="scss">
@@ -82,6 +85,7 @@ const ask = (e: any) => {
     border: 1px solid #e5e5e5;
     border-radius: 0.4rem;
     margin-bottom: 3.2rem;
+
     &-title {
       padding: 2.4rem 2.4rem 1.6rem;
       border-bottom: 1px solid #e5e5e5;
@@ -164,6 +168,7 @@ table {
   width: 100%;
   display: flex;
   flex-direction: column;
+
   & thead,
   tbody {
     display: flex;
@@ -218,6 +223,7 @@ table {
     display: flex;
     gap: 3.2rem;
   }
+
   &-profile {
     max-width: 35rem;
     width: 100%;
@@ -231,6 +237,7 @@ table {
     border: 1px solid #e5e5e5;
     width: 100%;
     position: relative;
+
     &-title {
       padding: 2.4rem 2.4rem 1.6rem;
       font-size: 2rem;

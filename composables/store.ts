@@ -1,29 +1,24 @@
 const $router = useRouter()
 
-export async function storeData(data: String | any) {
+export async function storeData(name: String | any, data: String | any) {
 
-    const store = localStorage.getItem("Authorization")
-    const token = data.token
+    const store = localStorage.getItem(name)
 
     if (!store) {
-        localStorage.setItem("Authorization", token)
+        localStorage.setItem(name, data)
     } else {
         return false
     }
 
 }
 
-export async function removeLocalData(data: String | any) {
-    const store = localStorage
-    const localData = store.getItem(data)
+export async function getStoreData(name: any) {
+    const target = localStorage.getItem(name)
 
-    if (localData) {
-        store.removeItem(data)
-        $router.push({
-            path: "/dashboard"
-        })
+    if (target) {
+        return target
     } else {
-        console.error("The error contained in function of deleting user! Check your credentials!")
+        return false
     }
 }
 
@@ -35,4 +30,4 @@ export async function checkToken() {
 }
 
 
-export default { storeData, checkToken, removeLocalData }
+export default { storeData, checkToken, getStoreData }

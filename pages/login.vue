@@ -44,7 +44,9 @@ const login = async () => {
       const data = response.data
 
       if (data.token) {
-        storeData(data)
+        storeData("Authorization", data.token)
+        storeData("username", user.value.username)
+        storeData("password", user.value.password)
         $router.push({
           path: "/dashboard"
         })

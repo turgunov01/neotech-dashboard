@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <!-- <SpaLoadingTemplate v-if="1" /> -->
-    <div class="container" >
+    <div class="container">
       <sidebar />
       <div class="content">
         <slot />
@@ -13,13 +13,6 @@
 <script lang="ts" setup>
 import sidebar from '~/components/sidebars/sidebar.vue';
 const $router = useRouter()
-
-// $router.beforeEach(() => {
-//   if(fetch) {}
-
-  
-// })
-
 
 </script>
 
