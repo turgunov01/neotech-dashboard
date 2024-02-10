@@ -14,12 +14,15 @@
     "@types/crypto-js": "^4.2.1",
     "@types/vue-color": "^2.4.8",
     "nuxt": "^3.8.1",
+    "nuxt-tiptap-editor": "^1.1.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^40.1.0",
-    "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "@tiptap/extension-bold": "^2.2.1",
+    "@tiptap/extension-color": "^2.2.1",
+    "@tiptap/extension-italic": "^2.2.1",
+    "@tiptap/extension-text-style": "^2.2.1",
     "crypto-js": "^4.2.0",
     "md5": "^2.3.0",
     "sass": "^1.69.5",
