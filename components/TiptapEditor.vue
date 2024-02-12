@@ -23,7 +23,7 @@
             </div>
             <editor-content :editor="editor" />
         </div>
-        <div class="wrapper" v-else-if="object.component === 'Text'">
+        <div class="wrapper" v-else-if="object.component === 'Text'" >
             <div class="btns">
                 <button class="btn" title="Ctrl + B/CMD + B" @click="editor.chain().focus().toggleBold().run()">
                     <img src="../src/assets/editor-methods/bold.svg" @click="editor.chain().focus().toggleBold().run()"
@@ -135,6 +135,7 @@
                 <button @click="create(object.slides)" class="slide-button">Создать слайд</button>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -345,6 +346,10 @@ export default {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
+}
+
+.box .wrapper {
+    width: 100%;
 }
 
 .box:not(:first-of-type) {

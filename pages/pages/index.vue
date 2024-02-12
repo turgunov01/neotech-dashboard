@@ -1,12 +1,97 @@
 <template>
     <div class="pages">
         <Layers />
+        <aside class="aside" :class="aside ? 'active' : ''" @mouseleave="activate">
+            <div class="aside-container">
+                <img src="../../src/assets/images/logo.svg" class="aside-logotype" alt="">
+                <div class="aside-content">
+                    <h1 class="aside-title">Основные блоки</h1>
+                    <div class="aside-buttons">
+                        <div class="aside-button" @click="create('Title')">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/h1.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Заголовок</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/p.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Текст</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/img.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Изображение</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/button.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Кнопка</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/table.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Таблица</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/file.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Файл</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/video.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Видео</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/slides.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Слайдер</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/columns.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">2 колонки</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/columns.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">3 колонки</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/columns.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">4 колонки</p>
+                        </div>
+                        <div class="aside-button">
+                            <div class="aside-button-icon">
+                                <img src="../../src/assets/blocks/contact.svg" alt="" class="aside-button-image">
+                            </div>
+                            <p class="aside-button-name">Контакты</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
         <div class="pages-content">
             <draggable :list="list">
                 <template #item="{ element }">
                     <TiptapEditorVue :object="element" v-model="element.text" />
                 </template>
             </draggable>
+            <button class="more-btns-label" @click="activate">
+                +
+            </button>
             <div class="buttons">
                 <button class="save" @click="save">Сохранить</button>
                 <button class="edit">Опубликовать</button>
@@ -109,11 +194,47 @@ const save = () => {
     console.log(list.value)
 }
 
+const aside = ref(false)
 
+const activate = () => {
+    aside.value = !aside.value
+}
+
+const create = (value: String) => {
+    const object = {
+        name: "block-name",
+        css: "",
+        component: value,
+        text: null,
+        id: list.value.length + 1,
+        slides: value === "Slider" ? [] : null,
+        url: value === "Video" || value === "Image" ? {
+            path: "",
+            resolution: "",
+            maxResolution: "",
+        } : null,
+        button: value === "Button" ? {
+            path: "",
+            resolution: "",
+            maxResolution: "",
+        } : null
+    }
+
+    if (value === "Title") {
+        object.text = "<h1>Новый Заголовок</h1>"
+    } else if (value === "Text") {
+        object.text = "<p>Новый текст</p>"
+    } 
+
+    list.value.push(object)
+
+}
 
 </script>
   
 <style lang="scss">
+@import "../../src/assets/scss/aside.scss";
+
 .pages {
     display: flex;
     width: 100%;
@@ -194,5 +315,30 @@ const save = () => {
     border-radius: .4rem;
     font-size: 1.5rem;
     font-weight: 400;
+}
+
+.more {
+    &-btns {
+        &-label {
+            color: #8A98AC;
+            font-size: 1.8rem;
+            border: .2rem solid #EFEFEF;
+            background: unset;
+            border-radius: .4rem;
+            max-width: 5.2rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            width: 100%;
+            margin-left: 2.4rem;
+            margin-top: 2.4rem;
+
+            &.active {
+                position: relative;
+            }
+        }
+    }
 }
 </style>
