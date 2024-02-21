@@ -1,7 +1,7 @@
 <template>
     <div class="pages">
         <Layers />
-        <aside class="aside" :class="aside ? 'active' : ''" @mouseleave="activate">
+        <aside class="aside" :class="aside ? 'active' : ''" @mouseleave="activate" v-if="loaded">
             <div class="aside-container">
                 <img src="../../src/assets/images/logo.svg" class="aside-logotype" alt="">
                 <div class="aside-content">
@@ -13,25 +13,25 @@
                             </div>
                             <p class="aside-button-name">Заголовок</p>
                         </div>
-                        <div class="aside-button">
+                        <div class="aside-button" @click="create('Text')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/p.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">Текст</p>
                         </div>
-                        <div class="aside-button">
+                        <div class="aside-button" @click="create('Image')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/img.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">Изображение</p>
                         </div>
-                        <div class="aside-button">
+                        <div class="aside-button" @click="create('Button')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/button.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">Кнопка</p>
                         </div>
-                        <div class="aside-button">
+                        <!-- <div class="aside-button" @click="create('Table', 'File')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/table.svg" alt="" class="aside-button-image">
                             </div>
@@ -42,51 +42,33 @@
                                 <img src="../../src/assets/blocks/file.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">Файл</p>
-                        </div>
-                        <div class="aside-button">
+                        </div> -->
+                        <div class="aside-button" @click="create('Video')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/video.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">Видео</p>
                         </div>
-                        <div class="aside-button">
+                        <div class="aside-button" @click="create('Slider')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/slides.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">Слайдер</p>
                         </div>
-                        <div class="aside-button">
+                        <div class="aside-button" @click="createColumn('Columns')">
                             <div class="aside-button-icon">
                                 <img src="../../src/assets/blocks/columns.svg" alt="" class="aside-button-image">
                             </div>
                             <p class="aside-button-name">2 колонки</p>
                         </div>
-                        <div class="aside-button">
-                            <div class="aside-button-icon">
-                                <img src="../../src/assets/blocks/columns.svg" alt="" class="aside-button-image">
-                            </div>
-                            <p class="aside-button-name">3 колонки</p>
-                        </div>
-                        <div class="aside-button">
-                            <div class="aside-button-icon">
-                                <img src="../../src/assets/blocks/columns.svg" alt="" class="aside-button-image">
-                            </div>
-                            <p class="aside-button-name">4 колонки</p>
-                        </div>
-                        <div class="aside-button">
-                            <div class="aside-button-icon">
-                                <img src="../../src/assets/blocks/contact.svg" alt="" class="aside-button-image">
-                            </div>
-                            <p class="aside-button-name">Контакты</p>
-                        </div>
                     </div>
                 </div>
             </div>
         </aside>
-        <div class="pages-content">
-            <draggable :list="list">
+        <div class="pages-content" v-if="loaded">
+            <draggable :list="list" v-if="list.length">
                 <template #item="{ element }">
-                    <TiptapEditorVue :object="element" v-model="element.text" />
+                    <TiptapEditorVue :object="element" v-model="element.text" :list="list" />
                 </template>
             </draggable>
             <button class="more-btns-label" @click="activate">
@@ -103,98 +85,40 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
 import TiptapEditorVue from '~/components/TiptapEditor.vue';
-import ButtonEditor from '~/components/redaktor/blocks/ButtonEditor.vue';
 import Layers from '~/components/redaktor/layers.vue';
 
-const list = ref([
-    {
-        name: "block-name",
-        css: "",
-        component: "Title",
-        text: "<h1>профессиональная команда с мировым опытом в IT-разработке, которая ценит индивидуальность, ответственность и взаимный рост, стремясь к устойчивым результатам</h1>",
-        id: 1,
-    },
-    {
-        name: "block-name",
-        css: "",
-        component: "Text",
-        text: "<p>профессиональная команда с мировым опытом в IT-разработке, которая ценит индивидуальность, ответственность и взаимный рост, стремясь к устойчивым результатам</p>",
-        id: 2,
-    },
-    {
-        name: "block-name",
-        text: "<p>A Vue.js wrapper component for tiptap to use v-model</p>",
-        css: "",
-        component: "Button",
-        button: {
-            innerText: "",
-            href: "",
-            background: "",
-            border: ""
-        },
-        id: 3,
-    },
-    {
-        name: "block-name",
-        url: {
-            path: "",
-            resolution: "",
-            maxResolution: "",
-        },
-        alt: "",
-        component: "Image",
-        id: 4,
-    },
-    {
-        name: "block-name",
-        url: {
-            path: "",
-            resolution: "",
-            maxResolution: "",
-        },
-        alt: "",
-        component: "Video",
-        id: 5,
-    },
-    {
-        name: "block-name",
-        component: "Slider",
-        id: 6,
-        slides: [
-            {
-                id: 1,
-                name: "slide",
-                heading: "IT - проекты",
-                image: {
-                    url: '',
-                    resolution: "",
-                },
-                title: "Построение комплексных решений для проектов под ключ",
-                button: {
-                    value: "Подробнее"
-                },
-                description: "Наша компания специализируется на реализации самых разнообразных проектов — от простых интернет-магазинов до высокотехнологичных заказных программных решений."
-            },
-            {
-                id: 2,
-                name: "slide",
-                heading: "IT - проекты",
-                image: {
-                    url: '',
-                    resolution: "",
-                },
-                title: "Построение комплексных решений для проектов под ключ",
-                description: "Наша компания специализируется на реализации самых разнообразных проектов — от простых интернет-магазинов до высокотехнологичных заказных программных решений."
-            },
-        ]
-    }
-])
+const list = ref([])
+const $router = useRouter()
+const loaded = ref(false)
+const aside = ref(false)
 
-const save = () => {
-    console.log(list.value)
+const getComponents = async () => {
+    await getIndexData(`/pages/index/block/${$router.currentRoute.value.query.blockID}`)
+        .then((response: any) => response.json())
+        .then(response => {
+            const data = response.data
+
+            if (data.block.components) {
+                data.block.components.forEach((item: any) => {
+                    list.value.push(item)
+                })
+            }
+
+            //            console.log(list.value)
+        })
 }
 
-const aside = ref(false)
+const save = async () => {
+
+    await putIndexData(`/pages/index/block/${$router.currentRoute.value.query.blockID}`, JSON.stringify(list.value))
+        .then(response => response.json())
+        .then(async (response) => {
+            const data = response
+            await toastGood(data.message, data.status ? data.status : 200)
+        })
+
+}
+
 
 const activate = () => {
     aside.value = !aside.value
@@ -207,16 +131,31 @@ const create = (value: String) => {
         component: value,
         text: null,
         id: list.value.length + 1,
-        slides: value === "Slider" ? [] : null,
+        slides: value === "Slider" ? [
+            {
+                id: 1,
+                name: "slide",
+                heading: "Название слайдера",
+                image: {
+                    url: '',
+                    resolution: "",
+                },
+                title: "Титул слайдера",
+                button: {
+                    innerText: "Текст кнопки"
+                },
+                description: "Описание слайдера"
+            },
+        ] : null,
         url: value === "Video" || value === "Image" ? {
             path: "",
             resolution: "",
             maxResolution: "",
         } : null,
         button: value === "Button" ? {
-            path: "",
-            resolution: "",
-            maxResolution: "",
+            innerText: "",
+            href: "",
+            border: "",
         } : null
     }
 
@@ -224,11 +163,41 @@ const create = (value: String) => {
         object.text = "<h1>Новый Заголовок</h1>"
     } else if (value === "Text") {
         object.text = "<p>Новый текст</p>"
-    } 
+    }
 
     list.value.push(object)
+}
+
+const createColumn = (amount: any) => {
+    const element = {
+        id: 1,
+        component: "Columns",
+        blocks: [
+            {
+                id: 1,
+                image: {
+                    url: "",
+                    size: 0,
+                },
+                button: {
+                    innerText: "Button",
+                    href: "/",
+                    border: "2rem"
+                },
+            }
+        ],
+        text: null
+    }
+
+    list.value.push(element)
+
 
 }
+
+onMounted(async () => {
+    await getComponents()
+    loaded.value = true
+})
 
 </script>
   

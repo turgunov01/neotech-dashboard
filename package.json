@@ -19,6 +19,7 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "@nuxt/ui": "^2.13.0",
     "@tiptap/extension-bold": "^2.2.1",
     "@tiptap/extension-color": "^2.2.1",
     "@tiptap/extension-italic": "^2.2.1",
@@ -27,6 +28,7 @@
     "md5": "^2.3.0",
     "sass": "^1.69.5",
     "sweetalert2": "^11.10.3",
+    "vue-toast-notification": "^3.1.2",
     "vuedraggable": "^4.1.0"
   }
 }

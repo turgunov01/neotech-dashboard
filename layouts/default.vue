@@ -1,12 +1,15 @@
 <template>
   <div class="wrapper">
     <!-- <SpaLoadingTemplate v-if="1" /> -->
-    <div class="container">
-      <sidebar />
-      <div class="content">
-        <slot />
+    <Ucontainer>
+      <div class="container">
+        <sidebar />
+        <div class="content">
+          <slot />
+        </div>
       </div>
-    </div>
+    </Ucontainer>
+    <UNotifications />
   </div>
 </template>
 
@@ -18,13 +21,13 @@ const $router = useRouter()
 
 <style lang="scss" scoped>
 .container {
-  max-width: 100%w;
+  max-width: 100% !important;
   width: 100%;
   margin: 0 auto;
 }
 
 .wrapper {
-  &>.container {
+  & .container {
     display: flex;
   }
 

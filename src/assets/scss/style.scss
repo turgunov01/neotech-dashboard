@@ -33,3 +33,32 @@ a {
 .ck.ck-editor {
     width: 100% !important;
 }
+
+
+.text-sm {
+    font-size: 1.6rem !important;
+    line-height: 130% !important;
+}
+
+.fixed[role=region] {
+    position: fixed;
+    top: 0;
+    bottom: unset;
+    width: 100%;
+    max-width: 40rem;
+    z-index: 1000;
+
+    & .p-4 {
+        padding: 2rem !important;
+    }
+
+    & .i-heroicons-check-circle {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    & .i-heroicons-x-mark-20-solid {
+        width: 2rem;
+        height: 2rem;
+    }
+}

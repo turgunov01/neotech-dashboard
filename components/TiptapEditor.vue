@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box" v-if="object">
         <div class="text-editor">
             <img src="../src/assets/burger.svg" alt="">
         </div>
@@ -17,13 +17,13 @@
                     <label for="color-1">
                         <img src="../src/assets/editor-methods/color.svg" alt="">
                     </label>
-                    <input type="color" id="color-1" hidden
+                    <input type="color" id="color-1" hidden :value="object.text"
                         @input="editor.chain().focus().setColor($event.target.value).run()">
                 </button>
             </div>
             <editor-content :editor="editor" />
         </div>
-        <div class="wrapper" v-else-if="object.component === 'Text'" >
+        <div class="wrapper" v-else-if="object.component === 'Text'">
             <div class="btns">
                 <button class="btn" title="Ctrl + B/CMD + B" @click="editor.chain().focus().toggleBold().run()">
                     <img src="../src/assets/editor-methods/bold.svg" @click="editor.chain().focus().toggleBold().run()"
@@ -37,7 +37,7 @@
                     <label for="color-2">
                         <img src="../src/assets/editor-methods/color.svg" alt="">
                     </label>
-                    <input type="color" id="color-2" hidden
+                    <input type="color" id="color-2" hidden :value="object.text"
                         @input="content.chain().focus().setColor($event.target.value).run()">
                 </button>
             </div>
@@ -46,21 +46,19 @@
         <div class="wrapper box-editor" v-else-if="object.component === 'Button'">
             <div class="button-name">
                 <input type="text" :style="{
-                    border: object.button ? object.button.border : '.1rem solid #e5e5e5'
-                }" class="button-input" :placeholder="'Новая кнопка'"
-                    :value="object.button.innerText ? object.button.innerText : ''">
+                    border: object.button.border ? `.1rem solid ${object.button.border}` : '.1rem solid #e5e5e5',
+                    background: object.button.background ? object.button.background : `#ffffff`
+                }" class="button-input" :placeholder="'Новая кнопка'" v-model="object.button.innerText">
             </div>
             <div class="box-button">
                 <div class="box-methods">
                     <label for="color-input">
                         <p class="color-name">Выбор фона цвета кнопки</p>
-                        <input type="color" id="border-color" @change="buttonColor($event, 'border')"
-                            :value="object.button.background">
+                        <input type="color" id="border-color" v-model="object.button.background">
                     </label>
                     <label for="color-border">
                         <p class="color-name">Выбор цвета контура кнопки</p>
-                        <input type="color" id="background-color" @change="buttonColor($event, 'background')"
-                            :value="object.button.border">
+                        <input type="color" id="background-color" v-model="object.button.border">
                     </label>
                     <label class="link-selector">
                         <p class="color-name">Открыть</p>
@@ -75,24 +73,25 @@
             </div>
         </div>
         <div class="wrapper image-editor" v-else-if="object.component === 'Image'">
-            <label for="image-box" class="image-box" v-if="!object.url.path.length">
+            <label :for="'image-box' + object.id" class="image-box" v-if="!object.url.path.length">
                 <img src="../src/assets/editor-methods/upload.svg" alt="">
                 <h6 class="image-box-title">Перетащите изображение сюда
                     или <span>загрузите изображение</span></h6>
                 <p class="image-box-type">Формат: jpeg, png, svg. </p>
-                <input type="file" accept="image/*" @change="input($event)" id="image-box" hidden>
+                <input type="file" accept="image/*" @change="input($event)" :value="object.url.path"
+                    :id="'image-box' + object.id" name="image" hidden>
             </label>
             <div class="image-box-content" v-else-if="object.url.path.length">
                 <img :src="object.url.path" alt="">
             </div>
         </div>
         <div class="wrapper image-editor" v-else-if="object.component === 'Video'">
-            <label for="video-box" class="image-box" v-if="!object.url.path.length">
+            <label :for="'video-box' + object.id" class="image-box" v-if="!object.url.path.length">
                 <img src="../src/assets/editor-methods/upload.svg" alt="">
                 <h6 class="image-box-title">Перетащите видеофайл сюда
                     или <span>загрузите видеофайл</span></h6>
                 <p class="image-box-type">Формат: jpeg, png, svg. </p>
-                <input type="file" accept="video/*" @change="input($event)" id="video-box" hidden>
+                <input type="file" accept="video/*" @change="input($event)" :id="'video-box' + object.id" hidden>
             </label>
             <div class="video-box-content" v-else-if="object.url.path.length">
                 <video :src="object.url.path" controls></video>
@@ -127,13 +126,19 @@
                             {{ item.description }}
                         </p>
                         <button class="slide-box-params-button" :class="!item.button ? '' : 'active'">
-                            <input type="text" :placeholder="'Название кнопки'" v-if="!item.button">
-                            <p class="slide-box-params-text" contenteditable @keyup="slideButtonChange($event, item.button.value)" v-else> {{ item.button.value }} </p>
+                            <input type="text" :placeholder="'Название кнопки'" :value="item.button.innerText"
+                                v-if="!item.button">
+                            <p class="slide-box-params-text" contenteditable
+                                @keyup="slideButtonChange($event, item.button.innerText)" v-else> {{ item.button.innerText
+                                }} </p>
                         </button>
                     </div>
                 </div>
                 <button @click="create(object.slides)" class="slide-button">Создать слайд</button>
             </div>
+        </div>
+        <div class="wrapper columns" v-else-if="object.component === 'Columns'">
+            <redaktor-blocks-columns :array="object" />
         </div>
 
     </div>
@@ -169,6 +174,10 @@ export default {
         object: {
             type: Object,
             required: true,
+        },
+        list: {
+            required: true,
+            type: Array,
         }
     },
 
@@ -216,13 +225,15 @@ export default {
             const value = e.target.value
 
             this.object.button.href = value
-            console.log(this.object.button.href)
+            console.log(this.object.button)
         },
         input(e) {
             const file = e.target.files[0]
             const url = URL.createObjectURL(file)
 
+            this.object.url.image = file
             this.object.url.path = url
+            console.log(this.object.url)
         },
         slideImage(e, value) {
             const file = e.target.files[0]
@@ -248,7 +259,8 @@ export default {
         update(event, value) {
             const html = event.target.innerHTML
             value = html
-4        },
+            4
+        },
         create(value) {
             const item = {
                 id: value.length + 1,
@@ -259,7 +271,10 @@ export default {
                     url: "",
                     resolution: ""
                 },
-                description: "Описание слайда"
+                description: "Описание слайда",
+                button: {
+                    innerText: ""
+                }
             }
 
             value.push(item)
@@ -284,7 +299,7 @@ export default {
             }
         },
         slideButtonChange(e, input) {
-            const html = e.target.innerHTML 
+            const html = e.target.innerHTML
 
             input = html
         }
