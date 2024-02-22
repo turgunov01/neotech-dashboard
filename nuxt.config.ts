@@ -14,14 +14,4 @@ export default defineNuxtConfig({
       }
     }
   },
-  ui: {
-    notifications: {
-      // Show toasts at the top right of the screen
-      position: 'top-0 bottom-auto'
-    }
-  },
-  modules: ['nuxt-tiptap-editor', '@nuxt/ui'],
-  tiptap: {
-    prefix: "Tiptap", //prefix for Tiptap imports, composables not included
-  },
 })

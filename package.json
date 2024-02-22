@@ -19,11 +19,6 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@nuxt/ui": "^2.13.0",
-    "@tiptap/extension-bold": "^2.2.1",
-    "@tiptap/extension-color": "^2.2.1",
-    "@tiptap/extension-italic": "^2.2.1",
-    "@tiptap/extension-text-style": "^2.2.1",
     "crypto-js": "^4.2.0",
     "md5": "^2.3.0",
     "sass": "^1.69.5",
