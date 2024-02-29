@@ -32,6 +32,11 @@
             <img src="../../src/assets/images/sidebar-icons/document.svg" class="inactive" alt="">
             <img src="../../src/assets/images/sidebar-icons/active/document.svg" class="active" alt="">
             Страницы</nuxt-link>
+          <span class="sidebar-item sidebar-item-children">
+            <nuxt-link class="sidebar-item" v-for="(item, index) in list" :to="`/pages/${index}`">
+              {{ item.name }}
+            </nuxt-link>
+          </span>
         </li>
         <li class="sidebar-item">
           <nuxt-link to="/me" class="sidebar-link">
@@ -47,9 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-import Swal from 'sweetalert2';
-
 const $router = useRouter();
+const list = ref([])
 const changeMessages = (e: any) => {
   const item = e.target;
 
@@ -67,27 +71,27 @@ const logout = () => {
   const user = localStorage.getItem("username")
   const pass = localStorage.getItem("password")
 
-  Swal.fire({
-    title: "Вы точно хотите выйти с системы?",
-    showDenyButton: true,
-    confirmButtonText: "Да",
-    denyButtonText: `Отмена`
-  }).then((result: any) => {
-    /* Read more about isConfirmed, isDenied below */
-    if (result.isConfirmed && store && user && pass) {
-      localStorage.removeItem("Authorization")
-      localStorage.removeItem("username")
-      localStorage.removeItem("password")
-      $router.push({ path: "/login" })
-    } else {
-      return
-    }
-  });
-
-
-
+  if (store) {
+    localStorage.removeItem("Authorization")
+    $router.push({ path: "/login" })
+  }
 
 };
+
+const getPages = async () => {
+  await getIndexData("/pages/")
+    .then(response => response.json())
+    .then((response: Response | any) => {
+      response.data.pages.forEach((item: Object, index: Number | any) => {
+        list.value.push(item)
+      });
+    })
+}
+
+onMounted(async () => {
+  await getPages()
+})
+
 </script>
 
 <style lang="scss" scoped>

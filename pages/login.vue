@@ -18,7 +18,6 @@
 </template>
 
 <script lang="ts" setup>
-import Swal from 'sweetalert2';
 const $router = useRouter()
 const meta = definePageMeta({
   layout: "auth",
@@ -38,7 +37,7 @@ const login = async () => {
     body: JSON.stringify(user.value)
   };
 
-  await postData('/api/login', options)
+  await postUserData('/api/login', options)
     .then(response => response.json())
     .then(response => {
       const data = response.data

@@ -6,6 +6,8 @@ export async function apiDataFetch(uri: any, headers: any) {
 
 
 
+    // Average request of the API endpoint
+
     if (token) {
         return fetch(`${base}${uri}`, headers && typeof headers === "object"
             ? headers
@@ -20,16 +22,8 @@ export async function apiDataFetch(uri: any, headers: any) {
     }
 }
 
-// async function getHeaders() {
-//     const headers = {
-//         Authorization: `Bearer ${await checkToken()}`,
-//         "Content-Language": await getLanguage(),
-//         "Content-Type": "application/json"
-//     }
 
-//     return headers
-// }
-
+// GET request to all the data of the /pages/
 export async function getIndexData(uri: String | any) {
     // const headers = await getHeaders()
     return fetch(`${await baseURI()}${uri}`, {
@@ -42,6 +36,8 @@ export async function getIndexData(uri: String | any) {
     })
 }
 
+
+// PUT request to all the data of the /pages/ by ID
 export async function putIndexData(uri: String | any, _body: any) {
     return fetch(`${baseURI()}${uri}`, {
         method: "PUT",
@@ -54,6 +50,7 @@ export async function putIndexData(uri: String | any, _body: any) {
     })
 }
 
+// POST request to all data of the /pages/ by ID
 export async function postIndexData(uri: String | any, _body: any) {
     return fetch(`${baseURI()}${uri}`, {
         method: "POST",
@@ -66,11 +63,29 @@ export async function postIndexData(uri: String | any, _body: any) {
     })
 }
 
-export async function postData(uri: any, headers: any) {
+// POST Authentification
+export async function postUserData(uri: any, headers: any) {
     const base = baseURI()
 
     const token = await checkToken()
     const $router = useRouter()
 
-    return fetch(`${base}${uri}`, { ...headers })
+    return fetch(`${base}${uri}`, headers)
+}
+
+// POST Image 
+export async function postImage(uri: any, formData: any) {
+    const base = baseURI()
+
+    const token = await checkToken()
+
+    return fetch(`http://localhost:5003${uri}`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Language": await getLanguage(),
+            'Content-Type': 'multipart/form-data;'
+        },
+        body: formData
+    })
 }
