@@ -6,51 +6,56 @@
             </div>
             <div class="pages-content">
                 <RedaktorModelsLayers :list="list[Number(Route.id)].blocks" :model="model" @open="model = !model" />
-                <div class="pages-editor">
+                <div class="pages-editor" v-if="list[Number(Route.id)].blocks && list[Number(Route.id)].blocks.length">
                     <div class="pages-editor-drag">
-                        <draggable :list="list[Number(Route.id)].blocks[Route.query].components">
+                        <draggable
+                            :list="list[Number(Route.id)].blocks[Route.query].components ? list[Number(Route.id)].blocks[Route.query].components : []">
                             <template #item="{ element, index }" class="element">
                                 <div class="element-selector">
                                     <img src="../../src/assets/burger.svg" alt="">
                                     <div class="element-draggable">
                                         <div class="element"
                                             v-if="element.component === 'Title' || element.component === 'Text'">
-                                            <RedaktorTipTap :element="element" />
+                                            <RedaktorEditor v-model="element.text" :modules="true"
+                                                @class="updateClass($event, element)" />
                                         </div>
                                         <div class="element" v-else-if="element.component === 'Button'">
                                             <div class="element-button">
                                                 <div class="element-button-visual">
                                                     <RedaktorTipTap :element="element" :style="{
-                                                        'border-color': element.button.borderColor,
-                                                        'background-color': element.button.backgroundColor,
-                                                        'color': element.button.color
-                                                    }" :modules="false" />
+        'border-color': element.button.borderColor,
+        'background-color': element.button.backgroundColor,
+        'color': element.button.color
+    }" :modules="false" />
                                                 </div>
                                                 <div class="element-button-labels">
                                                     <label :for="`element-button-background-${index}`"
                                                         class="element-button-label">
-                                                        <p class="element-button-label-title">Выбор фона цвета кнопки</p>
+                                                        <p class="element-button-label-title">Выбор фона цвета кнопки
+                                                        </p>
                                                         <div :style="{
-                                                            'background-color': element.button.backgroundColor,
-                                                        }" class="element-button-label-rect"></div>
+        'background-color': element.button.backgroundColor,
+    }" class="element-button-label-rect"></div>
                                                         <input :id="`element-button-background-${index}`" hidden
                                                             type="color" v-model="element.button.backgroundColor" />
                                                     </label>
                                                     <label :for="`element-button-border-${index}`"
                                                         class="element-button-label">
-                                                        <p class="element-button-label-title">Выбор цвета контура кнопки</p>
+                                                        <p class="element-button-label-title">Выбор цвета контура кнопки
+                                                        </p>
                                                         <div :style="{
-                                                            'background-color': element.button.borderColor,
-                                                        }" class="element-button-label-rect"></div>
-                                                        <input :id="`element-button-border-${index}`" hidden type="color"
-                                                            v-model="element.button.borderColor" />
+        'background-color': element.button.borderColor,
+    }" class="element-button-label-rect"></div>
+                                                        <input :id="`element-button-border-${index}`" hidden
+                                                            type="color" v-model="element.button.borderColor" />
                                                     </label>
                                                     <label :for="`element-button-color-${index}`"
                                                         class="element-button-label">
-                                                        <p class="element-button-label-title">Выбор цвета текста кнопки</p>
+                                                        <p class="element-button-label-title">Выбор цвета текста кнопки
+                                                        </p>
                                                         <div :style="{
-                                                            'background-color': element.button.color,
-                                                        }" class="element-button-label-rect"></div>
+        'background-color': element.button.color,
+    }" class="element-button-label-rect"></div>
                                                         <input :id="`element-button-color-${index}`" hidden type="color"
                                                             v-model="element.button.color" />
                                                     </label>
@@ -58,7 +63,8 @@
                                                         <p class="element-button-linker-title">Открыть -</p>
                                                         <select :id="`element-button-route-${index}-${element.name}`"
                                                             @change="selected($event, element)">
-                                                            <option value="/" selected disabled>Выберите страницу</option>
+                                                            <option value="/" selected disabled>Выберите страницу
+                                                            </option>
                                                             <option v-for="(route, index) in Route.pages"
                                                                 :value="route ? route.route : '/'"> {{ route.name }}
                                                             </option>
@@ -76,8 +82,7 @@
                                                             <span>
                                                                 Название слайдера:
                                                             </span>
-                                                            <RedaktorTiptapSlider :modules="false"
-                                                                :element="slide.heading" />
+                                                            <RedaktorEditor :modules="false" v-model="slide.heading" />
                                                         </p>
                                                         <img src="../../src/assets/blocks/chevron.svg"
                                                             class="element-slider-chevron" alt="">
@@ -104,10 +109,10 @@
                                                             </label>
                                                         </div>
                                                         <div class="element-slider-title">
-                                                            <RedaktorTiptapSlider :modules="false" :element="slide.title" />
+                                                            <RedaktorEditor :modules="false" v-model="slide.title" />
                                                         </div>
                                                         <div class="element-slider-title">
-                                                            <RedaktorTiptapSlider :modules="false" :element="slide.text" />
+                                                            <RedaktorEditor :modules="false" v-model="slide.text" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -135,6 +140,13 @@
                                             <output class="image-box-output" v-else>
                                                 <img :src="element.image.src" alt="">
                                             </output>
+                                        </div>
+                                        <div class="element" v-if="element.component === 'Column' || element.component === 'Columns'">
+                                            <div class="element-columns">
+                                                <div class="element-column">
+                                                    1
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -259,7 +271,7 @@ const getData = async () => {
                 list.value.push(pages)
             })
 
-            console.log(list.value[Route.value.id].blocks[Route.value.query].components)
+            // console.log(list.value[Route.value.id].blocks[Route.value.query].components)
             return
 
             const data = response.data.pages[Number($router.currentRoute.value.params.id)]
@@ -278,6 +290,12 @@ const getData = async () => {
             });
 
         })
+}
+
+// Add Class to block
+const updateClass = (e: MouseEvent | any, fields: Object | any) => {
+    fields.css = []
+    fields.css.push(e.target.id)
 }
 
 // aside positioning on active\clicked
@@ -309,7 +327,7 @@ const create = (val: String) => {
         image: {},
         video: {},
         button: {},
-        column: {}
+        columns: []
     }
 
 
@@ -415,10 +433,6 @@ const append = (parent: Array<Object>) => {
     console.log(parent)
 }
 
-const testEditorInput = (value: any) => {
-    console.log(value);
-}
-
 // Update the page with the current page block:id
 const pageUpdate = async () => {
     const index = list.value[Number(Route.value.id)]
@@ -431,6 +445,14 @@ const pageUpdate = async () => {
 
 onMounted(async () => {
     await getData()
+
+    if (!Route.value.query) {
+        $router.push({ query: { block: 0 } })
+        setTimeout(() => {
+            location.reload()
+        }, 300);
+    }
+
     loaded.value = true
 })
 

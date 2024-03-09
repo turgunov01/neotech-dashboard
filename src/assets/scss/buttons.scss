@@ -1,0 +1,63 @@
+// Button default customizations
+
+button input {
+    outline: none;
+    border: none;
+}
+
+button {
+    width: 4rem;
+    height: 4rem;
+    background: #EFEFEF;
+    border: unset;
+    cursor: pointer;
+    border-radius: .3rem;
+
+    &:hover {
+        background: #c4cbd5;
+    }
+}
+
+
+// Custom buttons 
+
+.fontSize {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .8rem;
+    max-width: 12.5rem;
+    width: 100%;
+    background: #efefef;
+    height: 4rem;
+    border-radius: .3rem;
+
+    & input {
+        width: 4.5rem;
+        height: 3rem;
+        text-align: center;
+        font-size: 1.6rem;
+        line-height: 3rem;
+    }
+
+    & button {
+        width: max-content;
+        height: max-content;
+        font-size: 2rem;
+        color: #8A98AC;
+        background: unset;
+        border: unset;
+    }
+}
+
+.tiptap {
+    font-size: 10px !important;
+}
+
+.editor {
+    &-methods {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+}

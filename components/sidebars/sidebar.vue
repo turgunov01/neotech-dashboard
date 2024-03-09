@@ -33,7 +33,7 @@
             <img src="../../src/assets/images/sidebar-icons/active/document.svg" class="active" alt="">
             Страницы</nuxt-link>
           <span class="sidebar-item sidebar-item-children">
-            <nuxt-link class="sidebar-item" v-for="(item, index) in list" :to="`/pages/${index}`">
+            <nuxt-link class="sidebar-item" v-for="(item, index) in list" @click="update" :to="`/pages/${index}`">
               {{ item.name }}
             </nuxt-link>
           </span>
@@ -86,6 +86,12 @@ const getPages = async () => {
         list.value.push(item)
       });
     })
+}
+
+const update = async () => {
+  setTimeout(() => {
+    location.reload()
+  }, 300);
 }
 
 onMounted(async () => {
