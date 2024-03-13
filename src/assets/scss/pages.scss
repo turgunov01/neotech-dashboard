@@ -249,6 +249,12 @@
             border-radius: .4rem;
             padding: 2.4rem;
             row-gap: .8rem;
+
+            &-output {
+                max-width: 50rem;
+                display: flex;
+
+            }
         }
     }
 
@@ -448,11 +454,29 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
+        row-gap: .8rem;
 
         & .element {
             &-column {
+                background: #ffffff;
+                padding: 1.2rem;
                 max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                row-gap: 2rem;
+
+                &-text {
+                    margin-top: 1.2rem;
+                }
             }
+        }
+    }
+
+    &-column {
+        &-button {
+            background: #FFA80020;
+            color: #FFA800;
+            margin-top: 1.2rem;
         }
     }
 }

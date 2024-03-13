@@ -104,9 +104,13 @@
                                                                         Формат: jpeg, png, svg.
                                                                     </p>
                                                                 </div>
-                                                                <input type="file" @change="upload($event)" hidden
+                                                                <input type="file" @change="upload($event, slide.image)"
+                                                                    hidden
                                                                     :id="`slider-image-box-${'block-' + Route.id}-${index}`">
                                                             </label>
+                                                            <output class="image-box-output" v-else>
+                                                                <img :src="slide.image.src" alt="">
+                                                            </output>
                                                         </div>
                                                         <div class="element-slider-title">
                                                             <RedaktorEditor :modules="false" v-model="slide.title" />
@@ -134,19 +138,54 @@
                                                         Формат: jpeg, png, svg.
                                                     </p>
                                                 </div>
-                                                <input type="file" @change="upload($event)" hidden
+                                                <input type="file" hidden ref="fileInput"
+                                                    @change="upload($event, element.image)"
                                                     :id="`image-box-${'block-' + Route.id}-${index}`">
                                             </label>
                                             <output class="image-box-output" v-else>
                                                 <img :src="element.image.src" alt="">
                                             </output>
                                         </div>
-                                        <div class="element" v-if="element.component === 'Column' || element.component === 'Columns'">
+                                        <div class="element"
+                                            v-if="element.component === 'Column' || element.component === 'Columns'">
                                             <div class="element-columns">
-                                                <div class="element-column">
-                                                    1
+                                                <div class="element-column" v-for="(column, index) in element.columns"
+                                                    :key="index">
+                                                    <label class="image-box"
+                                                        :for="`image-box-${'block-' + Route.id}-${index}`"
+                                                        v-if="!column.image.src">
+                                                        <div class="element-icon">
+                                                            <img src="../../src/assets/editor-methods/upload.svg"
+                                                                alt="">
+                                                        </div>
+                                                        <div class="element-name">
+                                                            <p class="element-text">Перетащите изображение сюда
+                                                                или <span>загрузите изображение</span>
+                                                            </p>
+                                                            <p class="element-text">
+                                                                Формат: jpeg, png, svg.
+                                                            </p>
+                                                        </div>
+                                                        <input type="file" hidden ref="fileInput"
+                                                            @change="upload($event, column.image)"
+                                                            :id="`image-box-${'block-' + Route.id}-${index}`">
+                                                    </label>
+                                                    <output class="image-box-output" v-else>
+                                                        <img :src="column.image.src" alt="">
+                                                    </output>
+                                                    <div class="element-column-textarea">
+                                                        <div class="element-column-title">
+                                                            <RedaktorEditor :modules="true" v-model="column.title" />
+                                                        </div>
+                                                        <div class="element-column-text">
+                                                            <RedaktorEditor :modules="true" v-model="column.text" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <button class="element-column-button"
+                                                @click="appendColumn(element.columns)">Добавить новую
+                                                колонну</button>
                                         </div>
                                     </div>
                                 </div>
@@ -242,6 +281,8 @@ const list = ref([])
 const layers = ref([])
 const $router = useRouter()
 const opened = ref(false)
+
+const fileInput = ref(null)
 
 // Draggable component
 const component = defineComponent(draggable)
@@ -349,13 +390,14 @@ const create = (val: String) => {
             }
             break;
         case "Column":
-            object.column = {
+            const newColumn = {
                 title: "<h1>Новый заголовок</h1>",
                 text: "<p>Новый текст</p>",
                 image: {},
                 // isNoImage is false only text content if true no text content
-                isNoImage: true,
+                hasNoImage: true,
             }
+            object.columns.push(newColumn)
             break;
         case "Image":
             object.image = {
@@ -390,21 +432,47 @@ const create = (val: String) => {
 }
 
 // Update the image in the route and push to server
-// const upload = async (e: MouseEvent | any) => {
-//     const file = e.target.files[0]
+const upload = async (e: MouseEvent | any, value: Object | any) => {
 
+    // Create FormData object
+    const formData = new FormData();
 
+    // Append the image file to FormData with a custom key ('image' in this example)
+    formData.append('image', e.target.files[0]);
 
-//     const formData = new FormData()
-//     formData.append("image", file)
+    // Create and configure a new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${baseURI()}/api/upload`, true);
 
-//     await postImage("/upload", formData)
-//         .then(response => response.json())
-//         .then((response: Response | any) => {
-//             console.log(response)
-//         })
+    // Set the Authorization header with the bearer token
+    xhr.setRequestHeader('Authorization', `Bearer ${await checkToken()}`);
 
-// }
+    // Set up an event listener to track the upload progress
+    xhr.upload.addEventListener('progress', function (event) {
+        if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            console.log(`Upload Progress: ${percentComplete}%`);
+        }
+    });
+
+    xhr.addEventListener("load", () => {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.response)
+            value.src = response.route
+            console.log(response)
+        }
+    })
+
+    // Set up the event listener for when there is an error during the upload
+    xhr.addEventListener('error', function () {
+        console.error('There was an error during the upload.');
+    });
+
+    // Send the FormData object with the image
+    xhr.send(formData);
+}
+
+// Usage example:
 
 // Button color customization
 const color = ref({
@@ -431,6 +499,19 @@ const append = (parent: Array<Object>) => {
     }
     parent.push(slide)
     console.log(parent)
+}
+
+// Create a new column with params parent
+const appendColumn = (parent: Array<Object>) => {
+    const object = {
+        title: "<h1>Новый заголовок</h1>",
+        text: "<p>Новый текст</p>",
+        image: {},
+        hasNoImage: true
+    }
+
+    if (parent) parent.push(object)
+    else throw new Error("Failed to create column!")
 }
 
 // Update the page with the current page block:id

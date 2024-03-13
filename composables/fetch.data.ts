@@ -74,12 +74,12 @@ export async function postUserData(uri: any, headers: any) {
 }
 
 // POST Image 
-export async function postImage(uri: any, formData: any) {
+export async function postImage(uri: any, formData: FormData) {
     const base = baseURI()
 
     const token = await checkToken()
 
-    return fetch(`http://localhost:5003${uri}`, {
+    return fetch(`${base}${uri}`, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${token}`,
