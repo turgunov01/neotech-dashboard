@@ -5,10 +5,11 @@
 </template>
 <script lang="ts" setup>
 const $router = useRouter()
-onMounted(() => {
+onMounted(async () => {
+    await $router.push("/pages/" + getLanguage() + "/0")
     setTimeout(() => {
-        $router.push({ path: `/pages/${getLanguage()}` })
-    }, 200);
+        location.reload()
+    }, 1000);
 })
 </script>
 <style lang="">
