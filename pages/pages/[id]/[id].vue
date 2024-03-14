@@ -3,6 +3,17 @@
         <div class="pages-wrapper">
             <div class="pages-container">
                 <h1 class="pages-title">{{ list[Number(Route.id)].name }}</h1>
+                <div class="pages-locale">
+                    <button @click="redirectTo($event)" id="ru"
+                        :class="$router.currentRoute.value.path.includes('ru') ? 'active' : ''"
+                        class="pages-locale-button">Русский</button>
+                    <button @click="redirectTo($event)" id="en"
+                        :class="$router.currentRoute.value.path.includes('en') ? 'active' : ''"
+                        class="pages-locale-button">Английский</button>
+                    <button @click="redirectTo($event)" id="uz"
+                        :class="$router.currentRoute.value.path.includes('uz') ? 'active' : ''"
+                        class="pages-locale-button">Узбекский</button>
+                </div>
             </div>
             <div class="pages-content">
                 <RedaktorModelsLayers :list="list[Number(Route.id)].blocks" :model="model" @open="model = !model" />
@@ -12,7 +23,7 @@
                             :list="list[Number(Route.id)].blocks[Route.query].components ? list[Number(Route.id)].blocks[Route.query].components : []">
                             <template #item="{ element, index }" class="element">
                                 <div class="element-selector">
-                                    <img src="../../src/assets/burger.svg" alt="">
+                                    <img src="../../../src/assets/burger.svg" alt="">
                                     <div class="element-draggable">
                                         <div class="element"
                                             v-if="element.component === 'Title' || element.component === 'Text'">
@@ -84,7 +95,7 @@
                                                             </span>
                                                             <RedaktorEditor :modules="false" v-model="slide.heading" />
                                                         </p>
-                                                        <img src="../../src/assets/blocks/chevron.svg"
+                                                        <img src="../../../src/assets/blocks/chevron.svg"
                                                             class="element-slider-chevron" alt="">
                                                     </div>
                                                     <div class="element-slider-content">
@@ -93,7 +104,7 @@
                                                                 :for="`slider-image-box-${'block-' + Route.id}-${index}`"
                                                                 v-if="!slide.image.src.length">
                                                                 <div class="element-icon">
-                                                                    <img src="../../src/assets/editor-methods/upload.svg"
+                                                                    <img src="../../../src/assets/editor-methods/upload.svg"
                                                                         alt="">
                                                                 </div>
                                                                 <div class="element-name">
@@ -128,7 +139,7 @@
                                             <label class="image-box" :for="`image-box-${'block-' + Route.id}-${index}`"
                                                 v-if="!element.image.src.length">
                                                 <div class="element-icon">
-                                                    <img src="../../src/assets/editor-methods/upload.svg" alt="">
+                                                    <img src="../../../src/assets/editor-methods/upload.svg" alt="">
                                                 </div>
                                                 <div class="element-name">
                                                     <p class="element-text">Перетащите изображение сюда
@@ -155,7 +166,7 @@
                                                         :for="`image-box-${'block-' + Route.id}-${index}`"
                                                         v-if="!column.image.src">
                                                         <div class="element-icon">
-                                                            <img src="../../src/assets/editor-methods/upload.svg"
+                                                            <img src="../../../src/assets/editor-methods/upload.svg"
                                                                 alt="">
                                                         </div>
                                                         <div class="element-name">
@@ -211,7 +222,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Title')" data-type="Title">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/h1.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/h1.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Заголовок</p>
                     </button>
@@ -219,7 +230,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Text')" data-type="Text">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/p.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/p.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Текст</p>
                     </button>
@@ -227,7 +238,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Button')" data-type="Button">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/button.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/button.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Кнопка</p>
                     </button>
@@ -235,7 +246,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Column')" data-type="Column">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/columns.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/columns.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Колонка</p>
                     </button>
@@ -243,7 +254,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Image')" data-type="Image">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/img.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/img.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Картинка</p>
                     </button>
@@ -251,7 +262,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Video')" data-type="Video">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/video.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/video.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Видео</p>
                     </button>
@@ -259,7 +270,7 @@
                 <li class="aside-item">
                     <button class="aside-button" @click="create('Slider')" data-type="Slider">
                         <div class="aside-button-image">
-                            <img src="../../src/assets/blocks/slides.svg" class="type" alt="">
+                            <img src="../../../src/assets/blocks/slides.svg" class="type" alt="">
                         </div>
                         <p class="type-name">Слайдер</p>
                     </button>
@@ -524,14 +535,37 @@ const pageUpdate = async () => {
         })
 }
 
+// Change localization on the localStorage
+const redirectTo = async (e: MouseEvent) => {
+    const store = localStorage.getItem('lang')
+
+    if (store) {
+        await localStorage.removeItem('lang')
+        await localStorage.setItem("lang", e.target?.id)
+
+        $router.push({ path: `/pages/${await getLanguage()}/${$router.currentRoute.value.params.id}` })
+        setTimeout(() => {
+            location.reload()
+        }, 1000);
+        return
+    }
+
+    await localStorage.setItem("lang", e.target?.id)
+    $router.push({ path: `/pages/${await getLanguage()}/${$router.currentRoute.value.params.id}` })
+    setTimeout(() => {
+        location.reload()
+    }, 400);
+    return
+}
+
 onMounted(async () => {
     await getData()
 
     if (!Route.value.query) {
-        $router.push({ query: { block: 0 } })
+        await $router.push({ path: `/pages/${getLanguage()}/${$router.currentRoute.value.params.id}`, query: { block: 0 } })
         setTimeout(() => {
             location.reload()
-        }, 300);
+        }, 200);
     }
 
     loaded.value = true
@@ -540,5 +574,36 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-@import '../../src/assets/scss/pages.scss'
+@import '../../../src/assets/scss/pages.scss';
+
+.pages {
+    &-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &-locale {
+        display: flex;
+        align-items: center;
+
+        &-button {
+            background: unset;
+            width: 12rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: .1rem solid #e5e5e5;
+
+            &.active {
+                background: #F1F9FE;
+                color: #0054FF;
+                font-size: 1.5rem;
+                font-weight: 500;
+                line-height: 2.1rem;
+            }
+        }
+    }
+}
 </style>

@@ -28,14 +28,15 @@
           </span>
         </li>
         <li class="sidebar-item">
-          <nuxt-link to="/pages" class="sidebar-link">
+          <nuxt-link to="/pages/" class="sidebar-link">
             <img src="../../src/assets/images/sidebar-icons/document.svg" class="inactive" alt="">
             <img src="../../src/assets/images/sidebar-icons/active/document.svg" class="active" alt="">
             Страницы</nuxt-link>
           <span class="sidebar-item sidebar-item-children">
-            <nuxt-link class="sidebar-item" v-for="(item, index) in list" @click="update" :to="`/pages/${index}`">
+            <button class="sidebar-item" v-for="(item, index) in list" @click="update($event)"
+              :id="`/pages/${getLanguage()}/${index}`">
               {{ item.name }}
-            </nuxt-link>
+            </button>
           </span>
         </li>
         <li class="sidebar-item">
@@ -88,10 +89,12 @@ const getPages = async () => {
     })
 }
 
-const update = async () => {
+const update = async (e: MouseEvent) => {
+  if (e.target.id) $router.push({ path: e.target.id })
   setTimeout(() => {
     location.reload()
   }, 300);
+  return
 }
 
 onMounted(async () => {
@@ -132,6 +135,10 @@ onMounted(async () => {
 
   &-item {
     width: 100%;
+    background-color: unset;
+    border: unset;
+    text-align: start;
+    font-size: 1.5rem;
 
     &-children {
       display: flex;
