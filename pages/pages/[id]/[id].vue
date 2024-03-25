@@ -16,37 +16,41 @@
                 </div>
             </div>
             <div class="pages-content">
-                <RedaktorModelsLayers :list="list[Number(Route.id)].blocks" :model="model" @open="model = !model" />
+                <RedaktorModelsLayers :list="list[Number(Route.id)]" :model="model" @open="model = !model" />
                 <div class="pages-editor" v-if="list[Number(Route.id)].blocks && list[Number(Route.id)].blocks.length">
                     <div class="pages-editor-drag">
-                        <draggable
-                            :list="list[Number(Route.id)].blocks[Route.query].components ? list[Number(Route.id)].blocks[Route.query].components : []">
+                        <draggable :list="list[Number(Route.id)].blocks[Route.query].components">
                             <template #item="{ element, index }" class="element">
                                 <div class="element-selector">
-                                    <img src="../../../src/assets/burger.svg" alt="">
+                                    <img src="../../../src/assets/burger.svg" @click="toggleModal($event)" alt="">
+                                    <aside class="element-delete-request">
+                                        <p class="element-request-text">
+                                            Удалить блок?
+                                        </p>
+                                        <div class="element-request-buttons">
+                                            <button class="element-request-button"
+                                                @click="deleteNode(index, $event)">Да</button>
+                                            <button class="element-request-button">Нет</button>
+                                        </div>
+                                    </aside>
                                     <div class="element-draggable">
                                         <div class="element"
                                             v-if="element.component === 'Title' || element.component === 'Text'">
-                                            <RedaktorEditor v-model="element.text" :modules="true"
+                                            <RedaktorEditor v-model="element.locale[lang].text" :modules="true"
                                                 @class="updateClass($event, element)" />
                                         </div>
                                         <div class="element" v-else-if="element.component === 'Button'">
                                             <div class="element-button">
                                                 <div class="element-button-visual">
-                                                    <RedaktorTipTap :element="element" :style="{
-        'border-color': element.button.borderColor,
-        'background-color': element.button.backgroundColor,
-        'color': element.button.color
-    }" :modules="false" />
+                                                    <RedaktorBlocksButtonEditor :element="element.button"
+                                                        :modules="false" />
                                                 </div>
                                                 <div class="element-button-labels">
                                                     <label :for="`element-button-background-${index}`"
                                                         class="element-button-label">
                                                         <p class="element-button-label-title">Выбор фона цвета кнопки
                                                         </p>
-                                                        <div :style="{
-        'background-color': element.button.backgroundColor,
-    }" class="element-button-label-rect"></div>
+                                                        <div class="element-button-label-rect"></div>
                                                         <input :id="`element-button-background-${index}`" hidden
                                                             type="color" v-model="element.button.backgroundColor" />
                                                     </label>
@@ -54,9 +58,7 @@
                                                         class="element-button-label">
                                                         <p class="element-button-label-title">Выбор цвета контура кнопки
                                                         </p>
-                                                        <div :style="{
-        'background-color': element.button.borderColor,
-    }" class="element-button-label-rect"></div>
+                                                        <div class="element-button-label-rect"></div>
                                                         <input :id="`element-button-border-${index}`" hidden
                                                             type="color" v-model="element.button.borderColor" />
                                                     </label>
@@ -64,9 +66,7 @@
                                                         class="element-button-label">
                                                         <p class="element-button-label-title">Выбор цвета текста кнопки
                                                         </p>
-                                                        <div :style="{
-        'background-color': element.button.color,
-    }" class="element-button-label-rect"></div>
+                                                        <div class="element-button-label-rect"></div>
                                                         <input :id="`element-button-color-${index}`" hidden type="color"
                                                             v-model="element.button.color" />
                                                     </label>
@@ -293,6 +293,10 @@ const layers = ref([])
 const $router = useRouter()
 const opened = ref(false)
 
+const deleteModal = ref(false)
+
+const lang = getLanguage()
+
 const fileInput = ref(null)
 
 // Draggable component
@@ -305,6 +309,7 @@ const Route = ref({
     query: $router.currentRoute.value.query.block,
 })
 
+
 // Opens the modal window which creates a new block inside of the Route.value.layers and declares it in blocks list.
 // Pushes immediately into server
 const model = ref(false)
@@ -314,11 +319,6 @@ const getData = async () => {
     await getIndexData("/pages/")
         .then((response: any) => response.json())
         .then((response: Response | any) => {
-
-            // response.data.pages.forEach((page: Object | any) => {
-            //     Route.value.pages.push(page)
-            // })
-
             response.data.pages.forEach((pages: Object | any) => {
                 list.value.push(pages)
             })
@@ -342,6 +342,19 @@ const getData = async () => {
             });
 
         })
+}
+
+
+
+// Toggling the delete window
+const toggleModal = (e: MouseEvent | any) => {
+    deleteModal.value = !deleteModal.value
+    const modals = document.querySelectorAll(".element-delete-request")
+    modals.forEach((modal: any) => {
+        modal.classList.remove("active")
+    })
+
+    e.target.nextSibling.classList.add("active")
 }
 
 // Add Class to block
@@ -373,7 +386,17 @@ const create = (val: String) => {
     const object = {
         name: `Block-${val}`,
         component: val,
-        text: "",
+        locale: {
+            en: {
+                text: ""
+            },
+            ru: {
+                text: ""
+            },
+            uz: {
+                text: ""
+            },
+        },
         url: {},
         slides: [],
         image: {},
@@ -386,14 +409,40 @@ const create = (val: String) => {
 
     switch (val) {
         case "Title":
-            object.text = "<h1>Новый заголовок</h1>"
+            object.locale["ru"].text = "<h1>Новый заголовок</h1>"
+            object.locale["en"].text = "<h1>Newborn Title</h1>"
+            object.locale["uz"].text = "<h1>Yangi Titul</h1>"
             break;
         case "Text":
-            object.text = "<p>Новый текст</p>"
+            object.locale["ru"].text = "<p>Новый Текст</p>"
+            object.locale["en"].text = "<p>New Text</p>"
+            object.locale["uz"].text = "<p>Yangi Tekst</p>"
             break;
         case "Button":
             object.button = {
-                text: "Кнопка",
+                locale: {
+                    ru: {
+                        text: "Новая кнопка",
+                        url: {
+                            text: "Ссылка",
+                            placeholder: "Введите ссылку"
+                        }
+                    },
+                    en: {
+                        text: "New Button",
+                        url: {
+                            text: "Link",
+                            placeholder: "Enter link"
+                        }
+                    },
+                    uz: {
+                        text: "Yangi knopka",
+                        url: {
+                            text: "Knopka",
+                            placeholder: "Ssilkani kiriting"
+                        }
+                    }
+                },
                 route: "",
                 color: "",
                 backgroundColor: "",
@@ -402,8 +451,20 @@ const create = (val: String) => {
             break;
         case "Column":
             const newColumn = {
-                title: "<h1>Новый заголовок</h1>",
-                text: "<p>Новый текст</p>",
+                locale: {
+                    en: {
+                        title: "<h1>New Column Title</h1>",
+                        text: "<p>New Column Text</p>",
+                    },
+                    ru: {
+                        title: "<h1>Новый заголовок</h1>",
+                        text: "<p>Новый текст</p>",
+                    },
+                    uz: {
+                        title: "<h1>Yangi sarlavha</h1>",
+                        text: "<p>Yangi tekst</p>",
+                    }
+                },
                 image: {},
                 // isNoImage is false only text content if true no text content
                 hasNoImage: true,
@@ -428,7 +489,20 @@ const create = (val: String) => {
         const slide = {
             title: "",
             heading: "",
-            text: "",
+            locale: {
+                en: {
+                    title: "<h1>New Slide Title</h1>",
+                    text: "<p>New Slide Text</p>",
+                },
+                ru: {
+                    title: "<h1>Новый заголовок</h1>",
+                    text: "<p>Новый текст</p>",
+                },
+                uz: {
+                    title: "<h1>Yangi sarlavha</h1>",
+                    text: "<p>Yangi tekst</p>",
+                }
+            },
             image: {
                 src: "",
                 alt: "",
@@ -437,6 +511,7 @@ const create = (val: String) => {
         object.slides.push(slide)
     }
 
+    console.log(object)
     list.value[Number(Route.value.id)].blocks[Number(Route.value.query)].components.push(object)
     opened.value = false
     return
@@ -453,6 +528,7 @@ const upload = async (e: MouseEvent | any, value: Object | any) => {
 
     // Create and configure a new XMLHttpRequest object
     const xhr = new XMLHttpRequest();
+
     xhr.open('POST', `${baseURI()}/api/upload`, true);
 
     // Set the Authorization header with the bearer token
@@ -469,6 +545,7 @@ const upload = async (e: MouseEvent | any, value: Object | any) => {
     xhr.addEventListener("load", () => {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.response)
+            debugger
             value.src = response.route
             console.log(response)
         }
@@ -483,14 +560,6 @@ const upload = async (e: MouseEvent | any, value: Object | any) => {
     xhr.send(formData);
 }
 
-// Usage example:
-
-// Button color customization
-const color = ref({
-    backgroundColor: "",
-    borderColor: ""
-})
-
 // GET select value
 const selected = (e: MouseEvent | any, element: Object | any) => {
     const value = e.target.value
@@ -502,7 +571,17 @@ const append = (parent: Array<Object>) => {
     const slide = {
         title: "",
         heading: "",
-        text: "",
+        locale: {
+            ru: {
+                text: "",
+            },
+            en: {
+                text: "",
+            },
+            uz: {
+                text: "",
+            }
+        },
         image: {
             src: "",
             alt: "",
@@ -515,8 +594,20 @@ const append = (parent: Array<Object>) => {
 // Create a new column with params parent
 const appendColumn = (parent: Array<Object>) => {
     const object = {
-        title: "<h1>Новый заголовок</h1>",
-        text: "<p>Новый текст</p>",
+        locale: {
+            ru: {
+                title: "",
+                text: "",
+            },
+            en: {
+                title: "",
+                text: "",
+            },
+            uz: {
+                title: "",
+                text: "",
+            }
+        },
         image: {},
         hasNoImage: true
     }
@@ -533,6 +624,13 @@ const pageUpdate = async () => {
         .then((response: Response | any) => {
             console.log(response)
         })
+}
+
+// Deleting component 
+const deleteNode = async (val: Number | any, e: MouseEvent | any) => {
+    const array = list.value[Number(Route.value.id)].blocks[Number(Route.value.query)].components.filter((item: any, index: number) => index !== val)
+    list.value[Number(Route.value.id)].blocks[Number(Route.value.query)].components = array
+    pageUpdate()
 }
 
 // Change localization on the localStorage
@@ -604,6 +702,76 @@ onMounted(async () => {
                 line-height: 2.1rem;
             }
         }
+    }
+}
+
+.element {
+
+    &-request {
+        &-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+
+            & button {
+                width: 10rem;
+                height: 4rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: none;
+                font-size: 1.5rem;
+                line-height: 110%;
+                font-weight: 500;
+                border-radius: .4rem;
+
+                &:nth-of-type(1) {
+                    background: #E2F0FD;
+                    color: #0054FF;
+                }
+
+                &:nth-of-type(2) {
+                    background: #FBE9EA;
+                    color: #FF3F3F;
+                }
+
+                &.active {
+                    background: #F1F9FE;
+                    color: #0054FF;
+                    font-size: 1.5rem;
+                    font-weight: 500;
+                    line-height: 2.1rem;
+                }
+            }
+        }
+    }
+
+    &-delete {
+        &-request {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 4rem;
+            box-shadow: 0 0 .4rem rgba(0, 0, 0, 0.2);
+            z-index: 100;
+
+            &.active {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                row-gap: 2rem;
+                background: white;
+                padding: 2rem;
+            }
+        }
+    }
+
+    &-selector {
+        position: relative;
     }
 }
 </style>

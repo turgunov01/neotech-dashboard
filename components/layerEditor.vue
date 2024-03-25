@@ -1,53 +1,28 @@
 <template>
-  <draggable
-    :list="data"
-    :disabled="!enabled"
-    class="list-group"
-    ghost-class="ghost"
-    @start="dragging = true"
-    @end="dragging = false"
-  >
+  <draggable :list="data" :disabled="!enabled" class="list-group" ghost-class="ghost" @start="dragging = true"
+    @end="dragging = false">
     <template #item="{ element }">
       <div class="list-group-item">
-        <span @click="$emit('delete', $event)"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+        <span @click="$emit('delete', $event)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+            viewBox="0 0 20 20" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd"
               d="M3 7C3 6.73478 3.10536 6.48043 3.29289 6.29289C3.48043 6.10536 3.73478 6 4 6H16C16.2652 6 16.5196 6.10536 16.7071 6.29289C16.8946 6.48043 17 6.73478 17 7C17 7.26522 16.8946 7.51957 16.7071 7.70711C16.5196 7.89464 16.2652 8 16 8H4C3.73478 8 3.48043 7.89464 3.29289 7.70711C3.10536 7.51957 3 7.26522 3 7ZM3 13C3 12.7348 3.10536 12.4804 3.29289 12.2929C3.48043 12.1054 3.73478 12 4 12H16C16.2652 12 16.5196 12.1054 16.7071 12.2929C16.8946 12.4804 17 12.7348 17 13C17 13.2652 16.8946 13.5196 16.7071 13.7071C16.5196 13.8946 16.2652 14 16 14H4C3.73478 14 3.48043 13.8946 3.29289 13.7071C3.10536 13.5196 3 13.2652 3 13Z"
-              fill="#0054FF"
-            /></svg
-        ></span>
+              fill="#0054FF" />
+          </svg></span>
         <div class="draggable-content">
-          <div
-            style="width: 100%"
-            v-if="
-              element.type !== 'img' &&
-              element.type !== 'button' &&
-              element.type !== 'video'
-            "
-          >
+          <div style="width: 100%" v-if="element.type !== 'img' &&
+    element.type !== 'button' &&
+    element.type !== 'video'
+    ">
             <text-editor :content="text" :element="element" />
           </div>
           <div v-if="element.type === 'button' && !element.editorData.length">
             <div class="button">
-              <input
-                type="text"
-                placeholder="Название кнопки"
-                @input="name($event)"
-                v-model="element.name"
-                class="button-name"
-                :style="{
-                  background: `${button.background}`,
-                  borderColor: `${button.border}`,
-                }"
-              />
+              <input type="text" placeholder="Название кнопки" @input="name($event)" v-model="element.name"
+                class="button-name" :style="{
+    background: `${button.background}`,
+    borderColor: `${button.border}`,
+  }" />
               <div class="button-color">
                 <palette :type="'фона'" :style="button" :parent="element" />
               </div>
@@ -58,19 +33,10 @@
           </div>
           <div v-if="element.type === 'img'">
             <label for="image64" class="element-label">
-              <img
-                src="../src/assets/images/image.svg"
-                class="element-type"
-                alt=""
-              />
+              <img src="../src/assets/images/image.svg" class="element-type" alt="" />
               <p class="element-title">Загрузить изображение</p>
               <p class="element-weight">Максимальный файл 3МБ</p>
-              <input
-                type="file"
-                @change="inputImage($event)"
-                hidden
-                id="image64"
-              />
+              <input type="file" @change="inputImage($event)" hidden id="image64" />
             </label>
           </div>
         </div>
@@ -172,6 +138,7 @@ export default {
     z-index: 999;
   }
 }
+
 .list-group-item {
   display: flex;
   align-items: center;
@@ -181,7 +148,7 @@ export default {
 
   margin-bottom: 2.4rem;
 
-  & > .ck-editor {
+  &>.ck-editor {
     width: 100%;
   }
 }

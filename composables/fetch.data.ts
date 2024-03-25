@@ -2,9 +2,7 @@ export async function apiDataFetch(uri: any, headers: any) {
     const base = baseURI()
 
     const token = await checkToken()
-    const $router = useRouter()
-
-
+    const $router = useRouter().currentRoute.value
 
     // Average request of the API endpoint
 
@@ -87,5 +85,21 @@ export async function postImage(uri: any, formData: FormData) {
             'Content-Type': 'multipart/form-data;'
         },
         body: formData
+    })
+}
+
+// DELETE Content
+export async function apiDeleteFetch(uri: any) {
+    const base = baseURI()
+
+    const token = await checkToken()
+
+    return fetch(`${base}${uri}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Language": await getLanguage(),
+            "Content-Type": "application/json"
+        }
     })
 }
