@@ -13,6 +13,14 @@
                             <button @click="deleteBlock(element.id)">delete</button>
                             <button @click="toggleEdit(element.id)">edit name</button>
                         </div>
+                        <div class="view" :class="`edit-modal edit-modal-name-${element.id}`">
+                            <div class="view-container">
+                                <div class="view-container-input">
+                                    <input type="text" v-model="element.name">
+                                </div>
+                                <button class="view-button" @click="update">Добавить</button>
+                            </div>
+                        </div>
                     </li>
                 </template>
             </draggable>
@@ -24,7 +32,7 @@
             <div class="view-container-input">
                 <input type="text" v-model="object.name">
             </div>
-            <button class="view-button" @click="update">Добавить</button>
+            <button class="view-button" @click="$emit('save')">Добавить</button>
         </div>
     </div>
 </template>
@@ -48,8 +56,6 @@ const props = defineProps({
 const emits = defineEmits(['open', 'save'])
 
 const $router = useRouter()
-
-const editName = ref(false)
 
 const object = {
     name: "Новый блок",
@@ -103,12 +109,25 @@ const deleteBlock = async (index: Number) => {
 }
 
 const toggleEdit = async (index: Number) => {
-    const current = props.list.blocks
-    editName.value = !editName.value
+    const item = document.querySelector(`.edit-modal-name-${index}`)
+    const items = document.querySelectorAll(".edit-modal")
 
+    items.forEach((block: any) => {
+        block.classList.remove('active')
+    })
+
+    item?.classList.add('active')
 }
 
 </script>
 <style lang="scss" scoped>
-@import '../../../src/assets/scss/pages.scss'
+@import '../../../src/assets/scss/pages.scss';
+
+.edit-modal {
+    display: none;
+
+    &.active {
+        display: flex
+    }
+}
 </style>
