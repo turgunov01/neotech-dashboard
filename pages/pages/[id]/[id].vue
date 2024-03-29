@@ -16,7 +16,8 @@
                 </div>
             </div>
             <div class="pages-content">
-                <RedaktorModelsLayers :list="list[Number(Route.id)]" :model="model" @open="model = !model" />
+                <RedaktorModelsLayers :list="list[Number(Route.id)]" :model="model" :edit-model="editModel"
+                    @save="pageUpdate" @open="model = !model" />
                 <div class="pages-editor" v-if="list[Number(Route.id)].blocks && list[Number(Route.id)].blocks.length">
                     <div class="pages-editor-drag">
                         <draggable :list="list[Number(Route.id)].blocks[Route.query].components">
@@ -313,6 +314,7 @@ const Route = ref({
 // Opens the modal window which creates a new block inside of the Route.value.layers and declares it in blocks list.
 // Pushes immediately into server
 const model = ref(false)
+const editModel = ref(false)
 
 // Get all data by route and by default for editing
 const getData = async () => {
@@ -325,26 +327,34 @@ const getData = async () => {
 
             // console.log(list.value[Route.value.id].blocks[Route.value.query].components)
             return
-
-            const data = response.data.pages[Number($router.currentRoute.value.params.id)]
-            Route.value.name = data.name
-
-            data.blocks.forEach((block: any, index: Number) => {
-                Route.value.layers.push(block)
-
-                console.log(block)
-
-                if (index === Number(Route.value.query) && block.components.length) {
-                    block.components.forEach((component: any, index: Number) => {
-                        Route.value.components.push(component)
-                    })
-                }
-            });
-
         })
+
+    await currentComponent()
 }
 
+const currentComponent = async () => {
+    await getIndexData(`/pages/${Route.value.id}`)
+        .then((response: Response | any) => response.json())
+        .then((response: Response | any) => {
+            const data = response
 
+            const component = data.page
+
+            try {
+                if ($router.currentRoute.value.query.block) return
+                $router.push({ path: $router.currentRoute.value.path, query: { block: 0 } })
+                setTimeout(() => {
+                    location.reload()
+                }, 300);
+            } catch (err) {
+                console.log(err)
+            }
+
+        })
+        .catch((error: Error | any) => {
+            if (error) console.log(error)
+        })
+}
 
 // Toggling the delete window
 const toggleModal = (e: MouseEvent | any) => {
@@ -623,6 +633,11 @@ const pageUpdate = async () => {
         .then(response => response.json())
         .then((response: Response | any) => {
             console.log(response)
+            if (response) {
+                setTimeout(() => {
+                    location.reload()
+                }, 300);
+            }
         })
 }
 

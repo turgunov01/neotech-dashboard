@@ -11,6 +11,7 @@
                         <img src="../../../src/assets/burger.svg" alt="">
                         <div :id="`layers-context-menu-${index}`" class="context-menu">
                             <button @click="deleteBlock(element.id)">delete</button>
+                            <button @click="toggleEdit(element.id)">edit name</button>
                         </div>
                     </li>
                 </template>
@@ -26,6 +27,22 @@
             <button class="view-button" @click="update">Добавить</button>
         </div>
     </div>
+    <div class="view" v-if="editModel" @click.self="$emit('change')">
+        <div class="view-container">
+            <div class="view-container-input">
+                <input type="text" v-model="object.name">
+            </div>
+            <button class="view-button" @click="update">Сохранить</button>
+        </div>
+    </div>
+    <div class="view" v-if="editName" @click.self="editName = false">
+        <div class="view-container">
+            <div class="view-container-input">
+                <input type="text" @input="inputValue($event)" :value="editing">
+            </div>
+            <button class="view-button" @click="$emit('save'), editing = ''">Сохранить</button>
+        </div>
+    </div>
 </template>
 <script lang="ts" setup>
 import draggable from 'vuedraggable';
@@ -37,12 +54,19 @@ const props = defineProps({
     model: {
         required: true,
         type: Boolean
+    },
+    editModel: {
+        required: true,
+        type: Boolean
     }
 })
 
-const emits = defineEmits(['open'])
+const emits = defineEmits(['open', 'change', 'save'])
 
 const $router = useRouter()
+
+const editName = ref(false)
+const editing = ref('')
 
 const object = {
     name: "Новый блок",
@@ -95,7 +119,16 @@ const deleteBlock = async (index: Number) => {
         })
 }
 
+const toggleEdit = async (index: Number) => {
+    const current = props.list.blocks
+    editName.value = !editName.value
 
+    editing.value = props.list.blocks[index].name
+}
+
+const inputValue = (e: any | KeyboardEvent) => {
+    editing.value = e.target.value
+}
 
 </script>
 <style lang="scss" scoped>
