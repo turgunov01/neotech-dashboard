@@ -13,12 +13,13 @@
                             <button @click="deleteBlock(element.id)">delete</button>
                             <button @click="toggleEdit(element.id)">edit name</button>
                         </div>
-                        <div class="view" :class="`edit-modal edit-modal-name-${element.id}`">
+                        <div class="view" :class="`edit-modal edit-modal-name-${element.id}`"
+                            @click="closeModal($event)">
                             <div class="view-container">
                                 <div class="view-container-input">
                                     <input type="text" v-model="element.name">
                                 </div>
-                                <button class="view-button" @click="update">Добавить</button>
+                                <button class="view-button" @click="$emit('save')">Сохранить</button>
                             </div>
                         </div>
                     </li>
@@ -32,7 +33,7 @@
             <div class="view-container-input">
                 <input type="text" v-model="object.name">
             </div>
-            <button class="view-button" @click="$emit('save')">Добавить</button>
+            <button class="view-button" @click="update">Добавить</button>
         </div>
     </div>
 </template>
@@ -115,13 +116,35 @@ const toggleEdit = async (index: Number) => {
     items.forEach((block: any) => {
         block.classList.remove('active')
     })
+    const menus = document.querySelectorAll(".context-menu")
+    menus.forEach(menu => {
+        menu.classList.remove('active')
+    })
 
     item?.classList.add('active')
 }
 
+const closeModal = (event: any) => {
+    event.target.classList.remove('active')
+}
+
+onMounted(() => {
+    window.onscroll = () => {
+        const layer = document.querySelector(".layers-container")
+        const top = layer?.getBoundingClientRect().top
+
+        if(window.scrollY > 130) {
+            layer?.classList.add("fixed")
+        } else {
+            layer?.classList.remove("fixed")
+        }
+    }
+})
+
 </script>
 <style lang="scss" scoped>
 @import '../../../src/assets/scss/pages.scss';
+
 
 .edit-modal {
     display: none;
@@ -129,5 +152,9 @@ const toggleEdit = async (index: Number) => {
     &.active {
         display: flex
     }
+}
+
+.view-button {
+    text-align: center;
 }
 </style>
