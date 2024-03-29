@@ -29,5 +29,10 @@ export async function checkToken() {
     return null
 }
 
+export async function clearStoreData(data: string) {
+    const store = localStorage
+    store.removeItem(data)
+}
 
-export default { storeData, checkToken, getStoreData }
+
+export default { storeData, checkToken, getStoreData, clearStoreData }
