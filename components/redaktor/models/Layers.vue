@@ -27,22 +27,6 @@
             <button class="view-button" @click="update">Добавить</button>
         </div>
     </div>
-    <div class="view" v-if="editModel" @click.self="$emit('change')">
-        <div class="view-container">
-            <div class="view-container-input">
-                <input type="text" v-model="object.name">
-            </div>
-            <button class="view-button" @click="update">Сохранить</button>
-        </div>
-    </div>
-    <div class="view" v-if="editName" @click.self="editName = false">
-        <div class="view-container">
-            <div class="view-container-input">
-                <input type="text" @input="inputValue($event)" :value="editing">
-            </div>
-            <button class="view-button" @click="$emit('save'), editing = ''">Сохранить</button>
-        </div>
-    </div>
 </template>
 <script lang="ts" setup>
 import draggable from 'vuedraggable';
@@ -61,12 +45,11 @@ const props = defineProps({
     }
 })
 
-const emits = defineEmits(['open', 'change', 'save'])
+const emits = defineEmits(['open', 'save'])
 
 const $router = useRouter()
 
 const editName = ref(false)
-const editing = ref('')
 
 const object = {
     name: "Новый блок",
@@ -123,11 +106,6 @@ const toggleEdit = async (index: Number) => {
     const current = props.list.blocks
     editName.value = !editName.value
 
-    editing.value = props.list.blocks[index].name
-}
-
-const inputValue = (e: any | KeyboardEvent) => {
-    editing.value = e.target.value
 }
 
 </script>
