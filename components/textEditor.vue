@@ -5,27 +5,14 @@
         <button class="element-fontSize-dec" @click="content.fontSize--">
           -
         </button>
-        <input
-          type="text"
-          placeholder="16"
-          class="element-fontSize-value"
-          maxlength="3"
-          v-model="content.fontSize"
-        />
+        <input type="text" placeholder="16" class="element-fontSize-value" maxlength="3" v-model="content.fontSize" />
         <button class="element-fontSize-inc" @click="content.fontSize++">
           +
         </button>
       </div>
       <div class="element-fontStyle">
-        <button
-          class="element-fontStyle-bold element-fontStyle-options"
-          @click="toggle()"
-        >
-          <img
-            src="../src/assets/images/bold.svg"
-            class="element-fontStyle-bold-icon"
-            alt=""
-          />
+        <button class="element-fontStyle-bold element-fontStyle-options" @click="toggle()">
+          <img src="../src/assets/images/bold.svg" class="element-fontStyle-bold-icon" alt="" />
           <div class="element-fontStyle-dropdown" v-if="dropdown">
             <span class="element-fontStyle-spans">
               <p @click="styling(4 * 100)" :class="`${4 * 100}`">regular</p>
@@ -34,11 +21,7 @@
           </div>
         </button>
         <button class="element-fontStyle-bold" @click="underline()">
-          <img
-            src="../src/assets/images/underline.svg"
-            class="element-fontStyle-underline-icon"
-            alt=""
-          />
+          <img src="../src/assets/images/underline.svg" class="element-fontStyle-underline-icon" alt="" />
         </button>
       </div>
       <div class="element-fontColor">
@@ -50,121 +33,60 @@
           <img src="../src/assets/images/chevron.svg" alt="" />
         </div>
         <div class="element-fontColor-dropdown" v-if="hexOpened">
-          <input
-            type="color"
-            placeholder="Код цвета"
-            v-model="content.fontColor"
-            @input="color($event)"
-          />
-          <span
-            class="element-fontColor-box"
-            :style="{
-              background: `${content.fontColor}`,
-            }"
-          ></span>
+          <input type="color" placeholder="Код цвета" v-model="content.fontColor" @input="color($event)" />
+          <span class="element-fontColor-box" :style="{
+      background: `${content.fontColor}`,
+    }"></span>
         </div>
       </div>
       <div class="element-lineHeight">
         <div class="element-lineHeight" @click="toggleHeight()">
           <button class="element-lineHeight-label" @click="toggleHeight()">
-            <img
-              src="../src/assets/images/color.svg"
-              @click="toggleHeight()"
-              alt=""
-            />
+            <img src="../src/assets/images/color.svg" @click="toggleHeight()" alt="" />
           </button>
-          <img
-            src="../src/assets/images/updown.svg"
-            @click="toggleHeight()"
-            alt=""
-          />
-          <img
-            src="../src/assets/images/chevron.svg"
-            @click="toggleHeight()"
-            alt=""
-          />
+          <img src="../src/assets/images/updown.svg" @click="toggleHeight()" alt="" />
+          <img src="../src/assets/images/chevron.svg" @click="toggleHeight()" alt="" />
         </div>
         <div class="element-lineHeight-dropdown" v-if="height">
-          <input
-            type="text"
-            placeholder="Высота текста"
-            v-model="content.lineHeight"
-            @input="lineHeight($event)"
-          />
+          <input type="text" placeholder="Высота текста" v-model="content.lineHeight" @input="lineHeight($event)" />
         </div>
       </div>
       <div class="element-styler">
         <button class="element-styler-bold">
-          <img
-            src="../src/assets/images/listing.svg"
-            class="element-styler-bold-icon"
-            alt=""
-          />
+          <img src="../src/assets/images/listing.svg" class="element-styler-bold-icon" alt="" />
         </button>
         <button class="element-styler-bold">
-          <img
-            src="../src/assets/images/numbering.svg"
-            class="element-styler-underline-icon"
-            alt=""
-          />
+          <img src="../src/assets/images/numbering.svg" class="element-styler-underline-icon" alt="" />
         </button>
         <button class="element-styler-bold">
           <div class="element-styler-positions">
-            <img
-              src="../src/assets/images/positioning.svg"
-              class="element-styler-underline-icon"
-              alt=""
-              id="left"
-            />
+            <img src="../src/assets/images/positioning.svg" class="element-styler-underline-icon" alt="" id="left" />
           </div>
           <img src="../src/assets/images/chevron.svg" alt="" />
         </button>
       </div>
       <div class="element-styler">
         <button class="element-styler-bold">
-          <img
-            src="../src/assets/images/link.svg"
-            class="element-styler-bold-icon"
-            alt=""
-          />
+          <img src="../src/assets/images/link.svg" class="element-styler-bold-icon" alt="" />
         </button>
         <button class="element-styler-bold">
-          <img
-            src="../src/assets/images/image.svg"
-            class="element-styler-underline-icon"
-            alt=""
-          />
+          <img src="../src/assets/images/image.svg" class="element-styler-underline-icon" alt="" />
         </button>
       </div>
     </div>
     <div class="element-content">
-      <div
-        class="element-content-view"
-        v-html="element.editorData"
-        v-if="!element.isView"
-        @dblclick="element.isView = !element.isView"
-      ></div>
-      <textarea
-        name="element-content-textarea"
-        cols="30"
-        rows="10"
-        v-if="element.isView"
-        v-model="element.text"
-        @input="update($event, element)"
-        :style="{
-          fontSize: `${content.fontSize / 10}rem`,
-          fontWeight: `${content.fontWeight}`,
-          textDecoration: `${content.textDecoration}`,
-          color: `${content.fontColor}`,
-          lineHeight: `${content.lineHeight / 10}rem`,
-        }"
-      >
+      <div class="element-content-view" v-html="element.editorData" v-if="!element.isView"
+        @dblclick="element.isView = !element.isView"></div>
+      <textarea name="element-content-textarea" cols="30" rows="10" v-if="element.isView" v-model="element.text"
+        @input="update($event, element)" :style="{
+      fontSize: `${content.fontSize / 10}rem`,
+      fontWeight: `${content.fontWeight}`,
+      textDecoration: `${content.textDecoration}`,
+      color: `${content.fontColor}`,
+      lineHeight: `${content.lineHeight / 10}rem`,
+    }">
       </textarea>
-      <button
-        class="element-save"
-        v-if="element.isView"
-        @click="save('underline')"
-      >
+      <button class="element-save" v-if="element.isView" @click="save('underline')">
         Сохранить
       </button>
     </div>
@@ -238,11 +160,9 @@ const save = (val: any) => {
     line-height: ${props.content.lineHeight / 10}rem;
     `;
 
-  const content = `<${props.element.type} style="${styles}" ${
-    props.element.type === "img" ? 'src=""' : ""
-  }>${props.element.type !== "img" ? props.element.text : ""}${
-    props.element.type !== "img" ? "</" + props.element.type + ">" : ""
-  }`;
+  const content = `<${props.element.type} style="${styles}" ${props.element.type === "img" ? 'src=""' : ""
+    }>${props.element.type !== "img" ? props.element.text : ""}${props.element.type !== "img" ? "</" + props.element.type + ">" : ""
+    }`;
 
   props.element.editorData = content;
   props.element.isView = false;
@@ -288,6 +208,7 @@ textarea {
     &-view {
       padding: 0.5rem;
     }
+
     & textarea {
       resize: none;
       margin-top: 0.9rem;
@@ -401,7 +322,7 @@ textarea {
     height: 4rem;
     position: relative;
 
-    & > .element-fontColor {
+    &>.element-fontColor {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -457,7 +378,7 @@ textarea {
     height: 4rem;
     position: relative;
 
-    & > .element-lineHeight {
+    &>.element-lineHeight {
       display: flex;
       align-items: center;
       justify-content: center;

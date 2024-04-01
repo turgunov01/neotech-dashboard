@@ -11,13 +11,24 @@
                 @click="$emit('class', $event), editor.chain().focus().toggleItalic().run()">
                 <img src="../../src/assets/editor-methods/italic.svg" alt="">
             </button>
+            <!-- <div class="buttons">
+                <button class="decrement">-</button>
+                <p class="element-fontSize"> {{ fontSize }} </p>
+                <button class="increment" @click="increment">+</button>
+            </div> -->
+            <button @click="editor.chain().focus().toggleUnderline().run()"
+                :class="{ 'is-active': editor.isActive('underline') }">
+                <img src="../../src/assets/editor-methods/underline.svg" alt="">
+            </button>
         </div>
         <editor-content :editor="editor" />
     </div>
 </template>
 
+
 <script>
 import StarterKit from '@tiptap/starter-kit'
+import Underline from '@tiptap/extension-underline'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 
 export default {
@@ -33,7 +44,12 @@ export default {
         modules: {
             required: true,
             type: Boolean
-        }
+        },
+        size: {
+            required: true,
+            type: Number,
+            default: 16
+        },
     },
 
     emits: ['update:modelValue', 'class'],
@@ -44,7 +60,12 @@ export default {
         }
     },
 
-    methods: {},
+    methods: {
+        increment() {
+            this.size++
+            console.log()
+        }
+    },
 
     watch: {
         modelValue(value) {
@@ -66,6 +87,7 @@ export default {
         this.editor = new Editor({
             extensions: [
                 StarterKit,
+                Underline
             ],
             content: this.modelValue,
             onUpdate: () => {
@@ -85,4 +107,9 @@ export default {
 
 <style scoped lang="scss">
 @import '../../src/assets/scss/buttons.scss';
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
 </style>
