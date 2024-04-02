@@ -43,8 +43,7 @@
                                         <div class="element" v-else-if="element.component === 'Button'">
                                             <div class="element-button">
                                                 <div class="element-button-visual">
-                                                    <RedaktorBlocksButtonEditor :element="element.button"
-                                                        :modules="false" />
+                                                    <RedaktorEditor v-model="element.button" :modules="true" />
                                                 </div>
                                                 <div class="element-button-labels">
                                                     <label :for="`element-button-background-${index}`"
