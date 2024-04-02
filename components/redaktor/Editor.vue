@@ -20,6 +20,10 @@
                 :class="{ 'is-active': editor.isActive('underline') }">
                 <img src="../../src/assets/editor-methods/underline.svg" alt="">
             </button>
+            <label class="color">
+                <input type="color" @input="editor.chain().focus().setColor($event.target.value).run()"
+                    :value="editor.getAttributes('textStyle').color">
+            </label>
         </div>
         <editor-content :editor="editor" />
     </div>
@@ -29,6 +33,9 @@
 <script>
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
+import { Color } from '@tiptap/extension-color'
+import TextStyle from '@tiptap/extension-text-style'
+import Text from '@tiptap/extension-text'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 
 export default {
@@ -84,10 +91,16 @@ export default {
     },
 
     mounted() {
+        Color.configure({
+            types: ['textStyle'],
+        })
         this.editor = new Editor({
             extensions: [
                 StarterKit,
-                Underline
+                Underline,
+                Text,
+                TextStyle,
+                Color,
             ],
             content: this.modelValue,
             onUpdate: () => {
@@ -111,5 +124,9 @@ export default {
 .buttons {
     display: flex;
     align-items: center;
+}
+
+.color {
+    width: 6rem;
 }
 </style>

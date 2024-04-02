@@ -20,6 +20,9 @@
   },
   "dependencies": {
     "@nuxtjs/toast": "^3.3.1",
+    "@tiptap/extension-color": "^2.2.4",
+    "@tiptap/extension-link": "^2.2.4",
+    "@tiptap/extension-text-style": "^2.2.4",
     "@tiptap/extension-underline": "^2.2.4",
     "crypto-js": "^4.2.0",
     "md5": "^2.3.0",
