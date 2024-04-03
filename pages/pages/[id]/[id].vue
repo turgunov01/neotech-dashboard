@@ -673,13 +673,13 @@ const redirectTo = async (e: MouseEvent) => {
 onMounted(async () => {
     await getData()
 
-    if (!Route.value.query) {
-        await $router.push({ path: `/pages/${getLanguage()}/${$router.currentRoute.value.params.id}`, query: { block: 0 } })
+    if (!list.value[Number(Route.value.id)].blocks[Route.value.query]) {
+        $router.push({ query: { block: 0 } })
         setTimeout(() => {
             location.reload()
-        }, 200);
+        }, 300);
     }
-
+    
     loaded.value = true
 })
 
