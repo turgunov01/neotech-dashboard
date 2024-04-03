@@ -34,7 +34,7 @@
                                             <button class="element-request-button">Нет</button>
                                         </div>
                                     </aside>
-                                    <div class="element-draggable">
+                                    <div class="element-draggable" v-if="element">
                                         <div class="element"
                                             v-if="element.component === 'Title' || element.component === 'Text'">
                                             <RedaktorEditor v-model="element.locale[lang].text" :modules="true"

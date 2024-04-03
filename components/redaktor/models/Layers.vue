@@ -9,9 +9,17 @@
                             {{ element.name }}
                         </nuxt-link>
                         <img src="../../../src/assets/burger.svg" alt="">
-                        <div :id="`layers-context-menu-${index}`" class="context-menu">
-                            <button @click="deleteBlock(element.id)">delete</button>
-                            <button @click="toggleEdit(element.id)">edit name</button>
+                        <div :id="`layers-context-menu-${index}`" @mouseenter="staycontext($event)"
+                            @mouseleave="removecontext($event)" class="context-menu">
+                            <button class="delete" @click="deleteBlock(element.id)">delete</button>
+                            <button class="edit" @click="toggleEdit(element.id)">edit</button>
+                            <div class="context-menu-parameters">
+                                <label :for="`context-menu-parameter-${index}`" class="context-menu-parameter">
+                                    <input :checked="true" type="checkbox" :id="`context-menu-parameter-${index}`"
+                                        @change="published($event)">
+                                    <p :class="`context-menu-parameter-${index}-span`">Показ</p>
+                                </label>
+                            </div>
                         </div>
                         <div class="view" :class="`edit-modal edit-modal-name-${element.id}`"
                             @click="closeModal($event)">
@@ -87,9 +95,24 @@ const contextmenu = (index: Number) => {
     menus.forEach(menu => {
         menu.classList.remove('active')
     })
-    if (context) {
-        context.classList.add("active")
+    context?.classList.toggle("active")
+}
+
+const staycontext = (e: any) => {
+    if (e) {
+        e.target.classList.add('active')
     }
+}
+
+const removecontext = (e: any) => {
+    setTimeout(() => {
+        e.target.classList.remove('active')
+    }, 4000);
+}
+
+const published = (event: any) => {
+    const isChecked = event.target.checked
+    console.log(isChecked)
 }
 
 const deleteBlock = async (index: Number) => {
@@ -133,7 +156,7 @@ onMounted(() => {
         const layer = document.querySelector(".layers-container")
         const top = layer?.getBoundingClientRect().top
 
-        if(window.scrollY > 130) {
+        if (window.scrollY > 130) {
             layer?.classList.add("fixed")
         } else {
             layer?.classList.remove("fixed")
@@ -156,5 +179,56 @@ onMounted(() => {
 
 .view-button {
     text-align: center;
+}
+
+.context {
+    &-menu {
+
+        & button {
+            text-transform: uppercase;
+            cursor: pointer;
+            height: 100%;
+            border-radius: unset;
+            transition: 300ms;
+
+            &:not(:first-of-type) {
+                border-top: .1rem solid #e5e5e5;
+            }
+
+            &:hover {
+                background: #e5e5e5;
+            }
+
+            &.delete {
+                color: red;
+            }
+
+            &.edit {
+                color: black
+            }
+        }
+
+        &-parameters {
+            padding: 0;
+        }
+
+        &-parameter {
+            display: flex;
+            border-top: .1rem solid #e5e5e5;
+            align-items: center;
+            justify-content: flex-start;
+            gap: .5rem;
+            border-radius: unset;
+            padding: 1rem;
+
+            & input {
+                width: max-content;
+            }
+
+            & p {
+                padding: 0;
+            }
+        }
+    }
 }
 </style>
