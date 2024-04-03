@@ -15,8 +15,8 @@
                             <button class="edit" @click="toggleEdit(element.id)">edit</button>
                             <div class="context-menu-parameters">
                                 <label :for="`context-menu-parameter-${index}`" class="context-menu-parameter">
-                                    <input :checked="true" type="checkbox" :id="`context-menu-parameter-${index}`"
-                                        @change="published($event)">
+                                    <input :checked="element.published" type="checkbox"
+                                        :id="`context-menu-parameter-${index}`" @change="published(element.id, $event)">
                                     <p :class="`context-menu-parameter-${index}-span`">Показ</p>
                                 </label>
                             </div>
@@ -110,9 +110,13 @@ const removecontext = (e: any) => {
     }, 4000);
 }
 
-const published = (event: any) => {
+const published = (value: any, event: any) => {
     const isChecked = event.target.checked
-    console.log(isChecked)
+
+    props.list.blocks[value].published = isChecked
+    props.list.blocks[value].archived = !isChecked
+
+    console.log(props.list.blocks[value])
 }
 
 const deleteBlock = async (index: Number) => {
