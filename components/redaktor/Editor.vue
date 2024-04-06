@@ -44,6 +44,12 @@
                     </button>
                 </div>
             </div>
+            <div class="fontSize">
+                <label class="fontSize-label">
+                    <input type="number" @input="changeSize($event, element)"
+                        :value="editor.getAttributes('textStyle').fontSize">
+                </label>
+            </div>
             <button class="link" @click.self="linkModal = !linkModal">
                 LINK
             </button>
@@ -91,11 +97,10 @@ export default {
             required: true,
             type: Boolean
         },
-        size: {
-            required: true,
+        element: {
+            required: false,
             type: Number,
-            default: 16
-        },
+        }
     },
 
     emits: ['update:modelValue', 'class'],
@@ -115,7 +120,24 @@ export default {
         },
         setLink(e) {
             const text = e.target.value
-            this.editor.commands.unsetLink()
+            console.log(text)
+        },
+        changeSize(event, element) {
+            const calculatedSize = `${event.target.value / 10}rem`
+
+            if (event.target.value < 0) alert(`Значение: "font-size" не может быть меньше нуля!`)
+
+            if (element.css) {
+                element.css.fontSize = calculatedSize
+
+            } else {
+                element.css = {
+                    fontSize: calculatedSize
+                }
+            }
+
+            console.log(element)
+
         }
     },
 

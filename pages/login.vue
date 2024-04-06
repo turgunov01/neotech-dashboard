@@ -28,6 +28,21 @@ const user = ref({
   password: ""
 })
 
+function getUserData() {
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+
+  fetch("https://ipinfo.io?token=ce894f2adc1c34", options)
+    .then((response: Response) => response.json())
+    .then(response => {
+      console.log(response)
+    })
+}
+
 const login = async () => {
   const options = {
     method: 'POST',
@@ -36,6 +51,7 @@ const login = async () => {
     },
     body: JSON.stringify(user.value)
   };
+
 
   await postUserData('/api/login', options)
     .then(response => response.json())

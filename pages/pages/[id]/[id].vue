@@ -31,16 +31,18 @@
                                         <div class="element-request-buttons">
                                             <button class="element-request-button"
                                                 @click="deleteNode(index, $event)">Да</button>
-                                            <button class="element-request-button">Нет</button>
+                                            <button class="element-request-button"
+                                                @click="closeDeleteModal">Нет</button>
                                         </div>
                                     </aside>
                                     <div class="element-draggable" v-if="element">
-                                        <div class="element"
+                                        <div :class="`element-item-${index}`" class="element"
                                             v-if="element.component === 'Title' || element.component === 'Text'">
-                                            <RedaktorEditor v-model="element.locale[lang].text" :modules="true"
-                                                @class="updateClass($event, element)" />
+                                            <RedaktorEditor v-model="element.locale[lang].text" :element="element"
+                                                :modules="true" @class="updateClass($event, element)" />
                                         </div>
-                                        <div class="element" v-else-if="element.component === 'Button'">
+                                        <div :class="`element-item-${index}`" class="element"
+                                            v-else-if="element.component === 'Button'">
                                             <div class="element-button">
                                                 <div class="element-button-visual">
                                                     <RedaktorEditor v-model="element.button" :modules="true" />
@@ -84,7 +86,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="element" v-else-if="element.component === 'Slider'">
+                                        <div :class="`element-item-${index}`" class="element"
+                                            v-else-if="element.component === 'Slider'">
                                             <div class="element-sliders">
                                                 <div class="element-slider" :id="`element-${index}`"
                                                     v-for="(slide, index) in element.slides">
@@ -93,7 +96,8 @@
                                                             <span>
                                                                 Название слайдера:
                                                             </span>
-                                                            <RedaktorEditor :modules="false" v-model="slide.heading" />
+                                                            <RedaktorEditor :modules="false"
+                                                                v-model="slide.locale[locale].heading" />
                                                         </p>
                                                         <img src="../../../src/assets/blocks/chevron.svg"
                                                             class="element-slider-chevron" alt="">
@@ -124,10 +128,12 @@
                                                             </output>
                                                         </div>
                                                         <div class="element-slider-title">
-                                                            <RedaktorEditor :modules="false" v-model="slide.title" />
+                                                            <RedaktorEditor :modules="false"
+                                                                v-model="slide.locale[locale].title" />
                                                         </div>
                                                         <div class="element-slider-title">
-                                                            <RedaktorEditor :modules="false" v-model="slide.text" />
+                                                            <RedaktorEditor :modules="false"
+                                                                v-model="slide.locale[locale].text" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -135,7 +141,8 @@
                                                     @click="append(element.slides)">Добавить новый слайд</button>
                                             </div>
                                         </div>
-                                        <div class="element" v-if="element.component === 'Image'">
+                                        <div :class="`element-item-${index}`" class="element"
+                                            v-if="element.component === 'Image'">
                                             <label class="image-box" :for="`image-box-${'block-' + Route.id}-${index}`"
                                                 v-if="!element.image.src.length">
                                                 <div class="element-icon">
@@ -157,11 +164,27 @@
                                                 <img :src="element.image.src" alt="">
                                             </output>
                                         </div>
-                                        <div class="element"
+                                        <div :class="`element-item-${index}`" class="element"
+                                            @contextmenu="openParams(index, $event)"
                                             v-if="element.component === 'Column' || element.component === 'Columns'">
                                             <div class="element-columns">
                                                 <div class="element-column" v-for="(column, index) in element.columns"
                                                     :key="index">
+                                                    <div class="element-column-context"
+                                                        :id="`element-column-border-${index}`">
+                                                        <label :for="`element-column-border-dashed-${index}`">
+                                                            <div :class="`element-column-border-dashed-${index}`">
+                                                                <input type="radio" :name="`element__border-${index}`"
+                                                                    :id="`element-column-border-dashed-${index}`">
+                                                                <p class="element-column-border-dashed-type">Dashed</p>
+                                                            </div>
+                                                            <div :class="`element-column-border-dashed-${index}`">
+                                                                <input type="radio" :name="`element__border-${index}`"
+                                                                    :id="`element-column-border-dashed-${index}`">
+                                                                <p class="element-column-border-dashed-type">Solid</p>
+                                                            </div>
+                                                        </label>
+                                                    </div>
                                                     <label class="image-box"
                                                         :for="`image-box-${'block-' + Route.id}-${index}`"
                                                         v-if="!column.image.src">
@@ -284,6 +307,7 @@
 import draggable from 'vuedraggable';
 // Using references to use dynamic variables
 import { ref } from 'vue'
+const locale = getLanguage()
 
 const loaded = ref(false)
 
@@ -364,6 +388,15 @@ const toggleModal = (e: MouseEvent | any) => {
     })
 
     e.target.nextSibling.classList.add("active")
+}
+
+const closeDeleteModal = () => {
+    deleteModal.value = !deleteModal.value
+
+    const modals = document.querySelectorAll(".element-delete-request")
+    modals.forEach((modal: any) => {
+        modal.classList.remove("active")
+    })
 }
 
 // Add Class to block
@@ -648,38 +681,56 @@ const deleteNode = async (val: Number | any, e: MouseEvent | any) => {
 }
 
 // Change localization on the localStorage
-const redirectTo = async (e: MouseEvent) => {
-    const store = localStorage.getItem('lang')
+const redirectTo = async (e: any) => {
+    const route = `/pages/${e.target.id}/${Route.value.id}`
 
-    if (store) {
-        await localStorage.removeItem('lang')
-        await localStorage.setItem("lang", e.target?.id)
+    await clearStoreData("lang")
+    await storeData("lang", e.target.id)
 
-        $router.push({ path: `/pages/${await getLanguage()}/${$router.currentRoute.value.params.id}` })
-        setTimeout(() => {
-            location.reload()
-        }, 1000);
-        return
-    }
+    $router.push({ path: route })
 
-    await localStorage.setItem("lang", e.target?.id)
-    $router.push({ path: `/pages/${await getLanguage()}/${$router.currentRoute.value.params.id}` })
     setTimeout(() => {
         location.reload()
-    }, 400);
+    }, 500);
     return
+}
+
+const getMousePosition = (target: string) => {
+    const block = document.querySelector(target)
+
+    const rect = block?.getBoundingClientRect()
+
+    const getLeft = () => rect?.left
+    const getTop = () => rect?.top
+
+
+    return { getLeft, getTop }
+
+}
+
+const openParams = (index: number, event: EventTarget | any) => {
+    const element = document.querySelector(`.element-item-${index}`)
+    const modal = element?.querySelector(`.element-column-context`)
+    modal?.classList.add("opened")
+
+
+    const top = event.clientY
+    const left = event.clientX
+
+    console.log(top, left)
+
 }
 
 onMounted(async () => {
     await getData()
 
     if (!list.value[Number(Route.value.id)].blocks[Route.value.query]) {
-        $router.push({ query: { block: 0 } })
+        $router.push({ path: $router.currentRoute.value.path, query: { block: 0 } })
         setTimeout(() => {
             location.reload()
         }, 300);
     }
-    
+
     loaded.value = true
 })
 
@@ -720,7 +771,6 @@ onMounted(async () => {
 }
 
 .element {
-
     &-request {
         &-buttons {
             display: flex;

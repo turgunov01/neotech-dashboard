@@ -6,7 +6,8 @@
 <script lang="ts" setup>
 const $router = useRouter()
 onMounted(async () => {
-    await $router.push("/pages/" + getLanguage() + "/0")
+    const locale = await getLanguage()
+    await $router.push("/pages/" + locale + "/0")
     setTimeout(() => {
         location.reload()
     }, 1000);
