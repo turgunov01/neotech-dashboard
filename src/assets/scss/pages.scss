@@ -1,4 +1,6 @@
 .pages {
+    overflow: hidden;
+
     &-container {
         max-width: 100%;
         padding: 3rem;
@@ -263,9 +265,15 @@
             row-gap: .8rem;
 
             &-output {
-                max-width: 50rem;
+                max-width: 40rem;
                 display: flex;
+                background-color: #efefef;
+                width: 100%;
 
+                & img {
+                    width: 100%;
+                    height: auto;
+                }
             }
         }
     }
@@ -352,6 +360,8 @@
             & select {
                 background: unset;
                 border: unset;
+                font-size: 1.6rem;
+                width: max-content;
 
                 & option {
                     color: #0054FF;
