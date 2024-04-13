@@ -1,7 +1,7 @@
 <template>
     <div class="layers">
         <div class="layers-container">
-            <draggable :list="list.blocks" class="layers-list">
+            <draggable :list="(list as any).blocks" class="layers-list">
                 <template #item="{ element, index }">
                     <li class="layers-item" @contextmenu.prevent="contextmenu(element.id)"
                         :class="Number($router.currentRoute.value.query.block) == index ? 'active' : ''">
@@ -33,10 +33,10 @@
                     </li>
                 </template>
             </draggable>
-            <button class="layers-button" @click="$emit('open')">Добавить блок</button>
+            <button class="layers-button" @click="open()">Добавить блок</button>
         </div>
     </div>
-    <div class="view" v-if="model" @click.self="$emit('open')">
+    <div class="view" v-if="model === true" @click.self="open()">
         <div class="view-container">
             <div class="view-container-input">
                 <input type="text" v-model="object.name">
@@ -52,17 +52,15 @@ const props = defineProps({
         type: Array,
         required: true
     },
-    model: {
-        required: true,
-        type: Boolean
-    },
     editModel: {
         required: true,
         type: Boolean
     }
 })
 
-const emits = defineEmits(['open', 'save'])
+const model = ref(false)
+
+const emits = defineEmits(['save'])
 
 const $router = useRouter()
 
@@ -77,16 +75,16 @@ const refresh = () => {
     }, 300);
 }
 
+const open = () => {
+    model.value = !model.value
+}
+
 const update = async () => {
     await postIndexData(`/pages/${$router.currentRoute.value.params.id}`, JSON.stringify(object))
-        .then(response => response.json())
-        .then((response: any) => {
-            console.log(response.message)
-            props.model = false
-            setTimeout(() => {
-                location.reload()
-            }, 300);
-        })
+
+    setTimeout(() => {
+        location.reload()
+    }, 300);
 }
 
 const contextmenu = (index: Number) => {
@@ -113,10 +111,10 @@ const removecontext = (e: any) => {
 const published = (value: any, event: any) => {
     const isChecked = event.target.checked
 
-    props.list.blocks[value].published = isChecked
-    props.list.blocks[value].archived = !isChecked
+        (props.list as any).blocks[value].published = true ? false : true;
+    (props.list as any).blocks[value].archived = false ? true : false;
 
-    console.log(props.list.blocks[value])
+    console.log((props.list as any).blocks[value])
 }
 
 const deleteBlock = async (index: Number) => {

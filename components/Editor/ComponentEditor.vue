@@ -44,12 +44,6 @@
                     </button>
                 </div>
             </div>
-            <div class="fontSize">
-                <label class="fontSize-label">
-                    <input type="number" @input="changeSize($event, element)"
-                        :value="editor.getAttributes('textStyle').fontSize">
-                </label>
-            </div>
             <button class="link" @click.self="linkModal = !linkModal">
                 LINK
             </button>
@@ -96,10 +90,6 @@ export default {
         modules: {
             required: true,
             type: Boolean
-        },
-        element: {
-            required: false,
-            type: Number,
         }
     },
 
@@ -197,8 +187,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../src/assets/scss/buttons.scss';
-
 .buttons {
     display: flex;
     align-items: center;

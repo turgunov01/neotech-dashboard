@@ -16,7 +16,7 @@ export async function apiDataFetch(uri: any, headers: any) {
                 }
             })
     } else {
-        $router.push({ path: "/login" })
+        useRouter().push({ path: "/login" })
     }
 }
 
@@ -59,33 +59,48 @@ export async function postIndexData(uri: String | any, _body: any) {
         },
         body: _body
     })
+        .then(response => response.json())
+        .then(response => console.log(response))
 }
 
 // POST Authentification
-export async function postUserData(uri: any, headers: any) {
+export async function postUserData(uri: any, user: any) {
     const base = baseURI()
 
     const token = await checkToken()
     const $router = useRouter()
 
-    return fetch(`${base}${uri}`, headers)
-}
-
-// POST Image 
-export async function postImage(uri: any, formData: FormData) {
-    const base = baseURI()
-
-    const token = await checkToken()
-
-    return fetch(`${base}${uri}`, {
-        method: "POST",
+    const options = {
+        method: 'POST',
         headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Language": await getLanguage(),
-            'Content-Type': 'multipart/form-data;'
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
         },
-        body: formData
-    })
+        body: JSON.stringify(user.value)
+    };
+
+    return fetch(`${base}${uri}`, options)
+        .then(response => response.json())
+        .then(response => {
+            const data = response.data
+
+            if (data.token) {
+                storeData("Authorization", data.token)
+                storeData("username", user.value.username)
+                storeData("password", user.value.password)
+                $router.push({
+                    path: "/dashboard"
+                })
+
+                console.log("Logged In!")
+            }
+        })
+        .catch(err => console.error(err))
+        .finally(() => {
+            setTimeout(() => {
+                console.clear()
+            }, 1000);
+        })
 }
 
 // DELETE Content

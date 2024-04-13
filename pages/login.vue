@@ -44,30 +44,7 @@ function getUserData() {
 }
 
 const login = async () => {
-  const options = {
-    method: 'POST',
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user.value)
-  };
-
-
-  await postUserData('/api/login', options)
-    .then(response => response.json())
-    .then(response => {
-      const data = response.data
-
-      if (data.token) {
-        storeData("Authorization", data.token)
-        storeData("username", user.value.username)
-        storeData("password", user.value.password)
-        $router.push({
-          path: "/dashboard"
-        })
-      }
-    })
-    .catch(err => console.error(err));
+  await postUserData('/api/login', user.value)
 }
 
 

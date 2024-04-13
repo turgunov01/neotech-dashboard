@@ -4,15 +4,7 @@ export default defineNuxtConfig({
   ssr: false,
   spaLoadingTemplate: true,
   css: ['~/src/assets/scss/style.scss'],
-  vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@use "@/src/assets/scss/colors.scss" as *;'
-        }
-      }
-    }
-  },
+  vite: {},
   modules: ["nuxt-tiptap-editor"],
   tiptap: {
     prefix: "Tiptap", //prefix for Tiptap imports, composables not included

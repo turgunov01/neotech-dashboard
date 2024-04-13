@@ -2,245 +2,42 @@
     <div class="pages" v-if="loaded">
         <div class="pages-wrapper">
             <div class="pages-container">
-                <h1 class="pages-title">{{ list[Number(Route.id)].name }}</h1>
-                <div class="pages-locale">
-                    <button @click="redirectTo($event)" id="ru"
-                        :class="$router.currentRoute.value.path.includes('ru') ? 'active' : ''"
-                        class="pages-locale-button">Русский</button>
-                    <button @click="redirectTo($event)" id="en"
-                        :class="$router.currentRoute.value.path.includes('en') ? 'active' : ''"
-                        class="pages-locale-button">Английский</button>
-                    <button @click="redirectTo($event)" id="uz"
-                        :class="$router.currentRoute.value.path.includes('uz') ? 'active' : ''"
-                        class="pages-locale-button">Узбекский</button>
-                </div>
+                <h1 class="pages-title">{{ (list[Number(Route.id)] as any).name }}</h1>
+                <Locales />
             </div>
             <div class="pages-content">
-                <RedaktorModelsLayers :list="list[Number(Route.id)]" :model="model" :edit-model="editModel"
-                    @save="pageUpdate" @open="model = !model" />
-                <div class="pages-editor" v-if="list[Number(Route.id)].blocks && list[Number(Route.id)].blocks.length">
+                <EditorModelsLayers :list="list[Number(Route.id)]" :edit-model="editModel" />
+                <div class="pages-editor"
+                    v-if="(list[Number(Route.id)] as any).blocks && (list[Number(Route.id)] as any).blocks.length">
                     <div class="pages-editor-drag">
-                        <draggable :list="list[Number(Route.id)].blocks[Route.query].components">
+                        <draggable :list="(list[Number(Route.id)] as any).blocks[Route.query as any].components"
+                            handle=".burger">
                             <template #item="{ element, index }" class="element">
                                 <div class="element-selector">
-                                    <img src="../../../src/assets/burger.svg" @click="toggleModal($event)" alt="">
-                                    <aside class="element-delete-request">
-                                        <p class="element-request-text">
-                                            Удалить блок?
-                                        </p>
-                                        <div class="element-request-buttons">
-                                            <button class="element-request-button"
-                                                @click="deleteNode(index, $event)">Да</button>
-                                            <button class="element-request-button"
-                                                @click="closeDeleteModal">Нет</button>
-                                        </div>
-                                    </aside>
-                                    <div class="element-draggable" v-if="element">
-                                        <div :class="`element-item-${index}`" class="element"
-                                            v-if="element.component === 'Title' || element.component === 'Text'">
-                                            <RedaktorEditor v-model="element.locale[lang].text" :element="element"
-                                                :modules="true" @class="updateClass($event, element)" />
-                                        </div>
-                                        <div :class="`element-item-${index}`" class="element"
-                                            v-else-if="element.component === 'Button'">
-                                            <div class="element-button">
-                                                <div class="element-button-visual">
-                                                    <RedaktorEditor v-model="element.button" :modules="true" />
-                                                </div>
-                                                <div class="element-button-labels">
-                                                    <label :for="`element-button-background-${index}`"
-                                                        class="element-button-label">
-                                                        <p class="element-button-label-title">Выбор фона цвета кнопки
-                                                        </p>
-                                                        <div class="element-button-label-rect"
-                                                            :style="{ backgroundColor: element.button.backgroundColor }">
-                                                        </div>
-                                                        <input :id="`element-button-background-${index}`" hidden
-                                                            type="color"
-                                                            @input="color($event, element.button.backgroundColor)" />
-                                                    </label>
-                                                    <label :for="`element-button-border-${index}`"
-                                                        class="element-button-label">
-                                                        <p class="element-button-label-title">Выбор цвета контура кнопки
-                                                        </p>
-                                                        <div class="element-button-label-rect"
-                                                            :style="{ borderColor: element.button.borderColor }"></div>
-                                                        <input :id="`element-button-border-${index}`" hidden
-                                                            type="color"
-                                                            @input="color($event, element.button.borderColor)" />
-                                                    </label>
-                                                    <div class="element-button-linker">
-                                                        <p class="element-button-linker-title">Открыть -</p>
-                                                        <select :id="`element-button-route-${index}-${element.name}`"
-                                                            @change="selected($event, element)">
-                                                            <option value="/" selected disabled>Выберите страницу
-                                                            </option>
-                                                            <option v-for="(  route, index  ) in list"
-                                                                :value="route ? route.route : '/'"> {{ route.name }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div :class="`element-item-${index}`" class="element"
-                                            v-else-if="element.component === 'Slider'">
-                                            <div class="element-sliders">
-                                                <div class="element-slider" :id="`element-${index}`"
-                                                    v-for="(  slide, index  ) in   element.slides  ">
-                                                    <div class="element-slider-text">
-                                                        <p class="element-slider-name">
-                                                            <span>
-                                                                Название слайдера:
-                                                            </span>
-                                                            <RedaktorEditor :modules="false"
-                                                                v-model="slide.locale[locale].heading" />
-                                                        </p>
-                                                        <img src="../../../src/assets/blocks/chevron.svg"
-                                                            class="element-slider-chevron" alt="">
-                                                    </div>
-                                                    <div class="element-slider-content">
-                                                        <div class="element-slider-image">
-                                                            <label class="image-box"
-                                                                :for="`slider-image-box-${'block-' + Route.id}-${index}`"
-                                                                v-if="!slide.image.src.length">
-                                                                <div class="element-icon">
-                                                                    <img src="../../../src/assets/editor-methods/upload.svg"
-                                                                        alt="">
-                                                                </div>
-                                                                <div class="element-name">
-                                                                    <p class="element-text">Перетащите изображение сюда
-                                                                        или <span>загрузите изображение</span>
-                                                                    </p>
-                                                                    <p class="element-text">
-                                                                        Формат: jpeg, png, svg.
-                                                                    </p>
-                                                                </div>
-                                                                <input type="file" @change="upload($event, slide.image)"
-                                                                    hidden
-                                                                    :id="`slider-image-box-${'block-' + Route.id}-${index}`">
-                                                            </label>
-                                                            <output class="image-box-output" v-else>
-                                                                <img :src="slide.image.src" alt="">
-                                                            </output>
-                                                        </div>
-                                                        <div class="element-slider-title">
-                                                            <RedaktorEditor :modules="false"
-                                                                v-model="slide.locale[locale].title" />
-                                                        </div>
-                                                        <div class="element-slider-title">
-                                                            <RedaktorEditor :modules="false"
-                                                                v-model="slide.locale[locale].text" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button class="element-slider-button"
-                                                    @click="append(element.slides)">Добавить новый слайд</button>
-                                            </div>
-                                        </div>
-                                        <div :class="`element-item-${index}`" class="element"
-                                            v-if="element.component === 'Image'">
-                                            <label class="image-box" :for="`image-box-${'block-' + Route.id}-${index}`"
-                                                v-if="!element.image.src.length">
-                                                <div class="element-icon">
-                                                    <img src="../../../src/assets/editor-methods/upload.svg" alt="">
-                                                </div>
-                                                <div class="element-name">
-                                                    <p class="element-text">Перетащите изображение сюда
-                                                        или <span>загрузите изображение</span>
-                                                    </p>
-                                                    <p class="element-text">
-                                                        Формат: jpeg, png, svg.
-                                                    </p>
-                                                </div>
-                                                <input type="file" hidden ref="fileInput"
-                                                    @change="upload($event, element.image)"
-                                                    :id="`image-box-${'block-' + Route.id}-${index}`">
-                                            </label>
-                                            <output class="image-box-output" v-else>
-                                                <img :src="element.image.src" alt="">
-                                            </output>
-                                        </div>
-                                        <div :class="`element-item-${index}`" class="element"
-                                            @contextmenu="openParams(index, $event)"
-                                            v-if="element.component === 'Column' || element.component === 'Columns'">
-                                            <div class="element-columns">
-                                                <div class="element-column"
-                                                    v-for="(  column, index  ) in   element.columns  " :key="index">
-                                                    <div class="element-column-context"
-                                                        :id="`element-column-border-${index}`">
-                                                        <label :for="`element-column-border-dashed-${index}`">
-                                                            <div :class="`element-column-border-dashed-${index}`">
-                                                                <input type="radio" :name="`element__border-${index}`"
-                                                                    :id="`element-column-border-dashed-${index}`">
-                                                                <p class="element-column-border-dashed-type">Dashed</p>
-                                                            </div>
-                                                            <div :class="`element-column-border-dashed-${index}`">
-                                                                <input type="radio" :name="`element__border-${index}`"
-                                                                    :id="`element-column-border-dashed-${index}`">
-                                                                <p class="element-column-border-dashed-type">Solid</p>
-                                                            </div>
-                                                        </label>
-                                                    </div>
-                                                    <label class="image-box"
-                                                        :for="`image-box-${'block-' + Route.id}-${index}`"
-                                                        v-if="!column.image.src">
-                                                        <div class="element-icon">
-                                                            <img src="../../../src/assets/editor-methods/upload.svg"
-                                                                alt="">
-                                                        </div>
-                                                        <div class="element-name">
-                                                            <p class="element-text">Перетащите изображение сюда
-                                                                или <span>загрузите изображение</span>
-                                                            </p>
-                                                            <p class="element-text">
-                                                                Формат: jpeg, png, svg.
-                                                            </p>
-                                                        </div>
-                                                        <input type="file" hidden ref="fileInput"
-                                                            @change="upload($event, column.image)"
-                                                            :id="`image-box-${'block-' + Route.id}-${index}`">
-                                                    </label>
-                                                    <output class="image-box-output" v-else>
-                                                        <img :src="column.image.src" alt="">
-                                                    </output>
-                                                    <div class="element-column-textarea">
-                                                        <div class="element-column-title">
-                                                            <RedaktorEditor :modules="true" v-model="column.title" />
-                                                        </div>
-                                                        <div class="element-column-text">
-                                                            <RedaktorEditor :modules="true" v-model="column.text" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="element-column-button"
-                                                @click="appendColumn(element.columns)">Добавить новую
-                                                колонну</button>
-                                        </div>
-                                    </div>
+                                    <img src="../../../src/assets/burger.svg" class="burger"
+                                        @click="toggleModal($event)" alt="">
+                                    <FloatingDeleteMenu :identificator="index" @delete="deleteNode(index, $event)"
+                                        @close="closeDeleteModal" />
+                                    <EditorTemplates :identificator="index" :element="element"
+                                        @update="updateClass($event, element)" />
                                 </div>
                             </template>
                         </draggable>
                     </div>
-                    <div class="element-event">
-                        <button class="pages-button" @click="position">+</button>
-                        <div class="element-event-left">
-                            <button class="element-event-save" @click="pageUpdate()">Сохранить</button>
-                        </div>
-                    </div>
+                    <AddBlock :data="list" @position="position" />
                 </div>
             </div>
         </div>
     </div>
-    <FloatingMenu />
+    <FloatingMenu :top="asideTop" :left="asideLeft" :list="list" @convert="opened = !opened" v-if="opened" />
 </template>
 
 <script lang="ts" setup>
 import draggable from 'vuedraggable';
 // Using references to use dynamic variables
-import { ref } from 'vue'
-import FloatingMenu from '~/components/redaktor/models/FloatingMenu.vue';
+import FloatingMenu from '~/components/Editor/models/FloatingMenu.vue';
+import FloatingDeleteMenu from '~/components/Editor/models/FloatingDeleteMenu.vue';
+
 const locale = getLanguage()
 
 const loaded = ref(false)
@@ -279,7 +76,7 @@ const getData = async () => {
         .then((response: any) => response.json())
         .then((response: Response | any) => {
             response.data.pages.forEach((pages: Object | any) => {
-                list.value.push(pages)
+                list.value.push(pages as never);
             })
 
             // console.log(list.value[Route.value.id].blocks[Route.value.query].components)
@@ -316,12 +113,21 @@ const currentComponent = async () => {
 // Toggling the delete window
 const toggleModal = (e: MouseEvent | any) => {
     deleteModal.value = !deleteModal.value
-    const modals = document.querySelectorAll(".element-delete-request")
-    modals.forEach((modal: any) => {
-        modal.classList.remove("active")
-    })
+    if (deleteModal.value === true) {
+        const modals = document.querySelectorAll(".element-delete-request")
 
-    e.target.nextSibling.classList.add("active")
+        modals.forEach((modal: any) => {
+            modal.classList.remove("active")
+        })
+
+        e.target.nextSibling.classList.add("active")
+    } else {
+        const modals = document.querySelectorAll(".element-delete-request")
+
+        modals.forEach((modal: any) => {
+            modal.classList.remove("active")
+        })
+    }
 }
 
 const closeDeleteModal = () => {
@@ -342,199 +148,21 @@ const updateClass = (e: MouseEvent | any, fields: Object | any) => {
 // aside positioning on active\clicked
 
 // Aside positions for further deletion of the components 
-const asideTop = ref(0)
-const asideLeft = ref(0)
+const asideTop = ref("0")
+const asideLeft = ref("0")
 
 // Function which calculates the position and the distances for aside
 const position = () => {
     const button = document.querySelector(".pages-button")
 
     const rect = button?.getBoundingClientRect()
-    console.log(rect)
 
-    asideTop.value = `${(rect?.top + 40) / 10}rem`
-    asideLeft.value = `${(rect?.left) / 10}rem`
+    asideTop.value = `${((rect?.top ?? 0) + 40) / 10}rem`
+    asideLeft.value = `${(rect?.left ?? 0) / 10}rem`
     opened.value = !opened.value
-
 }
 
-// Create an element with the target component/dataset ("data-type")
-const create = (val: String) => {
-    const object = {
-        name: `Block-${val}`,
-        component: val,
-        locale: {
-            en: {
-                text: ""
-            },
-            ru: {
-                text: ""
-            },
-            uz: {
-                text: ""
-            },
-        },
-        url: {},
-        slides: [],
-        image: {},
-        video: {},
-        button: {},
-        columns: []
-    }
 
-
-
-    switch (val) {
-        case "Title":
-            object.locale["ru"].text = "<h1>Новый заголовок</h1>"
-            object.locale["en"].text = "<h1>Newborn Title</h1>"
-            object.locale["uz"].text = "<h1>Yangi Titul</h1>"
-            break;
-        case "Text":
-            object.locale["ru"].text = "<p>Новый Текст</p>"
-            object.locale["en"].text = "<p>New Text</p>"
-            object.locale["uz"].text = "<p>Yangi Tekst</p>"
-            break;
-        case "Button":
-            object.button = {
-                locale: {
-                    ru: {
-                        text: "Новая кнопка",
-                        url: {
-                            text: "Ссылка",
-                            placeholder: "Введите ссылку"
-                        }
-                    },
-                    en: {
-                        text: "New Button",
-                        url: {
-                            text: "Link",
-                            placeholder: "Enter link"
-                        }
-                    },
-                    uz: {
-                        text: "Yangi knopka",
-                        url: {
-                            text: "Knopka",
-                            placeholder: "Ssilkani kiriting"
-                        }
-                    }
-                },
-                route: "",
-                color: "",
-                backgroundColor: "",
-                borderColor: ""
-            }
-            break;
-        case "Column":
-            const newColumn = {
-                locale: {
-                    en: {
-                        title: "<h1>New Column Title</h1>",
-                        text: "<p>New Column Text</p>",
-                    },
-                    ru: {
-                        title: "<h1>Новый заголовок</h1>",
-                        text: "<p>Новый текст</p>",
-                    },
-                    uz: {
-                        title: "<h1>Yangi sarlavha</h1>",
-                        text: "<p>Yangi tekst</p>",
-                    }
-                },
-                image: {},
-                // isNoImage is false only text content if true no text content
-                hasNoImage: true,
-            }
-            object.columns.push(newColumn)
-            break;
-        case "Image":
-            object.image = {
-                src: "",
-                alt: "",
-            }
-            break;
-        case "Video":
-            object.video = {
-                src: "",
-                alt: "",
-            }
-            break;
-    }
-
-    if (val === "Slider") {
-        const slide = {
-            title: "",
-            heading: "",
-            locale: {
-                en: {
-                    title: "<h1>New Slide Title</h1>",
-                    text: "<p>New Slide Text</p>",
-                },
-                ru: {
-                    title: "<h1>Новый заголовок</h1>",
-                    text: "<p>Новый текст</p>",
-                },
-                uz: {
-                    title: "<h1>Yangi sarlavha</h1>",
-                    text: "<p>Yangi tekst</p>",
-                }
-            },
-            image: {
-                src: "",
-                alt: "",
-            },
-        }
-        object.slides.push(slide)
-    }
-
-    console.log(object)
-    list.value[Number(Route.value.id)].blocks[Number(Route.value.query)].components.push(object)
-    opened.value = false
-    return
-}
-
-// Update the image in the route and push to server
-const upload = async (e: MouseEvent | any, value: Object | any) => {
-
-    // Create FormData object
-    const formData = new FormData();
-
-    // Append the image file to FormData with a custom key ('image' in this example)
-    formData.append('image', e.target.files[0]);
-
-    // Create and configure a new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('POST', `${baseURI()}/api/upload`, true);
-
-    // Set the Authorization header with the bearer token
-    xhr.setRequestHeader('Authorization', `Bearer ${await checkToken()}`);
-
-    // Set up an event listener to track the upload progress
-    xhr.upload.addEventListener('progress', function (event) {
-        if (event.lengthComputable) {
-            const percentComplete = (event.loaded / event.total) * 100;
-            console.log(`Upload Progress: ${percentComplete}%`);
-        }
-    });
-
-    xhr.addEventListener("load", () => {
-        if (xhr.status === 200) {
-            const response = JSON.parse(xhr.response)
-            debugger
-            value.src = response.route
-        }
-    })
-
-    // Set up the event listener for when there is an error during the upload
-    xhr.addEventListener('error', function () {
-        console.error('There was an error during the upload.');
-    });
-
-    // Send the FormData object with the image
-    xhr.send(formData);
-}
 
 // GET select value
 const selected = (e: MouseEvent | any, element: Object | any) => {
@@ -542,114 +170,27 @@ const selected = (e: MouseEvent | any, element: Object | any) => {
     element.button.route = value
 }
 
-// Create a new slide with params parent
-const append = (parent: Array<Object>) => {
-    const slide = {
-        title: "",
-        heading: "",
-        locale: {
-            ru: {
-                text: "",
-            },
-            en: {
-                text: "",
-            },
-            uz: {
-                text: "",
-            }
-        },
-        image: {
-            src: "",
-            alt: "",
-        },
-    }
-    parent.push(slide)
-    console.log(parent)
-}
-
-// Create a new column with params parent
-const appendColumn = (parent: Array<Object>) => {
-    const object = {
-        locale: {
-            ru: {
-                title: "",
-                text: "",
-            },
-            en: {
-                title: "",
-                text: "",
-            },
-            uz: {
-                title: "",
-                text: "",
-            }
-        },
-        image: {},
-        hasNoImage: true
-    }
-
-    if (parent) parent.push(object)
-    else throw new Error("Failed to create column!")
-}
-
-// Update the page with the current page block:id
-const pageUpdate = async () => {
-    const index = list.value[Number(Route.value.id)]
-    await postIndexData(`/pages/${Route.value.id}/update?block=${Route.value.query}`, JSON.stringify(index))
-        .then(response => response.json())
-        .then((response: Response | any) => {
-            console.log(response)
-            if (response) {
-                setTimeout(() => {
-                    location.reload()
-                }, 300);
-            }
-        })
-}
 
 // Deleting component 
 const deleteNode = async (val: Number | any, e: MouseEvent | any) => {
-    const array = list.value[Number(Route.value.id)].blocks[Number(Route.value.query)].components.filter((item: any, index: number) => index !== val)
-    list.value[Number(Route.value.id)].blocks[Number(Route.value.query)].components = array
-    pageUpdate()
+    const array = (list.value[Number(Route.value.id)] as any).blocks[Number(Route.value.query)].components.filter((item: any, index: number) => index !== val);
+
+    (list.value[Number(Route.value.id)] as any).blocks[Number(Route.value.query)].components = array
+    try {
+        await postIndexData(`/pages/${Route.value.id}/update?block=${Route.value.query}`, JSON.stringify(list.value[parseInt(Route.value.id as any)]));
+    }
+    catch (error) {
+        console.log(error)
+        return
+    }
+    finally {
+        setTimeout(() => {
+            location.reload()
+        }, 300);
+    }
 }
 
 // Change localization on the localStorage
-const redirectTo = async (e: any) => {
-    const route = `/pages/${e.target.id}/${Route.value.id}`
-
-    await clearStoreData("lang")
-    await storeData("lang", e.target.id)
-
-    $router.push({ path: route })
-
-    setTimeout(() => {
-        location.reload()
-    }, 500);
-    return
-}
-
-// GET MOUSE POSITION WITH EVENT POSITION
-const getMousePosition = (target: string) => {
-    const block = document.querySelector(target)
-
-    const rect = block?.getBoundingClientRect()
-
-    const getLeft = () => rect?.left
-    const getTop = () => rect?.top
-
-
-    return { getLeft, getTop }
-
-}
-
-const color = (e: any, value: any) => {
-    let inputvalue = e.target.value
-
-    value = inputvalue.toString()
-    console.log(value)
-}
-
 const openParams = (index: number, event: EventTarget | any) => {
     const element = document.querySelector(`.element-item-${index}`)
     const modal = element?.querySelector(`.element-column-context`)
@@ -666,7 +207,7 @@ const openParams = (index: number, event: EventTarget | any) => {
 onMounted(async () => {
     await getData()
 
-    if (!list.value[Number(Route.value.id)].blocks[Route.value.query]) {
+    if (!(list.value[Number(Route.value.id)] as any).blocks[(Route.value.query as never)]) {
         $router.push({ path: $router.currentRoute.value.path, query: { block: 0 } })
         setTimeout(() => {
             location.reload()
@@ -686,94 +227,9 @@ onMounted(async () => {
         align-items: center;
         justify-content: space-between;
     }
-
-    &-locale {
-        display: flex;
-        align-items: center;
-
-        &-button {
-            background: unset;
-            width: 12rem;
-            height: 4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: .1rem solid #e5e5e5;
-
-            &.active {
-                background: #F1F9FE;
-                color: #0054FF;
-                font-size: 1.5rem;
-                font-weight: 500;
-                line-height: 2.1rem;
-            }
-        }
-    }
 }
 
 .element {
-    &-request {
-        &-buttons {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            width: 100%;
-            margin-top: 1rem;
-
-            & button {
-                width: 10rem;
-                height: 4rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border: none;
-                font-size: 1.5rem;
-                line-height: 110%;
-                font-weight: 500;
-                border-radius: .4rem;
-
-                &:nth-of-type(1) {
-                    background: #E2F0FD;
-                    color: #0054FF;
-                }
-
-                &:nth-of-type(2) {
-                    background: #FBE9EA;
-                    color: #FF3F3F;
-                }
-
-                &.active {
-                    background: #F1F9FE;
-                    color: #0054FF;
-                    font-size: 1.5rem;
-                    font-weight: 500;
-                    line-height: 2.1rem;
-                }
-            }
-        }
-    }
-
-    &-delete {
-        &-request {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 4rem;
-            box-shadow: 0 0 .4rem rgba(0, 0, 0, 0.2);
-            z-index: 100;
-
-            &.active {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                row-gap: 2rem;
-                background: white;
-                padding: 2rem;
-            }
-        }
-    }
 
     &-selector {
         position: relative;

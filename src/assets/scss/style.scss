@@ -68,3 +68,46 @@ a {
     padding: .5rem 0;
     margin-top: .5rem;
 }
+
+
+button input {
+    outline: none;
+    border: none;
+}
+
+label,
+button {
+    width: 4rem;
+    height: 4rem;
+    background: #EFEFEF;
+    border: unset;
+    cursor: pointer;
+    border-radius: .3rem;
+
+    &.fontSize-label {
+        width: 6rem;
+    }
+
+    & input {
+        width: inherit;
+        height: inherit;
+    }
+
+    &:hover {
+        background: #c4cbd5;
+    }
+}
+
+
+
+.tiptap {
+    font-size: 10px !important;
+}
+
+.editor {
+    &-methods {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+}
