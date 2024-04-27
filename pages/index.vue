@@ -1,15 +1,12 @@
 <template>
-  <div></div>
+    
 </template>
 
-<script>
-export default {
-  mounted() {
-    const router = useRouter();
 
-    router.push({ path: "/dashboard" });
-  },
-};
+<script>
+
 </script>
 
-<style lang="scss" scoped></style>
+<style>
+
+</style>

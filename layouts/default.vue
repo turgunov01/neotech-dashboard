@@ -1,39 +1,41 @@
 <template>
-  <div class="wrapper">
-    <!-- <SpaLoadingTemplate v-if="1" /> -->
-    <Ucontainer>
-      <div class="container">
-        <sidebar />
-        <div class="content">
-          <slot />
+    <div class="nav">
+        <div class="nav-logo">
+            <nuxt-link to="/">
+                <img src="/assets/icons/logo.svg" alt="">
+            </nuxt-link>
         </div>
-      </div>
-    </Ucontainer>
-    <UNotifications />
-  </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <nuxt-link :to="`/`">
+                    <span>
+                        <img src="/assets/icons/navigation/stats.svg" alt="">
+                    </span>
+                    <p class="nav-item-name">Дашбоард</p>
+                </nuxt-link>
+                <nuxt-link :to="`/mail`">
+                    <span>
+                        <img src="/assets/icons/navigation/messages.svg" alt="">
+                    </span>
+                    <p class="nav-item-name">Сообщения</p>
+                </nuxt-link>
+                <nuxt-link :to="`/pages`">
+                    <span>
+                        <img src="/assets/icons/navigation/pages.svg" alt="">
+                    </span>
+                    <p class="nav-item-name">Страницы</p>
+                </nuxt-link>
+                <nuxt-link :to="`/me`">
+                    <span>
+                        <img src="/assets/icons/navigation/user.svg" alt="">
+                    </span>
+                    <p class="nav-item-name">Профиль</p>
+                </nuxt-link>
+            </li>
+        </ul>
+    </div>
 </template>
 
-<script lang="ts" setup>
-import sidebar from '~/components/sidebars/sidebar.vue';
-const $router = useRouter()
+<script lang="ts" setup></script>
 
-</script>
-
-<style lang="scss" scoped>
-.container {
-  max-width: 100% !important;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.wrapper {
-  & .container {
-    display: flex;
-  }
-
-  & .content {
-    padding: 3.2rem;
-    width: 100%;
-  }
-}
-</style>
+<style scoped lang="scss"></style>
