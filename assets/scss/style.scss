@@ -29,3 +29,6 @@ a {
     margin: 0 auto;
     padding: 0 1.5rem;
 }
+
+@import './components/nav.css';
+@import './components/UsersStatistics/stats.scss';

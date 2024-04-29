@@ -1,0 +1,66 @@
+.lines {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    margin-top: 3.2rem;
+}
+
+.line {
+    height: inherit;
+    position: relative;
+
+    &:hover {
+        & .line-info {
+            opacity: 1;
+        }
+    }
+
+    &-info {
+        position: absolute;
+        height: max-content;
+        width: 14rem;
+        top: 100%;
+        left: 50%;
+        transform: translate(-50%, 0);
+        border: .1rem solid #e5e5e5;
+        border-radius: .4rem;
+        opacity: 0;
+        transition: 300ms;
+        background: white;
+        z-index: 99;
+
+
+        &-name {
+            font-size: 1.4rem;
+            line-height: 1.6rem;
+            padding: .7rem;
+            font-weight: 400;
+            width: 100%;
+            color: white;
+        }
+    }
+}
+
+.results {
+    margin-top: 3.2rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+}
+
+.result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &-static {
+        display: flex;
+        gap: 1.2rem;
+    }
+
+    &-rectangle {
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 50%;
+    }
+}
