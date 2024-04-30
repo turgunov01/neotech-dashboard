@@ -14,11 +14,29 @@
                         </span>
                         <p class="nav-item-name">Дашбоард</p>
                     </nuxt-link>
-                    <nuxt-link :to="`/mail`">
+                    <nuxt-link class="mail-links" :to="`/mail/`" >
+                        <div class="origin mail">
+                            <div class="origin-star">
+                                <span>
+                                    <img src="/assets/icons/navigation/messages.svg" alt="">
+                                </span>
+                                <p class="nav-item-name">Сообщения</p>
+                            </div>
+                            <img class="mail-tick" src="../assets/tick.svg" alt="">
+                        </div>
                         <span>
-                            <img src="/assets/icons/navigation/messages.svg" alt="">
+                            <ul class="sub-menu">
+                                <li class="sub-menu-item">
+                                    <nuxt-link :to="`/mail`">Входящие</nuxt-link>
+                                </li>
+                                <li class="sub-menu-item">
+                                    <nuxt-link :to="`/mail/outgoing`">Отправленные</nuxt-link>
+                                </li>
+                                <li class="sub-menu-item">
+                                    <nuxt-link :to="`/mail/favorite`">Избранные</nuxt-link>
+                                </li>
+                            </ul>
                         </span>
-                        <p class="nav-item-name">Сообщения</p>
                     </nuxt-link>
                     <nuxt-link :to="`/pages`">
                         <span>
@@ -49,12 +67,34 @@
     </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+
+
+</script>
 
 <style scoped lang="scss">
 .wrapper {
     display: flex;
     align-items: flex-start;
+
+}
+
+.origin {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    &-star {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+
+    &>img {
+        transform: rotate(-90deg);
+        transition: 300ms;
+    }
 
 }
 
