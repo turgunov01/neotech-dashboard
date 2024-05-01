@@ -14,7 +14,7 @@
                         </span>
                         <p class="nav-item-name">Дашбоард</p>
                     </nuxt-link>
-                    <nuxt-link class="mail-links" :to="`/mail/`" >
+                    <nuxt-link class="mail-links" :to="`/mail/`">
                         <div class="origin mail">
                             <div class="origin-star">
                                 <span>
@@ -26,14 +26,13 @@
                         </div>
                         <span>
                             <ul class="sub-menu">
-                                <li class="sub-menu-item">
+                                <li class="sub-menu-item"
+                                    :class="$router.currentRoute.value.path.includes('incoming') ? 'active' : ''">
                                     <nuxt-link :to="`/mail`">Входящие</nuxt-link>
                                 </li>
-                                <li class="sub-menu-item">
+                                <li class="sub-menu-item"
+                                    :class="$router.currentRoute.value.path.includes('outgoing') ? 'active' : ''">
                                     <nuxt-link :to="`/mail/outgoing`">Отправленные</nuxt-link>
-                                </li>
-                                <li class="sub-menu-item">
-                                    <nuxt-link :to="`/mail/favorite`">Избранные</nuxt-link>
                                 </li>
                             </ul>
                         </span>

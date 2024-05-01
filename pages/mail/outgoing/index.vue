@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 
 const $router = useRouter()
@@ -135,8 +136,12 @@ const messages = {
         }
     ],
 }
+
+onMounted(() => {
+    if (messages.messages.length > 0) {
+        $router.push(`/mail/outgoing/1`)
+    }
+})
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

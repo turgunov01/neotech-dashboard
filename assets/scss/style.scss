@@ -30,6 +30,12 @@ a {
     padding: 0 1.5rem;
 }
 
+.router-link-active,
+.router-link-exact-active {
+    background: #E3F2FD80;
+    color: #0054FF;
+}
+
 @import './components/nav.css';
 @import './components/UsersStatistics/stats.scss';
 @import './components/UsersFormRequest/UsersMail.scss';

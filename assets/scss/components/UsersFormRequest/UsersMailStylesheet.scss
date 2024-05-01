@@ -123,6 +123,12 @@
 
         & .sub-menu {
             width: 100%;
+
+            &-item {
+                &.active a {
+                    color: #0054FF;
+                }
+            }
         }
 
         & a {
