@@ -4,11 +4,15 @@
             <div class="user-parameters">
                 <UsersInfo />
             </div>
+            <div class="user-history">
+                <HistoryActivity />
+            </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import HistoryActivity from '~/components/Models/UserHistoryActivity.vue';
 import UsersInfo from '~/components/Models/UsersProfileInfo.vue';
 
 
