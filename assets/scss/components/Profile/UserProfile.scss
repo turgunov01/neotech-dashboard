@@ -1,0 +1,61 @@
+.security {
+    max-width: inherit;
+    width: 100%;
+}
+
+.security {
+    border: .1rem solid #e5e5e5;
+
+    &-title {
+        font-size: 2rem;
+        line-height: 3rem;
+        font-weight: 500;
+        padding: 2.4rem;
+        padding-bottom: 1.6rem;
+        border-bottom: .1rem solid #e5e5e5;
+    }
+
+    &-datas {
+        padding: 0 2.4rem;
+    }
+
+    &-data {
+        display: flex;
+        flex-direction: column;
+        row-gap: .5rem;
+        padding: 1.6rem 0;
+        position: relative;
+
+        &:not(:last-of-type) {
+            border-bottom: .1rem solid #e5e5e5;
+        }
+
+        &-name {
+            color: #000000DE;
+            font-size: 1.6rem;
+            line-height: 3rem;
+            font-weight: 550;
+        }
+
+        &-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            & img {
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translate(0, -50%);
+
+            }
+        }
+    }
+}
+
+
+.user {
+    &-parameters {
+        max-width: 35.4rem;
+    }
+}
