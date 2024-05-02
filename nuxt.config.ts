@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
-  spaLoadingTemplate: true,
   css: ['/assets/scss/style.scss'],
-  vite: {},
+  modules: ['@nuxt/ui'],
+  ui: {}
 })

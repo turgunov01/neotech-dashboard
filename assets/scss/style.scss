@@ -36,6 +36,18 @@ a {
     color: #0054FF;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+    color: #344054;
+}
+
 @import './components/nav.css';
 @import './components/UsersStatistics/stats.scss';
 @import './components/UsersFormRequest/UsersMail.scss';
+@import './components/Constructor/Constructor.scss';

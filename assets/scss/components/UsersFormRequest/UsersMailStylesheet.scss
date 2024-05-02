@@ -70,6 +70,10 @@
         border: .1rem solid #e5e5e5;
         border-radius: .4rem;
 
+        & * {
+            color: #344054;
+        }
+
         &.reply {
             padding: 0;
             border: unset;
