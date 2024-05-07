@@ -89,3 +89,98 @@
         }
     }
 }
+
+.aside {
+    width: 30rem;
+    height: 100%;
+    background: #FFFFFF;
+    padding: 1.8rem;
+    display: flex;
+    justify-content: center;
+    height: calc(100vh - 7.1rem);
+    overflow: hidden;
+    overflow-y: scroll;
+
+    &-container {
+        width: 30rem;
+    }
+
+    &-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #F6F6F6;
+        padding: .4rem;
+        width: 100%;
+        height: 5rem;
+        border-radius: .8rem;
+
+        & button {
+            width: 50%;
+            height: 100%;
+            border-radius: .8rem;
+            opacity: 0.6;
+
+            &.active {
+                background: white;
+                opacity: 1;
+            }
+        }
+    }
+
+}
+
+.insert {
+    &-cards {
+        display: flex;
+        flex-direction: column;
+        row-gap: 1.2rem;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 1.6rem;
+    }
+
+    &-card {
+        width: 100%;
+        background: #F6F6F6;
+        padding: .6rem;
+        border-radius: .5rem;
+        pointer-events: visible;
+
+        &-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            line-height: 1.503rem;
+            text-align: center;
+            padding: 1rem 0 .6rem;
+        }
+
+        &-image {
+            width: 100%;
+
+            & img {
+                width: 100%;
+            }
+        }
+    }
+}
+
+.demo {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    &-container {
+        width: 100%;
+        padding: 1.6rem;
+    }
+
+    &-page {
+        width: 100%;
+        background: white;
+        min-height: 100vh;
+        color: #333;
+    }
+}
