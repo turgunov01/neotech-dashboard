@@ -9,10 +9,12 @@
             </button>
         </div>
         <div class="aside-content">
-            <div v-if="active === 0">
-                <ConstructorSidebarInsert />
+            <div class="aside-content-switcher" :class="active === 0 ? 'active' : ''">
+                <div class="insert">
+                    <div class="insert-cards" ref="cards"></div>
+                </div>
             </div>
-            <div v-else-if="active === 1">
+            <div class="aside-content-switcher" :class="active === 1 ? 'active' : ''">
                 <!-- <ConstructorSidebarPages /> -->
                 <p>1</p>
             </div>
@@ -22,7 +24,6 @@
 
 
 <script setup lang="ts">
-import ConstructorSidebarInsert from './ConstructorSidebarInsert.vue';
 
 const active = ref(0)
 
