@@ -380,6 +380,30 @@
             box-shadow: 0 .4rem .8rem rgba(0, 0, 0, 0.5);
         }
     }
+
+    &-toolbar {
+        background: #344054 !important;
+        left: unset !important;
+        right: 2rem !important;
+        height: 100% !important;
+        max-height: 4rem;
+        top: unset !important;
+        bottom: 100% !important;
+        display: flex;
+        align-items: center;
+
+        &-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-item {
+            &:first-of-type {
+                display: none;
+            }
+        }
+    }
 }
 
 .CodeMirror {

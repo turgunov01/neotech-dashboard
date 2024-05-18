@@ -1,4 +1,4 @@
-import grapesjs, { Component, Editor, type ComponentAdd, type EditorConfig } from "grapesjs";
+import grapesjs, { Component, Editor } from "grapesjs";
 import { ref, type Ref } from 'vue'
 import type { GrapesInitInterface, GrapesBlockManager } from "~/interface/Grapesjs.interface";
 import { PORT, USER_FETCH_HOST } from "./Exports";
@@ -39,11 +39,44 @@ async function GrapesInitBlockManager() {
 
 async function GrapesLauncher() {
     await GrapesInitBlockManager();
-    const editor = grapesjs.init(component.value as any)
+    const container = grapesjs.init(component.value as any)
+    return container
 }
 
+
+// Generate HTML on initialization of all elements
+function generateHTML(editor: Editor) {
+    const insertions = editor.BlockManager.getAllVisible()
+
+    const list = ref([Array<GrapesBlockManager>])
+
+    insertions.forEach(insertion => {
+        list.value.push(insertion.toJSON())
+    })
+
+    return list.value
+}
+
+function GrapesComponentHook(model: any) {
+    console.log('Global hook: component:create', (model as any).toJSON())
+}
+
+function HookActivity(editor: Editor) {
+    editor.on(`component:create`, model => {
+        GrapesComponentHook(model)
+    });
+}
+
+// Initialize the parameters for the Grapejs API
 export async function GrapesInit() {
-    await GrapesLauncher();
+    const editor = await GrapesLauncher();
+
+    if (editor && typeof editor !== undefined) {
+        HookActivity(editor)
+    }
+
+
+    return editor
 }
 
 export default { GrapesInit }
