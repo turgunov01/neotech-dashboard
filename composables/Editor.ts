@@ -29,7 +29,7 @@ export async function GrapesInit() {
 
     if (editor && typeof editor !== undefined) {
         HookActivity(editor)
-        settings(editor)
+        
     }
 
 
