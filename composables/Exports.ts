@@ -14,6 +14,16 @@ export function ParamsInit(type: string) {
     }
 }
 
+export const types = {
+    input: "input",
+    button: "button",
+    select: "select",
+    textarea: "textarea",
+    checkbox: "checkbox",
+    radio: "radio",
+    text: "text"
+}
+
 export const isRequestPopular = (query: string, value: string) => {
     return `?${query}=${value}`
 }
@@ -22,5 +32,7 @@ export default {
     PORT,
     USER_FETCH_HOST,
     apiDataFetch,
-    ParamsInit
+    ParamsInit,
+    types,
+    isRequestPopular,
 }
