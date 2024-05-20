@@ -20,3 +20,9 @@ export interface GrapesBlockManager {
     select: boolean | false,
     activate: boolean | false
 }
+
+export interface GrapesInitPagesInterface {
+    id: string | number,
+    styles: string,
+    component: string,
+}
