@@ -1,6 +1,8 @@
 export const PORT = 5003
 export const USER_FETCH_HOST = 'http://localhost:'
 
+export const uri = `${USER_FETCH_HOST}${PORT}`
+
 export function apiDataFetch(url: string, options: RequestInit) {
     return fetch(url, options)
 }
@@ -35,4 +37,5 @@ export default {
     ParamsInit,
     types,
     isRequestPopular,
+    uri
 }

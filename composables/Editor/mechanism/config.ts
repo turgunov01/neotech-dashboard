@@ -1,16 +1,40 @@
 import { Editor } from "grapesjs";
-import { onCreateCallback, onRemoveCallback } from "../callbacks/on:component";
-import { onComponentAdd, onComponentRemove } from "../hooks/component:hooks";
+import { onCloneComponent, onCreateCallback, onRemoveCallback } from "../callbacks/on:component";
+import { onComponentAdd, onComponentClone, onComponentRemove } from "../hooks/component:hooks";
 
 export function config(editor: Editor) {
     editor.on("component:add", async (model: Object) => {
+
+        const type = {
+            action: "component:create",
+            whatis: "component",
+            page: "test"
+        }
+
         await onCreateCallback(model)
-        onComponentAdd(model) // Notification Hook
+        onComponentAdd(type) // Statistics /api/logs/:username/?action=create&whatis=component&pageId=testId
     })
 
     editor.on("component:remove", async (model: Object) => {
+        const type = {
+            action: "component:remove",
+            whatis: "component",
+            page: "test"
+        }
+
         await onRemoveCallback(model)
-        onComponentRemove(model) // Notification Hook
+        onComponentRemove(type) // Statistics /api/logs/:username/?action=remove&whatis=component&pageId=testId
     })
+
+    editor.on("component:clone", async (model: Object) => {
+        const type = {
+            action: "component:clone",
+            whatis: "component",
+            page: "test"
+        }
+        await onCloneComponent(model)
+        onComponentClone(type) // Statistics /api/logs/:username/?action=clone&whatis=component&pageId=testId
+    })
+
 }
 
