@@ -65,34 +65,7 @@
         </div>
     </div>
     <div class="wrapper" v-else>
-        <div class="constructor">
-            <nav class="nav">
-                <div class="nav-media">
-                    <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
-                    <div class="nav-media-router" @click="$router.back()">
-                        <img src="/assets/tick.svg" alt="">
-                    </div>
-                    <input type="text" placeholder="Neotech Веб-сайт" value="Neotech Веб-сайт">
-                </div>
-                <div class="nav-event">
-                    <div class="backward">
-                        <img src="/assets/constructor/backward.svg" alt="">
-                    </div>
-                    <div class="forward">
-                        <img src="/assets/constructor/forward.svg" alt="">
-                    </div>
-                    <div class="frame demo">
-                        <img src="/assets/constructor/play.svg" alt="">
-                    </div>
-                    <button class="frame publish">
-                        Опубликовать
-                    </button>
-                </div>
-            </nav>
-            <div class="main">
-                <slot />
-            </div>
-        </div>
+        <slot />
     </div>
 </template>
 

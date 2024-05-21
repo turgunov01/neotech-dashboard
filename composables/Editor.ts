@@ -1,4 +1,4 @@
-import grapesjs, { Component, Editor } from "grapesjs";
+import grapesjs, { Component, Editor, type EditorConfig } from "grapesjs";
 import { ref, type Ref } from 'vue'
 
 import type { GrapesInitInterface, GrapesBlockManager } from "~/interface/Grapesjs.interface";
@@ -20,7 +20,7 @@ const component: Ref<GrapesInitInterface> = ref({
     },
 })
 
-async function GrapesLauncher() {
+export async function GrapesLauncher() {
     await GrapesInitBlockManager(component.value);
 
     (component.value as any).pageManager = {
@@ -30,7 +30,7 @@ async function GrapesLauncher() {
     if ((component.value as any).pageManager.pages) {
         GrapesInitPagesManager((component.value as any).pageManager.pages)
     }
-    
+
     const container = grapesjs.init(component.value as any)
     return container
 }
@@ -45,8 +45,46 @@ export async function GrapesInit() {
     }
 
     await config(editor)
+    await buttonEventHandler(editor)
 
     return editor
+}
+
+export function buttonEventHandler(editor: Editor) {
+    const button = document.querySelector(".frame.publish")
+
+    button?.addEventListener("click", async () => {
+        const resolvedHtml = editor.getHtml()
+        const resolvedCss = editor.getCss()
+
+        const components = editor.getComponents().toJSON()
+
+        console.log(components)
+        return
+
+        try {
+            await apiDataFetch(`${uri}/api/pages`, {
+                ...ParamsInit("POST"),
+                body: JSON.stringify({
+                    name: "тест-страница",
+                    html: resolvedHtml,
+                    css: resolvedCss
+                })
+            })
+                .then(response => response.json())
+                .then(response => {
+                    console.log(response)
+                })
+        }
+        catch (err) {
+            console.log(err)
+        }
+    })
+}
+
+export function getComponents(editor: Editor) {
+    const html = editor.getHtml()
+    return html
 }
 
 export default { GrapesInit }

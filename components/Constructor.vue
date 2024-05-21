@@ -5,12 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import 'grapesjs/dist/css/grapes.min.css';
-import { GrapesInit } from '~/composables/Editor'; // Add this line
 
-onMounted(() => {
-    GrapesInit()
-});
 </script>
 
 <style scoped lang="scss">

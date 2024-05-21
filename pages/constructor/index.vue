@@ -1,32 +1,58 @@
 <template>
-    <div class="wrapper">
-        <aside class="aside">
-            <ConstructorSidebarElements />
-        </aside>
-        <div class="demo">
-            <div class="demo-page">
-                <div class="demo-container">
-                    <Constructor />
+    <div class="constructor">
+        <nav class="nav">
+            <div class="nav-media">
+                <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
+                <div class="nav-media-router" @click="$router.back()">
+                    <img src="/assets/tick.svg" alt="">
+                </div>
+                <input type="text" placeholder="Neotech Веб-сайт" value="Neotech Веб-сайт">
+            </div>
+            <div class="nav-event">
+                <div class="backward">
+                    <img src="/assets/constructor/backward.svg" alt="">
+                </div>
+                <div class="forward">
+                    <img src="/assets/constructor/forward.svg" alt="">
+                </div>
+                <div class="frame demo">
+                    <img src="/assets/constructor/play.svg" alt="">
+                </div>
+                <button class="frame publish">
+                    Опубликовать
+                </button>
+            </div>
+        </nav>
+        <div class="main">
+            <div class="wrapper">
+                <aside class="aside">
+                    <ConstructorSidebarElements />
+                </aside>
+                <div class="demo">
+                    <div class="demo-page">
+                        <div class="demo-container">
+                            <Constructor />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
 
 <script lang="ts" setup>
 import Constructor from '~/components/Constructor.vue';
 import ConstructorSidebarElements from '../../components/Models/ConstructorSidebarElements.vue'
 
-const component = ref({
-    name: "Logo",
-    id: 1,
-    content: {
-        type: "img",
-        param: "svg",
-        url: "http://localhost:3000/_nuxt/assets/icons/logo.svg"
-    },
-    class: ['logo', 'nav-logo', 'header-logo'],
-    animation: [null],
+import 'grapesjs/dist/css/grapes.min.css';
+import { GrapesLauncher } from '~/composables/Editor'; // Add this line
+import type { Editor, EditorConfig } from 'grapesjs';
+
+
+
+onMounted(async () => {
+    GrapesInit()
 })
 
 
