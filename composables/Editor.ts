@@ -8,6 +8,10 @@ import { GrapesInitPagesManager } from "./Editor/managers/pages";
 
 import { settings } from "./Editor/types/settings";
 import { config } from "./Editor/mechanism/config";
+import { cyrb53 } from "./cybr/cybr-54";
+import { buildEditor, publish } from "./Editor/callbacks/on:publish";
+import type { GlobalAttributesInterface, GlobalInterface } from "~/interface/html/global.interfaces";
+import { pendingLaunch } from "./Editor/config/runtime";
 
 const component: Ref<GrapesInitInterface> = ref({
     container: '#gjs',
@@ -44,47 +48,34 @@ export async function GrapesInit() {
         settings(editor)
     }
 
-    await config(editor)
-    await buttonEventHandler(editor)
+    await pendingLaunch(editor)
+
 
     return editor
 }
 
-export function buttonEventHandler(editor: Editor) {
+export function buttonPublishHandler(editor: Editor) {
     const button = document.querySelector(".frame.publish")
 
     button?.addEventListener("click", async () => {
         const resolvedHtml = editor.getHtml()
         const resolvedCss = editor.getCss()
 
+        const element: GlobalInterface = {
+            name: "test-stranitsa",
+            html: resolvedHtml,
+            css: (resolvedCss as string),
+            sections: editor.getComponents() as any,
+            cipher: cyrb53(resolvedHtml).toString()
+        }
+
         const components = editor.getComponents().toJSON()
 
-        console.log(components)
-        return
-
-        try {
-            await apiDataFetch(`${uri}/api/pages`, {
-                ...ParamsInit("POST"),
-                body: JSON.stringify({
-                    name: "тест-страница",
-                    html: resolvedHtml,
-                    css: resolvedCss
-                })
-            })
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
-                })
-        }
-        catch (err) {
-            console.log(err)
-        }
+        if (components.length === 0) return alert("You can't publish empty page!")
+        publish(element)
     })
 }
 
-export function getComponents(editor: Editor) {
-    const html = editor.getHtml()
-    return html
-}
+
 
 export default { GrapesInit }

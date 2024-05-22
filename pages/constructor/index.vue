@@ -46,8 +46,6 @@ import Constructor from '~/components/Constructor.vue';
 import ConstructorSidebarElements from '../../components/Models/ConstructorSidebarElements.vue'
 
 import 'grapesjs/dist/css/grapes.min.css';
-import { GrapesLauncher } from '~/composables/Editor'; // Add this line
-import type { Editor, EditorConfig } from 'grapesjs';
 
 
 

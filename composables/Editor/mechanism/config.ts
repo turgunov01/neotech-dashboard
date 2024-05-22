@@ -4,6 +4,7 @@ import { onComponentAdd, onComponentClone, onComponentDrag, onComponentRemove } 
 
 export function config(editor: Editor) {
     editor.on("component:create", async (model: Object) => {
+        const content = ref({})
 
         const type = {
             action: "component:create",
@@ -11,8 +12,14 @@ export function config(editor: Editor) {
             page: "test"
         }
 
-        await onCreateCallback(model)
-        // onComponentAdd(type) // Statistics /api/logs/:username/?action=create&whatis=component&pageId=testId
+        const collection = {
+            ...(model as any).toJSON(),
+            html: (model as any).toHTML(),
+        }
+
+        await onCreateCallback(collection)
+        onComponentAdd(type) // Statistics /api/logs/:username/?action=create&whatis=component&pageId=testId
+
     })
 
     editor.on("component:remove", async (model: Object) => {
@@ -46,7 +53,7 @@ export function config(editor: Editor) {
         onComponentDrag(type) // Statistics /api/logs/:username/?action=drag&whatis=component&pageId=testId
     })
 
-    
+
 
 }
 
