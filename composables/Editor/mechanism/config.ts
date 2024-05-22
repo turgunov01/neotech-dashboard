@@ -12,13 +12,8 @@ export function config(editor: Editor) {
             page: "test"
         }
 
-        const collection = {
-            ...(model as any).toJSON(),
-            html: (model as any).toHTML(),
-        }
 
-        await onCreateCallback(collection)
-        onComponentAdd(type) // Statistics /api/logs/:username/?action=create&whatis=component&pageId=testId
+        await onCreateCallback(model)
 
     })
 
@@ -50,7 +45,7 @@ export function config(editor: Editor) {
             page: "test"
         }
         await onCloneComponent(model)
-        onComponentDrag(type) // Statistics /api/logs/:username/?action=drag&whatis=component&pageId=testId
+        // onComponentDrag(type) // Statistics /api/logs/:username/?action=drag&whatis=component&pageId=testId
     })
 
 

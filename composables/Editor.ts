@@ -1,17 +1,16 @@
-import grapesjs, { Component, Editor, type EditorConfig } from "grapesjs";
+import grapesjs, { Editor } from "grapesjs";
 import { ref, type Ref } from 'vue'
 
-import type { GrapesInitInterface, GrapesBlockManager } from "~/interface/Grapesjs.interface";
+import type { GrapesInitInterface } from "~/interface/Grapesjs.interface";
 
 import { GrapesInitBlockManager } from "./Editor/managers/blocks";
 import { GrapesInitPagesManager } from "./Editor/managers/pages";
 
 import { settings } from "./Editor/types/settings";
-import { config } from "./Editor/mechanism/config";
 import { cyrb53 } from "./cybr/cybr-54";
-import { buildEditor, publish } from "./Editor/callbacks/on:publish";
-import type { GlobalAttributesInterface, GlobalInterface } from "~/interface/html/global.interfaces";
-import { pendingLaunch } from "./Editor/config/runtime";
+import { publish } from "./Editor/callbacks/on:publish";
+import type { GlobalInterface } from "~/interface/html/global.interfaces";
+import { runtime } from "./Editor/config/runtime";
 
 const component: Ref<GrapesInitInterface> = ref({
     container: '#gjs',
@@ -45,36 +44,14 @@ export async function GrapesInit() {
     const editor = await GrapesLauncher();
 
     if (editor && typeof editor !== undefined) {
-        settings(editor)
+        settings(editor) // Set settings for the editor
     }
 
-    await pendingLaunch(editor)
-
-
+    await runtime(editor)
     return editor
 }
 
-export function buttonPublishHandler(editor: Editor) {
-    const button = document.querySelector(".frame.publish")
 
-    button?.addEventListener("click", async () => {
-        const resolvedHtml = editor.getHtml()
-        const resolvedCss = editor.getCss()
-
-        const element: GlobalInterface = {
-            name: "test-stranitsa",
-            html: resolvedHtml,
-            css: (resolvedCss as string),
-            sections: editor.getComponents() as any,
-            cipher: cyrb53(resolvedHtml).toString()
-        }
-
-        const components = editor.getComponents().toJSON()
-
-        if (components.length === 0) return alert("You can't publish empty page!")
-        publish(element)
-    })
-}
 
 
 

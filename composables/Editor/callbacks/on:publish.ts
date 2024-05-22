@@ -1,4 +1,3 @@
-import type { Editor } from "grapesjs"
 import type { GlobalAttributesInterface, GlobalInterface } from "~/interface/html/global.interfaces"
 
 export async function publish(model: GlobalInterface,) {
@@ -25,21 +24,3 @@ export async function publish(model: GlobalInterface,) {
     }
 }
 
-export async function buildEditor(editor: Editor) {
-    const query = {
-        type: "popular",
-        value: "*"
-    }
-    try {
-        await apiDataFetch(`${uri}/api/pages/test-stranitsa?${query.type}=${query.value}`, {
-            ...ParamsInit("GET"),
-        })
-            .then(response => response.json())
-            .then(response => {
-                const data = response
-                console.log(data)
-            })
-    } catch (err) {
-        console.log(err)
-    }
-}
