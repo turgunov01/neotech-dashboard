@@ -31,6 +31,7 @@ export async function buildEditor(editor: Editor) {
         type: "popular",
         value: "*"
     }
+
     try {
         await apiDataFetch(`${uri}/api/pages/test-stranitsa?${query.type}=${query.value}`, {
             ...ParamsInit("GET"),
@@ -38,15 +39,17 @@ export async function buildEditor(editor: Editor) {
             .then(response => response.json())
             .then(response => {
                 const data = response
+
                 editor.setComponents(data.sections)
             })
-    } catch (err) {
+    }
+    catch (err) {
         console.log(err)
     }
 }
 
 export async function runtime(editor: Editor) {
     await config(editor)
-    await buttonPublishHandler(editor)
     await buildEditor(editor)
+    buttonPublishHandler(editor)
 }

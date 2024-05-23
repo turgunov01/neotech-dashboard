@@ -6,10 +6,6 @@ import type { GrapesInitInterface } from "~/interface/Grapesjs.interface";
 import { GrapesInitBlockManager } from "./Editor/managers/blocks";
 import { GrapesInitPagesManager } from "./Editor/managers/pages";
 
-import { settings } from "./Editor/types/settings";
-import { cyrb53 } from "./cybr/cybr-54";
-import { publish } from "./Editor/callbacks/on:publish";
-import type { GlobalInterface } from "~/interface/html/global.interfaces";
 import { runtime } from "./Editor/config/runtime";
 
 const component: Ref<GrapesInitInterface> = ref({
@@ -43,15 +39,9 @@ export async function GrapesLauncher() {
 export async function GrapesInit() {
     const editor = await GrapesLauncher();
 
-    if (editor && typeof editor !== undefined) {
-        settings(editor) // Set settings for the editor
-    }
-
     await runtime(editor)
     return editor
 }
-
-
 
 
 
