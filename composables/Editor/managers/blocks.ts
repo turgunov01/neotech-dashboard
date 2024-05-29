@@ -11,7 +11,7 @@ export async function GrapesInitBlockManager(component: GrapesInitInterface) {
         ...ParamsInit('GET')
     }
 
-    await apiDataFetch(`${USER_FETCH_HOST}${PORT}/api/blocks`, options)
+    await apiDataFetch(`${uri}/api/blocks`, options)
         .then(response => response.json())
         .then(response => {
             const data = response

@@ -1,34 +1,37 @@
 <template>
-    <div class="stats">
+    <div class="stats" v-if="loaded">
         <div class="stats-container">
             <header class="stats-header">
                 <h4 class="stats-heading">Браузеры</h4>
-                <div class="stats-header-buttons">
+                <!-- <div class="stats-header-buttons">
                     <button class="stats-header-button active">За день</button>
                     <button class="stats-header-button">За месяц</button>
                     <button class="stats-header-button">За год</button>
-                </div>
+                </div> -->
             </header>
             <section class="lines">
-                <div class="line" v-for="(agent, index) in results" :key="index" :title="`Browser: ${agent.name}`" :style="{
-                    width: `100%`,
-                    backgroundColor: agent.color,
-                    maxWidth: `${agent.percentage}%`
-                }">
+                <div class="line" v-for="(agent, index) in agents" :key="index"
+                    :title="`Browser: ${(agent as any).name}`" :style="{
+        width: `100%`,
+        backgroundColor: (agent as any).color,
+        maxWidth: `${(agent as any).percentage}%`
+    }">
 
                     <div class="line-info">
-                        <p class="line-info-name" :style="{ background: `${agent.color}` }">{{ agent.name }}</p>
-                        <p class="line-info-name"> {{ agent.percentage }}% </p>
+                        <p class="line-info-name" :style="{ background: `${(agent as any).color}` }">
+                            {{ (agent as any).browser.name }}
+                        </p>
+                        <p class="line-info-name"> {{ (results as any)[index].percentage }}% </p>
                     </div>
                 </div>
             </section>
             <div class="results">
                 <div class="result" v-for="(result, index) in results" :key="index">
-                    <div class="result-static">
-                        <div class="result-rectangle" :style="{ background: `${result.color}` }"></div>
-                        <p class="result-agent"> {{ result.name }} </p>
+                    <div class="result-static" style="display: flex; align-items: center;">
+                        <div class="result-rectangle" :style="{ background: `${(result as any).color}` }"></div>
+                        <p class="result-agent"> {{ (agents[index] as any).browser.name }} </p>
                     </div>
-                    <p class="result-percentage"> {{ result.percentage }}% </p>
+                    <p class="result-percentage"> {{ (result as any).percentage }}% </p>
                 </div>
             </div>
         </div>
@@ -36,58 +39,40 @@
 </template>
 
 <script setup lang="ts">
-const agents = [
-    {
-        name: "Chrome",
-        count: 100,
-        color: "#365BA7",
-    },
-    {
-        name: "Safari",
-        count: 50,
-        color: "#EA654A",
-    },
-    {
-        name: "Firefox",
-        count: 30,
-        color: "#A2CB71",
-    },
-    {
-        name: "Edge",
-        count: 20,
-        color: "#9E59B3",
-    },
-    {
-        name: "Opera",
-        count: 10,
-        color: "#85B4E3",
-    },
-    {
-        name: "Yandex",
-        count: 5,
-        color: "#F3F1ED",
-    },
-    {
-        name: "IE",
-        count: 1,
-        color: "#00BCD4",
-    }
-]
-const results = ref([])
+
+const results: Array<any> = []
+const agents = ref([])
+const loaded = ref(false)
+
+async function getBrowsers() {
+    await apiDataFetch(`${uri}/api/users/browsers`, ParamsInit("GET"))
+        .then(response => response.json())
+        .then(response => {
+            response.browsers.forEach((item: Object) => {
+                agents.value.push(item as never)
+            })
+        })
+}
+
 
 const percentageCounter = () => {
-    const totalCount = agents.reduce((total, agent) => total + agent.count, 0);
-    agents.forEach(agent => {
+    const totalCount = agents.value.reduce((total, agent) => total + (agent as any).count, 0);
+    agents.value.forEach(agent => {
         const item = {
-            name: agent.name,
-            percentage: (agent.count / totalCount * 100).toFixed(2),
-            color: agent.color
+            name: (agent as any).name,
+            percentage: ((agent as any).count / totalCount * 100).toFixed(2),
+            color: (agent as any).color
         };
-        results.value.push(item)
+        results.push(item)
     });
 }
 
-percentageCounter()
+onMounted(async () => {
+    await getBrowsers()
+    await percentageCounter()
+    loaded.value = true
+})
+
 
 </script>
 

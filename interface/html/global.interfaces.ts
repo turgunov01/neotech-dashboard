@@ -4,7 +4,7 @@ export interface GlobalInterface {
     html: string,
     css: string,
     sections: Array<GlobalAttributesInterface>,
-    cipher: string
+    cipher: string,
 }
 
 export interface GlobalAttributesInterface {

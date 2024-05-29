@@ -1,5 +1,5 @@
 import type { Editor } from "grapesjs";
-import { onCloneComponent, onCreateCallback, onRemoveCallback } from "../../callbacks/on:component";
+import { onCloneComponent, onCreateCallback, onRemoveCallback } from "../callbacks/on:component";
 
 export function componentConfig(editor: Editor) {
     editor.on("component:create", async (model: Object) => {
@@ -10,7 +10,6 @@ export function componentConfig(editor: Editor) {
             whatis: "component",
             page: "test"
         }
-
 
         await onCreateCallback(model)
         // onComponentAdd(type) // Statistics /api/logs/:username/?action=create&whatis=component&pageId=testId

@@ -1,5 +1,5 @@
 <template>
-    <div class="mail">
+    <div class="mail" v-if="loaded">
         <div class="mail-container">
             <aside class="mail-sidebar">
                 <UsersFormRequest :data="(outgoings as any)" />
@@ -9,39 +9,39 @@
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
-                <div class="mail-content">
+                <div class="mail-content" v-if="currentMessage && currentMessageOutgoing">
                     <div class="mail-params">
                         <div class="mail-user-data">
-                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).author.name }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).name }} </h4>
                             <span>/</span>
-                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).author.email }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).email }} </h4>
                             <span>/</span>
-                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).author.phone }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).phone }} </h4>
                         </div>
                         <p class="mail-user-date">
-                            {{ (currentMessage as any).author.date.replace(/\./g, "/").replace(/\,/g, "").replace(/\:/g,
-                    "-") }}
+                            {{ (currentMessage as any).date.replace(/\./g, "/").replace(/\,/g, "").replace(/\:/g,
+        "-") }}
                         </p>
                     </div>
                     <div class="mail-message">
-                        <div class="mail-message-box" v-html="(currentMessage as any).message"></div>
+                        <div class="mail-message-box" v-html="(currentMessage as any).messages"></div>
                     </div>
                     <div class="mail-message reply">
                         <span class="reply-span">
                             <img src="/assets/icons/mailbox/reply.svg" alt="">
                             <div class="mail-user-data">
-                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).author.name }} </h4>
+                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).name }} </h4>
                                 <span>/</span>
-                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).author.email }}
+                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).email }}
                                 </h4>
                                 <span>/</span>
-                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).author.phone }}
+                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).phone }}
                                 </h4>
                             </div>
                         </span>
 
                         <div class="mail-message">
-                            <div class="mail-message-box" v-html="(currentMessageOutgoing as any).message"></div>
+                            <div class="mail-message-box" v-html="(currentMessageOutgoing as any).messages"></div>
                         </div>
                     </div>
                     <button class="mail-send">Отправить</button>
@@ -52,272 +52,48 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
 import UsersFormRequest from '../../../components/Models/UsersFormRequestSidebar.vue'
 
-const $router = useRouter()
+const $router = useRouter().currentRoute.value
 
-const param = $router.currentRoute.value.params.id
-const path = $router.currentRoute.value.path
+const loaded = ref(false)
+const outgoings = ref({
+    title: "Отправленные",
+    type: "outgoing",
+    messages: []
+})
 
+const request = async () => {
+    const options = {
+        ...ParamsInit("GET"),
+    }
 
-const incomings = {
-    title: 'Входящие',
-    type: 'incoming',
-    messages: [
-        {
-            id: 1,
-            author: {
-                name: 'John Doe',
-                email: 'example@example.com',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 2,
-            author: {
-                name: 'Jane Smith',
-                email: 'example2@example.com',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 3,
-            author: {
-                name: 'Michael Johnson',
-                email: 'example3@example.com',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 4,
-            author: {
-                name: 'Emily Davis',
-                email: 'example4@example.com',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 5,
-            author: {
-                name: 'Daniel Wilson',
-                email: 'example5@example.com',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 6,
-            author: {
-                name: 'Olivia Brown',
-                email: 'example6@example.com',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 7,
-            author: {
-                name: 'William Taylor',
-                email: 'example7@example.com',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 8,
-            author: {
-                name: 'Sophia Anderson',
-                email: 'example8@example.com',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 9,
-            author: {
-                name: 'James Martinez',
-                email: 'example9@example.com',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 10,
-            author: {
-                name: 'Isabella Thompson',
-                email: 'example10@example.com',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'incoming',
-            reply_to: null,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        }
-    ],
+    await apiDataFetch(`${uri}/api/messages`, options)
+        .then(res => res.json())
+        .then(res => {
+
+            res.messages.forEach((item: Object, index: number) => {
+                if ((item as any).type === 2) {
+                    outgoings.value.messages.push(item as never)
+                }
+            })
+        })
 }
 
-const outgoings = {
-    title: 'Исходящие',
-    type: 'outgoing',
-    messages: [
-        {
-            id: 1,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 1,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 2,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 2,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 3,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 3,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 4,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 4,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 5,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 5,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 6,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 6,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 7,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 7,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 8,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 8,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 9,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '1234567890',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 9,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        },
-        {
-            id: 10,
-            author: {
-                name: 'Support Neotech',
-                email: 'support@neotech.uz',
-                phone: '0987654321',
-                date: new Date().toLocaleString()
-            },
-            type: 'outgoing',
-            reply_to: 10,
-            message: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-        }
-    ],
-}
+const currentMessage = ref(Object as any)
+const currentMessageOutgoing = ref(Object as any)
 
-const currentMessage = incomings.messages.find((item: any) => item.id == param)
-const currentMessageOutgoing = outgoings.messages.find((item: any) => item.id == (currentMessage as any).id)
+onMounted(async () => {
+    await request()
+    loaded.value = true
 
+    if (!outgoings.value.messages.length) {
+        useRouter().push("/mail/incoming/")
+    }
+
+    currentMessageOutgoing.value = outgoings.value.messages.find(item => (item as any).id == $router.params.id)
+    currentMessage.value = outgoings.value.messages.find(item => (item as any).id == currentMessageOutgoing.value.id)
+})
 
 </script>
 

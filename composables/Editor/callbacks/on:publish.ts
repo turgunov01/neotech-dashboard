@@ -10,7 +10,7 @@ export async function publish(model: GlobalInterface,) {
                     sections: model.sections,
                     html: model.html,
                     css: model.css,
-                    cipher: model.cipher
+                    cipher: model.cipher,
                 })
         })
             .then(response => response.json())

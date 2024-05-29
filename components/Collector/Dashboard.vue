@@ -21,10 +21,13 @@
 
 <script lang="ts" setup>
 import UsersViewStats from '~/components/dashboard/UsersViewStats.vue'
-import UsersTimerStats from '~/components/dashboard/UsersTimerStats.vue'
+import UsersTimerStats from '../dashboard/UsersTImerStats.vue'
 import UsersFormCount from '~/components/dashboard/UsersFormCount.vue'
 import UsersBrowsersCounter from '~/components/dashboard/agents/UsersBrowsersCounter.vue'
 import UsersRouteActivity from '~/components/dashboard/history/UsersRouteActivity.vue'
+
+
+
 </script>
 
 <style scoped lang="scss">
@@ -32,6 +35,8 @@ import UsersRouteActivity from '~/components/dashboard/history/UsersRouteActivit
 .dash-blocks {
     width: 100%;
 }
+
+
 
 .dash-blocks {
     margin-top: 3.2rem;

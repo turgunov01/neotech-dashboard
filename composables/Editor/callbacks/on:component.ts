@@ -1,5 +1,5 @@
 export async function onCreateCallback(collection: Object) {
-    return collection
+    
 }
 
 export function onRemoveCallback(model: Object): any {

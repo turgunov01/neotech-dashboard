@@ -35,6 +35,7 @@ export async function GrapesLauncher() {
 }
 
 
+
 // Initialize the parameters for the Grapejs API
 export async function GrapesInit() {
     const editor = await GrapesLauncher();

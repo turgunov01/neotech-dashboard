@@ -1,7 +1,7 @@
 export const PORT = 5003
-export const USER_FETCH_HOST = 'http://localhost:'
+export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz'
 
-export const uri = `${USER_FETCH_HOST}${PORT}`
+export const uri = `${USER_FETCH_HOST}`
 
 export function apiDataFetch(url: string, options: RequestInit) {
     return fetch(url, options)

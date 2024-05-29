@@ -68,7 +68,6 @@ p,
 span {
     color: #344054 !important;
 }
-
 .demo-container {
     width: 100% !important;
 }

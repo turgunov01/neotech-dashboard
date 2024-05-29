@@ -8,7 +8,7 @@ export async function GrapesInitPagesManager(component: Component) {
         ...ParamsInit('GET')
     }
 
-    await apiDataFetch(`${USER_FETCH_HOST}${PORT}/api/pages/test-stranitsa?popular=*`, options)
+    await apiDataFetch(`${USER_FETCH_HOST}/api/pages/test-stranitsa?popular=*`, options)
         .then(response => response.json())
         .then(response => {
             const data = response

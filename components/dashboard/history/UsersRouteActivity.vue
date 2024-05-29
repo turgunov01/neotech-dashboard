@@ -3,11 +3,11 @@
         <div class="hst-container">
             <header class="stats-header">
                 <h4 class="stats-heading">Просмотры</h4>
-                <div class="stats-header-buttons">
+                <!-- <div class="stats-header-buttons">
                     <button class="stats-header-button active">За день</button>
                     <button class="stats-header-button">За месяц</button>
                     <button class="stats-header-button">За год</button>
-                </div>
+                </div> -->
             </header>
             <section class="hst-section">
                 <div class="hst-heading">

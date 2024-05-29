@@ -16,7 +16,7 @@ export function buttonPublishHandler(editor: Editor) {
             html: resolvedHtml,
             css: (resolvedCss as string),
             sections: editor.getComponents() as any,
-            cipher: cyrb53(resolvedHtml).toString()
+            cipher: cyrb53(resolvedHtml).toString(),
         }
 
         const components = editor.getComponents().toJSON()
@@ -41,6 +41,7 @@ export async function buildEditor(editor: Editor) {
                 const data = response
 
                 editor.setComponents(data.sections)
+                editor.Css.addRules(data.css)
             })
     }
     catch (err) {
