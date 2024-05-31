@@ -5,7 +5,12 @@
                 <UsersFormRequest :data="(messages as any)" />
             </aside>
             <section class="mail-section">
-                <span class="mail-favorite">
+                <span class="mail-favorite" @click="favorite(false)" v-if="(message as any).isFav == 'true'">
+                    <img src="../../../assets/star-in.svg" alt="">
+                    <p class="mail-favorite-heading">В избранных</p>
+                </span>
+                <span class="mail-favorite" @click="favorite(true)"
+                    v-else-if="(message as any).isFav == 'false' || !(message as any).isFav">
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
@@ -56,7 +61,7 @@ const message = ref({
 })
 
 const messages = ref({
-    title: "Входящие",
+    title: "Почта",
     type: "incoming",
     messages: []
 })
@@ -75,6 +80,30 @@ const request = async () => {
                 }
             })
 
+        })
+}
+
+const favorite = async (value: Boolean) => {
+    const options = {
+        ...ParamsInit("PUT"),
+        body: JSON.stringify({
+            ...message.value
+        })
+    }
+
+
+    await apiDataFetch(`${uri}/api/messages/${$router.currentRoute.value.params.id.toString()}?action=${value}`, options)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        .finally(() => {
+            setTimeout(() => {
+                location.reload()
+            }, 300);
         })
 }
 

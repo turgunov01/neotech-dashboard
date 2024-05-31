@@ -51,7 +51,7 @@
                     </nuxt-link>
                 </ul>
                 <div class="logout">
-                    <button data-type="logout">
+                    <button data-type="logout" @click="logout">
                         <span>
                             <img src="/assets/icons/navigation/logout.svg" alt="">
                         </span>
@@ -70,7 +70,11 @@
 </template>
 
 <script lang="ts" setup>
-
+const logout = async () => {
+    removeStoreData("Authorization")
+    removeStoreData("username")
+    removeStoreData("password")
+}
 
 </script>
 

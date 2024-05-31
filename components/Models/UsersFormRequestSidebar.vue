@@ -4,23 +4,19 @@
             <h2 class="sidebar-params-title"> {{ data.title }} </h2>
         </div>
         <ul class="sidebar-list">
-            <li class="sidebar-item" v-if="!outgoing"
-                :class="$router.currentRoute.value.params.id == item.id ? 'active' : ''"
-                :data-type="`${data.type}-messages`" v-for="item in data.messages ">
-                <nuxt-link :to="`${item.id}`">
+            <li class="sidebar-item" :class="$router.currentRoute.value.params.id == item.id ? 'active' : ''"
+                :data-type="`${data.type}-messages`" v-for="item in data.messages">
+                <nuxt-link :to="`${item.id}`" v-if="item.type === 1">
                     <h4 class="sidebar-item-message"> {{ item.messages }} </h4>
                     <h6 class="sidebar-item-author"> {{ item.email }} </h6>
                     <p class="sidebar-item-date"> {{ item.date.replace(/\./g, '/') }} </p>
                 </nuxt-link>
-            </li>
-            <li class="sidebar-item" v-else-if="outgoing"
-                :class="$router.currentRoute.value.params.id == item.id ? 'active' : ''"
-                :data-type="`${data.type}-messages`" v-for="item in data.messages ">
-                <nuxt-link :to="`${item.id}`">
+                <nuxt-link :to="`/mail/outgoing/${item.id}`" v-else-if="item.type !== 1">
                     <h4 class="sidebar-item-message"> {{ item.messages }} </h4>
                     <h6 class="sidebar-item-author"> {{ item.email }} </h6>
                     <p class="sidebar-item-date"> {{ item.date.replace(/\./g, '/') }} </p>
                 </nuxt-link>
+                <img src="../../assets/star-in.svg" class="sidebar-item-star" :class="item.isFav == 'true' ? 'active' : ''" alt="">
             </li>
         </ul>
     </div>
@@ -31,8 +27,6 @@
 import { defineProps } from 'vue'
 
 const $router = useRouter()
-
-const outgoing = $router.currentRoute.value.path.includes("outgoing")
 
 
 const props = defineProps({

@@ -5,7 +5,12 @@
                 <UsersFormRequest :data="(outgoings as any)" />
             </aside>
             <section class="mail-section">
-                <span class="mail-favorite">
+                <span class="mail-favorite" @click="favorite(false)" v-if="currentMessage.isFav == 'true'">
+                    <img src="../../../assets/star-in.svg" alt="">
+                    <p class="mail-favorite-heading">В избранных</p>
+                </span>
+                <span class="mail-favorite" @click="favorite(true)"
+                    v-else-if="currentMessage.isFav == 'false' || !currentMessage.isFav">
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
@@ -19,8 +24,12 @@
                             <h4 class="mail-user-data-text"> {{ (currentMessage as any).phone }} </h4>
                         </div>
                         <p class="mail-user-date">
-                            {{ (currentMessage as any).date.replace(/\./g, "/").replace(/\,/g, "").replace(/\:/g,
-        "-") }}
+                            {{ (currentMessage as any)
+        .date
+        .replace(/\./g, "/")
+        .replace(/\,/g, "")
+        .replace(/\:/g,
+            "-") }}
                         </p>
                     </div>
                     <div class="mail-message">
@@ -44,7 +53,10 @@
                             <div class="mail-message-box" v-html="(currentMessageOutgoing as any).messages"></div>
                         </div>
                     </div>
-                    <button class="mail-send">Отправить</button>
+                    <button class="mail-send" disabled :style="{
+                        cursor: 'not-allowed',
+                        opacity: '0.5'
+                    }">Отправить</button>
                 </div>
             </section>
         </div>
@@ -80,6 +92,30 @@ const request = async () => {
         })
 }
 
+const favorite = async (value: Boolean) => {
+    const options = {
+        ...ParamsInit("PUT"),
+        body: JSON.stringify({
+            ...currentMessage.value
+        })
+    }
+
+
+    await apiDataFetch(`${uri}/api/messages/${useRouter().currentRoute.value.params.id.toString()}?action=${value}`, options)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        .finally(() => {
+            setTimeout(() => {
+                location.reload()
+            }, 300);
+        })
+}
+
 const currentMessage = ref(Object as any)
 const currentMessageOutgoing = ref(Object as any)
 
@@ -97,4 +133,8 @@ onMounted(async () => {
 
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.mail-favorite {
+    cursor: pointer;
+}
+</style>
