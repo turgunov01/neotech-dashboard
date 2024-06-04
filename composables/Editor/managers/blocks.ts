@@ -1,6 +1,19 @@
 import type { GrapesInitInterface } from "~/interface/Grapesjs.interface"
 import { apiDataFetch } from "#imports"
 
+
+async function GrapesInitBlockLabels() {
+    const options = {
+        ...ParamsInit("GET")
+    }
+
+    await apiDataFetch(`${uri}/api/uploads`, options)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+        })
+}
+
 export async function GrapesInitBlockManager(component: GrapesInitInterface) {
     (component as any).blockManager = {
         appendTo: '.insert-cards',
@@ -11,13 +24,19 @@ export async function GrapesInitBlockManager(component: GrapesInitInterface) {
         ...ParamsInit('GET')
     }
 
-    await apiDataFetch(`${uri}/api/blocks`, options)
-        .then(response => response.json())
-        .then(response => {
-            const data = response
+    await GrapesInitBlockLabels()
+        .then(async () => {
+            await apiDataFetch(`${uri}/api/blocks`, options)
+                .then(response => response.json())
+                .then(async response => {
+                    const data = response
 
-            data.data.blocks.forEach((section: Object, idx: Number) => {
-                (component as any).blockManager.blocks.push(section)
-            })
+
+                    data.forEach((section: Object, idx: Number) => {
+                        (component as any).blockManager.blocks.push(section)
+                    })
+                })
         })
+
+
 }

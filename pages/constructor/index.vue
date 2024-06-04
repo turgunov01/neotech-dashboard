@@ -72,7 +72,6 @@ span {
     width: 100% !important;
 }
 
-
 .wrapper {
     display: flex;
 }

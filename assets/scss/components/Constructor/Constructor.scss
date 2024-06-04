@@ -389,7 +389,7 @@
         background: #344054 !important;
         left: unset !important;
         right: 2rem !important;
-        height: 100% !important;
+        height: auto !important;
         max-height: 4rem;
         top: unset !important;
         bottom: 100% !important;
@@ -407,7 +407,7 @@
                 display: none;
             }
         }
-    }
+    }    
 }
 
 .CodeMirror {

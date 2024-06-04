@@ -1,4 +1,5 @@
 import grapesjs, { Editor } from "grapesjs";
+
 import { ref, type Ref } from 'vue'
 
 import type { GrapesInitInterface } from "~/interface/Grapesjs.interface";
