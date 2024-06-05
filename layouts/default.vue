@@ -74,6 +74,10 @@ const logout = async () => {
     removeStoreData("Authorization")
     removeStoreData("username")
     removeStoreData("password")
+
+    setTimeout(() => {
+        location.reload()
+    }, 300);
 }
 
 </script>

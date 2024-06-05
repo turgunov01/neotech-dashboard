@@ -31,6 +31,7 @@ export async function GrapesInitBlockManager(component: GrapesInitInterface) {
                 .then(async response => {
                     const data = response
 
+                    console.log(data)
 
                     data.forEach((section: Object, idx: Number) => {
                         (component as any).blockManager.blocks.push(section)

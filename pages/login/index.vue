@@ -60,6 +60,10 @@ const login = async () => {
 
                     if (avail.username && avail.password && avail.token) {
                         $router.push("/")
+
+                        setTimeout(() => {
+                            location.reload()
+                        }, 200);
                     }
                 } catch (err) {
                     console.log(err)
