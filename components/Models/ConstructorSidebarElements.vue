@@ -9,12 +9,12 @@
             </button>
         </div>
         <div class="aside-content">
-            <div class="aside-content-switcher" :class="active === 0 ? 'active' : ''">
+            <div class="aside-content-switcher" :class="active === 1 ? 'active' : ''">
                 <div class="insert">
                     <div class="insert-cards" ref="cards"></div>
                 </div>
             </div>
-            <div class="aside-content-switcher" :class="active === 1 ? 'active' : ''">
+            <div class="aside-content-switcher" :class="active === 0 ? 'active' : ''">
                 <!-- <ConstructorSidebarPages /> -->
                 <p>1</p>
             </div>
