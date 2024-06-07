@@ -53,7 +53,8 @@ export function buttonPublishHandler(editor: Editor) {
         const components = editor.getComponents().toJSON()
 
         if (components.length === 0) return alert("You can't publish empty page!")
-        publish(element)
+
+        await publish(element)
     })
 }
 
@@ -68,12 +69,10 @@ export async function buildEditor(editor: Editor) {
             ...ParamsInit("GET"),
         })
             .then(response => response.json())
-            .then(response => {
+            .then(async response => {
                 const data = response
-                const assets = AssetManager(editor)
-
-                editor.AssetManager.add(assets)
-
+                const assets = await AssetManager(editor)
+                console.log(assets)
 
                 editor.setComponents(data.sections)
                 editor.Css.addRules(data.css)

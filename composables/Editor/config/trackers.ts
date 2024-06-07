@@ -1,4 +1,4 @@
-import type { Editor } from "grapesjs";
+import type { Asset, Editor } from "grapesjs";
 import { onCloneComponent, onCreateCallback, onRemoveCallback } from "../callbacks/on:component";
 
 export function componentConfig(editor: Editor) {
@@ -35,5 +35,11 @@ export function componentConfig(editor: Editor) {
         }
         await onCloneComponent(model)
         // onComponentClone(type) // Statistics /api/logs/:username/?action=clone&whatis=component&pageId=testId
+    })
+}
+
+export function assetConfig(editor: Editor) {
+    editor.on("asset:add", async (asset: Asset) => {
+        console.log(asset.toJSON())
     })
 }

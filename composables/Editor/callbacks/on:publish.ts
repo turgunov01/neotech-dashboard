@@ -1,4 +1,4 @@
-import type { GlobalAttributesInterface, GlobalInterface } from "~/interface/html/global.interfaces"
+import type { GlobalInterface } from "~/interface/global/global.interfaces"
 
 export async function publish(model: GlobalInterface,) {
     try {
