@@ -1,5 +1,5 @@
 import type { Editor } from "grapesjs"
-import { config } from "../mechanism/config"
+import { config } from "~/composables/config"
 import type { GlobalInterface } from "~/interface/global/global.interfaces"
 import { cyrb53 } from "~/composables/cybr/cybr-54"
 import { publish } from "../callbacks/on:publish"
@@ -16,22 +16,27 @@ async function AssetManager(editor: Editor) {
 
     const assets = ref([])
 
-    await apiDataFetch(`${uri}/api/uploads`, options)
-        .then(response => response.json())
-        .then(response => {
-            response.data.uploads.forEach((item: any, index: number) => {
-                const asset: AssetsInterface = {
-                    type: item.type ? item.type : "image",
-                    src: item.url,
-                    width: 100,
-                    height: 100,
-                    name: item.origin,
-                }
+    try {
+        await apiDataFetch(`${uri}/api/uploads`, options)
+            .then(response => response.json())
+            .then(response => {
+                response.data.uploads.forEach((item: any, index: number) => {
+                    const asset: AssetsInterface = {
+                        type: item.type ? item.type : "image",
+                        src: item.url,
+                        width: 100,
+                        height: 100,
+                        name: item.origin,
+                    }
 
-                assets.value.push(asset as never)
+                    assets.value.push(asset as never)
+                })
             })
-        })
+    } catch (err) {
+        alert(err)
+    }
 
+    await editor.AssetManager.add(assets.value)
     return assets.value
 }
 
@@ -72,7 +77,6 @@ export async function buildEditor(editor: Editor) {
             .then(async response => {
                 const data = response
                 const assets = await AssetManager(editor)
-                console.log(assets)
 
                 editor.setComponents(data.sections)
                 editor.Css.addRules(data.css)

@@ -31,13 +31,21 @@ export async function GrapesInitBlockManager(component: GrapesInitInterface) {
                 .then(async response => {
                     const data = response
 
-                    const labels = await GrapesInitBlockLabels()
-
-                    data.forEach((section: Object, idx: Number) => {
-                        (component as any).blockManager.blocks.push(section)
-                    })
+                    FilterBlocksSettings(data, component)
                 })
         })
 
+    
+}
 
+export async function FilterBlocksSettings(data: Response, component: any) {
+    const storedId = await getStoreData("init_filter")
+
+    if (!storedId) {
+        await storeData('init_filter', 0)
+    }
+
+    (data as Response | any).forEach((block: Object) => {
+        (component as any).blockManager.blocks.push(block)
+    })
 }

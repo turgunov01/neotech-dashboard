@@ -22,6 +22,10 @@ export async function publish(model: GlobalInterface,) {
             })
     } catch (err) {
         alert(err)
+    } finally {
+        setTimeout(() => {
+            location.reload()
+        }, 1000);
     }
 }
 

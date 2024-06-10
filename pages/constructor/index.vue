@@ -1,6 +1,7 @@
 <template>
     <div class="constructor">
         <nav class="nav">
+            <Loader :height="'7rem'" v-if="loaded" />
             <div class="nav-media">
                 <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
                 <div class="nav-media-router" @click="$router.back()">
@@ -18,14 +19,15 @@
                 <div class="frame demo">
                     <img src="/assets/constructor/play.svg" alt="">
                 </div>
-                <button class="frame publish">
+                <button class="frame publish" @click="load" style="position: relative;">
+                    <Loader :height="'100%'" :curved="'.8rem'" v-if="clicked" />
                     Опубликовать
                 </button>
             </div>
         </nav>
         <div class="main">
             <div class="wrapper">
-                <aside class="aside">
+                <aside class="aside" style="position: relative;">
                     <ConstructorSidebarElements />
                 </aside>
                 <div class="demo">
@@ -46,11 +48,33 @@ import Constructor from '~/components/Constructor.vue';
 import ConstructorSidebarElements from '../../components/Models/ConstructorSidebarElements.vue'
 
 import 'grapesjs/dist/css/grapes.min.css';
+import type { _height } from '#tailwind-config/theme';
 
+
+const loaded = ref(false)
+const clicked = ref(false)
+
+const load = () => {
+    clicked.value = true;
+
+    setTimeout(() => {
+        clicked.value = false
+    }, 1500);
+}
 
 
 onMounted(async () => {
-    GrapesInit()
+    loaded.value = true
+
+    try {
+        await GrapesInit()
+    } catch (err) {
+        alert(err)
+    } finally {
+        setTimeout(() => {
+            loaded.value = false
+        }, 500);
+    }
 })
 
 
@@ -68,6 +92,7 @@ p,
 span {
     color: #344054 !important;
 }
+
 .demo-container {
     width: 100% !important;
 }

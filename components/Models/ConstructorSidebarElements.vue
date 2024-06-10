@@ -1,22 +1,20 @@
 <template>
     <div class="aside-container">
         <div class="aside-buttons">
-            <button class="aside-button" :class="active === 0 ? 'active' : ''" @click="toggle(0)">
-                <p class="aside-button-name">Вставка</p>
+            <button class="aside-button" :class="activeElementType == 1 ? '' : 'active'" @click="toggle(0)">
+                <p class="aside-button-name">Шаблоны</p>
             </button>
-            <button class="aside-button" :class="active === 1 ? 'active' : ''" @click="toggle(1)">
-                <p class="aside-button-name">Страницы</p>
+            <button class="aside-button" :class="activeElementType == 0 ? '' : 'active'" @click="toggle(1)">
+                <p class="aside-button-name">Блоки</p>
             </button>
         </div>
         <div class="aside-content">
-            <div class="aside-content-switcher" :class="active === 1 ? 'active' : ''">
-                <div class="insert">
-                    <div class="insert-cards" ref="cards"></div>
-                </div>
-            </div>
-            <div class="aside-content-switcher" :class="active === 0 ? 'active' : ''">
-                <!-- <ConstructorSidebarPages /> -->
-                <p>1</p>
+            <Loader v-if="!loaded" :height="'10rem'" />
+            <div class="insert" :style="{
+                opacity: loaded ? 1 : 0,
+                transition: '1s'
+            }">
+                <div class="insert-cards"></div>
             </div>
         </div>
     </div>
@@ -25,11 +23,20 @@
 
 <script setup lang="ts">
 
-const active = ref(0)
+const activeElementType = ref(0)
+
+const loaded = ref(true)
 
 const toggle = (index: Number) => {
-    (active as any).value = index
+    (activeElementType.value as any) = index
 }
+
+onMounted(() => {
+    loaded.value = false
+    setTimeout(() => {
+        loaded.value = true
+    }, 2000);
+})
 
 </script>
 

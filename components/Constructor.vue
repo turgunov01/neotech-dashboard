@@ -1,6 +1,6 @@
 <template>
     <div id="gjs">
-        <h1>Hello World Component!</h1>
+        <Loader :height="'100%'" />
     </div>
 </template>
 

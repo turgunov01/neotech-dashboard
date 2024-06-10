@@ -1,5 +1,4 @@
 import type { Asset, Editor } from "grapesjs";
-import { onCloneComponent, onCreateCallback, onRemoveCallback } from "../callbacks/on:component";
 
 export function componentConfig(editor: Editor) {
     editor.on("component:create", async (model: Object) => {
@@ -10,9 +9,7 @@ export function componentConfig(editor: Editor) {
             whatis: "component",
             page: "test"
         }
-
-        await onCreateCallback(model)
-        // onComponentAdd(type) // Statistics /api/logs/:username/?action=create&whatis=component&pageId=testId
+        console.log("Component action: create")
 
     })
 
@@ -22,9 +19,7 @@ export function componentConfig(editor: Editor) {
             whatis: "component",
             page: "test"
         }
-
-        await onRemoveCallback(model)
-        // onComponentRemove(type) // Statistics /api/logs/:username/?action=remove&whatis=component&pageId=testId
+        console.log("Component action: remove")
     })
 
     editor.on("component:clone", async (model: Object) => {
@@ -33,13 +28,12 @@ export function componentConfig(editor: Editor) {
             whatis: "component",
             page: "test"
         }
-        await onCloneComponent(model)
-        // onComponentClone(type) // Statistics /api/logs/:username/?action=clone&whatis=component&pageId=testId
+        console.log("Component action: clone+create")
     })
 }
 
 export function assetConfig(editor: Editor) {
     editor.on("asset:add", async (asset: Asset) => {
-        console.log(asset.toJSON())
+        // console.log(asset.toJSON())
     })
 }
