@@ -21,7 +21,7 @@ export async function publish(model: GlobalInterface,) {
 
             })
     } catch (err) {
-        console.log(err)
+        alert(err)
     }
 }
 

@@ -222,6 +222,10 @@
         font-family: "Roboto", sans-serif !important;
     }
 
+    &-layer &-layer__t-default no-select &-two-color {
+        background: #333;
+    }
+
 
     &-editor {
         background: unset !important;
@@ -407,7 +411,7 @@
                 display: none;
             }
         }
-    }    
+    }
 }
 
 .CodeMirror {
