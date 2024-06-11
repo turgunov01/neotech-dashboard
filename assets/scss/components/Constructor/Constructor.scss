@@ -374,6 +374,37 @@
             background: rgba(0, 0, 0, 0.2) !important;
             backdrop-filter: blur(1rem) !important;
             box-shadow: 0 .4rem .8rem rgba(0, 0, 0, 0.5);
+
+            &.gjs {
+                &-one {
+                    &-bg {
+                        width: 100% !important;
+                        max-width: 120rem !important;
+                    }
+                }
+            }
+        }
+    }
+
+    &-am {
+        &-file {
+            &-uploader {
+                width: 100% !important;
+            }
+        }
+
+        &-name {
+            font-size: 1.6rem !important;
+        }
+
+        &-asset {
+            width: calc(100% / 4 - 1rem) !important;
+        }
+
+        &-assets {
+            &-cont {
+                width: 100% !important;
+            }
         }
     }
 

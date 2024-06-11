@@ -32,6 +32,23 @@ async function AssetManager(editor: Editor) {
                     assets.value.push(asset as never)
                 })
             })
+
+        // await apiDataFetch(`${uri}/api/assets`, options)
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         response.data.forEach((item: any, index: number) => {
+        //             const asset: AssetsInterface = {
+        //                 type: item.type ? item.type : "image",
+        //                 src: item.src,
+        //                 width: 100,
+        //                 height: 100,
+        //                 name: item.name,
+        //             }
+
+        //             assets.value.push(asset as never)
+        //             console.log(asset)
+        //         })
+        //     })
     } catch (err) {
         alert(err)
     }

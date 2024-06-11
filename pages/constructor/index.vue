@@ -2,7 +2,10 @@
     <div class="constructor">
         <nav class="nav">
             <Loader :height="'7rem'" v-if="loaded" />
-            <div class="nav-media">
+            <div class="nav-media" :style="{
+                opacity: !loaded ? '1' : '0',
+                transition: '1s'
+            }">
                 <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
                 <div class="nav-media-router" @click="$router.back()">
                     <img src="/assets/tick.svg" alt="">
@@ -48,8 +51,6 @@ import Constructor from '~/components/Constructor.vue';
 import ConstructorSidebarElements from '../../components/Models/ConstructorSidebarElements.vue'
 
 import 'grapesjs/dist/css/grapes.min.css';
-import type { _height } from '#tailwind-config/theme';
-
 
 const loaded = ref(false)
 const clicked = ref(false)
@@ -73,7 +74,7 @@ onMounted(async () => {
     } finally {
         setTimeout(() => {
             loaded.value = false
-        }, 500);
+        }, 100);
     }
 })
 
