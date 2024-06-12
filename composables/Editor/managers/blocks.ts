@@ -35,7 +35,11 @@ export async function GrapesInitBlockManager(component: GrapesInitInterface) {
                 })
         })
 
-    
+
+}
+
+export async function GrapesInitLocalization(component: GrapesInitInterface) {
+
 }
 
 export async function FilterBlocksSettings(data: Response, component: any) {

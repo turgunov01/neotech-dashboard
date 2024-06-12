@@ -29,7 +29,12 @@ export async function GrapesLauncher() {
 
 // Initialize the parameters for the Grapejs API
 export async function GrapesInit() {
-    const editor = await GrapesLauncher();
+    const editor = await GrapesLauncher() as Editor;
+
+    editor.Panels.removeButton('options', 'preview');
+    editor.Panels.removeButton('options', 'fullscreen');
+    editor.Panels.removeButton('options', 'code');
+
 
     await runtime(editor)
     return editor
