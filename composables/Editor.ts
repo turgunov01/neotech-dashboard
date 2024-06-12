@@ -8,6 +8,8 @@ import { GrapesInitBlockManager } from "./Editor/managers/blocks";
 
 import { runtime } from "./Editor/config/runtime";
 
+import { PanelManager } from "./Editor/managers/panels";
+
 const component: Ref<GrapesInitInterface> = ref({
     container: '#gjs',
     fromElement: true,
@@ -30,10 +32,17 @@ export async function GrapesLauncher() {
 // Initialize the parameters for the Grapejs API
 export async function GrapesInit() {
     const editor = await GrapesLauncher() as Editor;
+    const panelManager = new PanelManager(parent, button);
 
-    editor.Panels.removeButton('options', 'preview');
-    editor.Panels.removeButton('options', 'fullscreen');
-    editor.Panels.removeButton('options', 'code');
+    const newPanel: any = {
+        id: 'myNewButton',
+        className: 'someClass',
+        command: 'someCommand',
+        attributes: { title: 'Some title' },
+        active: false,
+    };
+
+    panelManager.createPanel();
 
 
     await runtime(editor)
