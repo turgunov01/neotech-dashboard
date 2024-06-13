@@ -9,6 +9,7 @@ import { GrapesInitBlockManager } from "./Editor/managers/blocks";
 import { runtime } from "./Editor/config/runtime";
 
 import { PanelManager } from "./Editor/managers/panels";
+import { locales } from "./Editor/config/locales";
 
 const component: Ref<GrapesInitInterface> = ref({
     container: '#gjs',
@@ -32,18 +33,9 @@ export async function GrapesLauncher() {
 // Initialize the parameters for the Grapejs API
 export async function GrapesInit() {
     const editor = await GrapesLauncher() as Editor;
-    const panelManager = new PanelManager(parent, button);
 
-    const newPanel: any = {
-        id: 'myNewButton',
-        className: 'someClass',
-        command: 'someCommand',
-        attributes: { title: 'Some title' },
-        active: false,
-    };
-
-    panelManager.createPanel();
-
+    // Locale
+    locales(editor)
 
     await runtime(editor)
     return editor
