@@ -38,6 +38,8 @@ export async function GrapesInit() {
     locales(editor)
 
     await runtime(editor)
+    const panels = document.querySelectorAll(".gjs-sm-sector")
+
     return editor
 }
 
