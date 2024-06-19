@@ -1,9 +1,6 @@
 import type { Editor } from "grapesjs"
-import type { AssetsInterface } from "~/interface/assets.interface"
-import { publish } from "../methods/publish"
-import type { GlobalInterface } from "~/interface/global/global.interfaces"
-import { cyrb53 } from "~/composables/cipher-53/cybr-54"
 import { EditorPublish } from "../../init"
+import { Panels } from "./configs"
 
 async function AssetManager(editor: Editor) {
     const options = {
@@ -66,7 +63,7 @@ export async function buildEditor(editor: Editor) {
     }
 }
 
-export function buttonPublishHandler(editor: Editor) {
+function buttonPublishHandler(editor: Editor) {
     const button = document.querySelector(".frame.publish")
 
     button?.addEventListener("click", async () => {
@@ -81,5 +78,6 @@ export function buttonPublishHandler(editor: Editor) {
 
 export async function runtime(editor: Editor) {
     await buildEditor(editor)
+    new Panels(editor).addPanel(editor)
     buttonPublishHandler(editor)
 }

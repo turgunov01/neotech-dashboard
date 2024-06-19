@@ -63,4 +63,3 @@ export class EditorPublish extends EditorApp {
         publish(this.element)
     }
 }
-
