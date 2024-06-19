@@ -77,7 +77,7 @@ const outgoings = ref({
 
 const request = async () => {
     const options = {
-        ...ParamsInit("GET"),
+        ...customHeaders("GET"),
     }
 
     await apiDataFetch(`${uri}/api/messages`, options)
@@ -94,7 +94,7 @@ const request = async () => {
 
 const favorite = async (value: Boolean) => {
     const options = {
-        ...ParamsInit("PUT"),
+        ...customHeaders("PUT"),
         body: JSON.stringify({
             ...currentMessage.value
         })

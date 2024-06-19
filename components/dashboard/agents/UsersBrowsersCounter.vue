@@ -45,7 +45,7 @@ const agents = ref([])
 const loaded = ref(false)
 
 async function getBrowsers() {
-    await apiDataFetch(`${uri}/api/users/browsers`, ParamsInit("GET"))
+    await apiDataFetch(`${uri}/api/users/browsers`, customHeaders("GET"))
         .then(response => response.json())
         .then(response => {
             response.browsers.forEach((item: Object) => {

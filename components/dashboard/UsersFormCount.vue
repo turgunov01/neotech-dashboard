@@ -24,7 +24,7 @@ const messages = ref(0)
 
 const request = async () => {
     const options = {
-        ...ParamsInit("GET"),
+        ...customHeaders("GET"),
     }
     await apiDataFetch(`${uri}/api/messages`, options)
         .then(response => response.json())

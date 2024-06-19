@@ -1,9 +1,9 @@
 import type { Editor } from "grapesjs"
-import { config } from "~/composables/config"
-import type { GlobalInterface } from "~/interface/global/global.interfaces"
-import { cyrb53 } from "~/composables/cybr/cybr-54"
-import { publish } from "../callbacks/on:publish"
 import type { AssetsInterface } from "~/interface/assets.interface"
+import { publish } from "../methods/publish"
+import type { GlobalInterface } from "~/interface/global/global.interfaces"
+import { cyrb53 } from "~/composables/cipher-53/cybr-54"
+import { EditorPublish } from "../../init"
 
 async function AssetManager(editor: Editor) {
     const options = {
@@ -33,51 +33,12 @@ async function AssetManager(editor: Editor) {
                 })
             })
 
-        // await apiDataFetch(`${uri}/api/assets`, options)
-        //     .then(response => response.json())
-        //     .then(response => {
-        //         response.data.forEach((item: any, index: number) => {
-        //             const asset: AssetsInterface = {
-        //                 type: item.type ? item.type : "image",
-        //                 src: item.src,
-        //                 width: 100,
-        //                 height: 100,
-        //                 name: item.name,
-        //             }
-
-        //             assets.value.push(asset as never)
-        //             console.log(asset)
-        //         })
-        //     })
     } catch (err) {
         alert(err)
     }
 
     await editor.AssetManager.add(assets.value)
     return assets.value
-}
-
-export function buttonPublishHandler(editor: Editor) {
-    const button = document.querySelector(".frame.publish")
-
-    button?.addEventListener("click", async () => {
-        const resolvedHtml = editor.getHtml()
-        const resolvedCss = editor.getCss()
-
-        const element: GlobalInterface = {
-            name: "test-stranitsa",
-            html: resolvedHtml,
-            css: (resolvedCss as string),
-            sections: editor.getComponents() as any,
-            cipher: cyrb53(resolvedHtml).toString(),
-        }
-
-        const components = editor.getComponents().toJSON()
-
-        if (components.length === 0) return alert("You can't publish empty page!")
-
-        await publish(element)
-    })
 }
 
 export async function buildEditor(editor: Editor) {
@@ -88,7 +49,7 @@ export async function buildEditor(editor: Editor) {
 
     try {
         await apiDataFetch(`${uri}/api/pages/test-stranitsa?${query.type}=${query.value}`, {
-            ...ParamsInit("GET"),
+            ...customHeaders("GET"),
         })
             .then(response => response.json())
             .then(async response => {
@@ -97,7 +58,7 @@ export async function buildEditor(editor: Editor) {
 
                 editor.setComponents(data.sections)
                 editor.Css.addRules(data.css)
-
+                editor.Assets.add(assets)
             })
     }
     catch (err) {
@@ -105,8 +66,20 @@ export async function buildEditor(editor: Editor) {
     }
 }
 
+export function buttonPublishHandler(editor: Editor) {
+    const button = document.querySelector(".frame.publish")
+
+    button?.addEventListener("click", async () => {
+        const components = editor.getComponents().toJSON()
+
+        if (components.length === 0) return alert("You can't publish empty page!")
+
+        return new EditorPublish(editor).sync()
+        // await publish(element)
+    })
+}
+
 export async function runtime(editor: Editor) {
-    await config(editor)
     await buildEditor(editor)
     buttonPublishHandler(editor)
 }

@@ -1,5 +1,5 @@
 export const PORT = 5003
-export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz'
+export const USER_FETCH_HOST = 'http://localhost:5003'
 
 export const uri = `${USER_FETCH_HOST}`
 
@@ -21,7 +21,7 @@ export function getStoreData(name: string) {
     return true
 }
 
-export function ParamsInit(type: string) {
+export function customHeaders(type: string) {
     return {
         method: type,
         headers: {
@@ -48,7 +48,7 @@ export default {
     PORT,
     USER_FETCH_HOST,
     apiDataFetch,
-    ParamsInit,
+    customHeaders,
     types,
     isRequestPopular,
     uri

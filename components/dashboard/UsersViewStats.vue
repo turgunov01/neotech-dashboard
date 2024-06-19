@@ -24,7 +24,7 @@ const visits = ref(0)
 
 const request = async () => {
     const options = {
-        ...ParamsInit("GET"),
+        ...customHeaders("GET"),
     }
     await apiDataFetch(`${uri}/api/stats?type=views`, options)
         .then(response => response.json())

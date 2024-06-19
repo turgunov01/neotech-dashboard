@@ -21,6 +21,7 @@
   "dependencies": {
     "@builder.io/sdk-vue": "^1.0.27",
     "grapesjs": "^0.21.10",
+    "grapesjs-swiper-slider": "^0.0.5",
     "sass": "^1.69.5",
     "vue-meta": "^2.4.0"
   }

@@ -68,7 +68,7 @@ const messages = ref({
 
 const request = async () => {
     await apiDataFetch(`${uri}/api/messages`, {
-        ...ParamsInit("GET")
+        ...customHeaders("GET")
     })
         .then(response => response.json())
         .then(async response => {
@@ -85,7 +85,7 @@ const request = async () => {
 
 const favorite = async (value: Boolean) => {
     const options = {
-        ...ParamsInit("PUT"),
+        ...customHeaders("PUT"),
         body: JSON.stringify({
             ...message.value
         })
@@ -118,7 +118,7 @@ const send = async () => {
     }
 
     await apiDataFetch(`${uri}/api/messages?type=2`, {
-        ...ParamsInit("POST"),
+        ...customHeaders("POST"),
         body: JSON.stringify(params)
     })
         .then((res: Response) => res.json())

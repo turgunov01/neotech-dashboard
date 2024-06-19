@@ -3,7 +3,7 @@ import type { GlobalInterface } from "~/interface/global/global.interfaces"
 export async function publish(model: GlobalInterface,) {
     try {
         await apiDataFetch(`${uri}/api/pages/test-stranitsa`, {
-            ...ParamsInit("PUT"),
+            ...customHeaders("PUT"),
             body:
                 JSON.stringify({
                     name: model.name,
@@ -22,10 +22,6 @@ export async function publish(model: GlobalInterface,) {
             })
     } catch (err) {
         alert(err)
-    } finally {
-        setTimeout(() => {
-            location.reload()
-        }, 1000);
     }
 }
 

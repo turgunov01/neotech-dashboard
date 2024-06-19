@@ -1,15 +1,9 @@
-import grapesjs, { Editor } from "grapesjs";
-
 import { ref, type Ref } from 'vue'
 
 import type { GrapesInitInterface } from "~/interface/Grapesjs.interface";
 
-import { GrapesInitBlockManager } from "./Editor/managers/blocks";
-
-import { runtime } from "./Editor/config/runtime";
-
-import { PanelManager } from "./Editor/managers/panels";
-import { locales } from "./Editor/config/locales";
+import { labels } from "./Editor/managers/blocks";
+import { EditorApp } from "./init";
 
 const component: Ref<GrapesInitInterface> = ref({
     container: '#gjs',
@@ -22,27 +16,13 @@ const component: Ref<GrapesInitInterface> = ref({
     },
 })
 
-export async function GrapesLauncher() {
-    await GrapesInitBlockManager(component.value);
-
-    const container = grapesjs.init(component.value as any)
-    return container
-}
-
 
 // Initialize the parameters for the Grapejs API
-export async function GrapesInit() {
-    const editor = await GrapesLauncher() as Editor;
-
-    // Locale
-    locales(editor)
-
-    await runtime(editor)
-    const panels = document.querySelectorAll(".gjs-sm-sector")
-
+export async function init() {
+    await labels(component.value);
+    const editor = new EditorApp(component.value).buildEditor();
     return editor
 }
 
 
-
-export default { GrapesInit }
+export default { init }
