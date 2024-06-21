@@ -8,24 +8,15 @@ export class Panels {
     }
 
     addPanel(editor: Editor) {
-        editor.Panels.addPanel({ id: "string" })
-        console.log(editor.Panels.getPanel("views-container")?.buttons?.toJSON())
-    }
-}
 
-export class Panel {
-    [variable: string]: any;
-    constructor(id: string, className: string, command: string, attributes: string, active: Boolean = false) {
-        this.panel = {
-            id: id,
-            className: className,
-            command: command,
-            attributes: attributes,
-            active: active,
-        }
-    }
-
-    include(component: this.panel) {
-        
+        editor.Panels.addButton('views', {
+            id: "views-container",
+            className: "fa fa-book",
+            command: "views-container",
+            attributes: {
+                title: "Custom Panel",
+            },
+        })
+        console.log(editor.Panels.getPanels().toJSON())
     }
 }

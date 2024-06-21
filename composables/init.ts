@@ -1,7 +1,7 @@
 import grapesjs, { Editor } from "grapesjs";
 
 import type { GrapesInitInterface } from "~/interface/Grapesjs.interface";
-import { runtime } from "./Editor/config/runtime";
+import { extraction, runtime } from "./Editor/config/runtime";
 import { translation } from "./Editor/config/locales";
 import type { GlobalInterface } from "~/interface/global/global.interfaces";
 import { cyrb53 } from "~/composables/cipher-53/cybr-54";
@@ -45,15 +45,13 @@ export class EditorPublish extends EditorApp {
 
     constructor(editor: Editor) {
         super(editor)
-        const resolvedHtml = editor.getHtml()
-        const resolvedCss = editor.getCss()
 
         const element: GlobalInterface = {
             name: "test-stranitsa",
-            html: resolvedHtml,
-            css: (resolvedCss as string),
+            html: extraction(editor).html,
+            css: (extraction(editor).css as any) as string,
             sections: editor.getComponents() as any,
-            cipher: cyrb53(resolvedHtml).toString(),
+            cipher: cyrb53(extraction(editor).html).toString(),
         }
 
         this.element = element
@@ -63,3 +61,5 @@ export class EditorPublish extends EditorApp {
         publish(this.element)
     }
 }
+
+

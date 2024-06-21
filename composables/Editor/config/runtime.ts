@@ -1,6 +1,6 @@
 import type { Editor } from "grapesjs"
 import { EditorPublish } from "../../init"
-import { Panels } from "./configs"
+import { componentsHandler } from "../managers/blocks"
 
 async function AssetManager(editor: Editor) {
     const options = {
@@ -18,7 +18,7 @@ async function AssetManager(editor: Editor) {
             .then(response => response.json())
             .then(response => {
                 response.data.uploads.forEach((item: any, index: number) => {
-                    const asset: AssetsInterface = {
+                    const asset = {
                         type: item.type ? item.type : "image",
                         src: item.url,
                         width: 100,
@@ -76,8 +76,19 @@ function buttonPublishHandler(editor: Editor) {
     })
 }
 
+export function extraction(editor: Editor) {
+    const container = editor as Editor
+    const params = {
+        html: container.getHtml(),
+        css: container.getCss(),
+        js: container.getJs()
+    }
+
+    return params
+}
+
 export async function runtime(editor: Editor) {
     await buildEditor(editor)
-    new Panels(editor).addPanel(editor)
+    componentsHandler(editor)
     buttonPublishHandler(editor)
 }
