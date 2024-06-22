@@ -1,10 +1,7 @@
-import type { GrapesInitInterface } from "~/interface/Grapesjs.interface"
 import { apiDataFetch } from "#imports"
 import type { Editor } from "grapesjs"
+import type { GrapesInitInterface } from "~/interface/grapejs"
 
-async function GrapesInitBlockLabels() {
-
-}
 
 export async function labels(component: GrapesInitInterface) {
     (component as any).blockManager = {
@@ -58,8 +55,6 @@ export async function componentsHandler(editor: Editor) {
                     title: 'Blocks',
                 },
             })
-
-            console.log(editor.Panels.getPanel("views"))
         })
 
 }

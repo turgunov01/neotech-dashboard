@@ -1,12 +1,11 @@
-import grapesjs, { Editor } from "grapesjs";
+import grapesjs, { Component, Editor } from "grapesjs";
 
-import type { GrapesInitInterface } from "~/interface/Grapesjs.interface";
-import { extraction, runtime } from "./Editor/config/runtime";
+import { runtime } from "./Editor/config/runtime";
 import { translation } from "./Editor/config/locales";
 import type { GlobalInterface } from "~/interface/global/global.interfaces";
-import { cyrb53 } from "~/composables/cipher-53/cybr-54";
 
-import { publish } from "./Editor/methods/publish";
+import type { GrapesInitInterface } from "~/interface/grapejs";
+import type { TraitsInterface } from "./Editor/interface/traits";
 
 export class EditorApp {
     [variable: string]: any;
@@ -19,7 +18,7 @@ export class EditorApp {
                 "Content-Language": "ru-RU",
                 Authorization: `${localStorage.getItem("Authorization")}`,
             }
-        }
+        };
     }
 
     translate(editor: any) {
@@ -37,29 +36,12 @@ export class EditorApp {
         const container = await grapesjs.init(this.component)
         await this.translate(container)
         await runtime(container);
+
+        this.editor.on("component:selected", (model: Component) => {
+            console.log(model.getTraits()[0].toJSON())
+        })
     }
 }
 
-export class EditorPublish extends EditorApp {
-    [variable: string]: any;
-
-    constructor(editor: Editor) {
-        super(editor)
-
-        const element: GlobalInterface = {
-            name: "test-stranitsa",
-            html: extraction(editor).html,
-            css: (extraction(editor).css as any) as string,
-            sections: editor.getComponents() as any,
-            cipher: cyrb53(extraction(editor).html).toString(),
-        }
-
-        this.element = element
-    }
-
-    sync() {
-        publish(this.element)
-    }
-}
 
 

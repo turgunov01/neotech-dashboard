@@ -1,16 +1,3 @@
-// export interface SwiperInterface {
-//     container: HTMLElement,
-//     speed: number | 1000;
-//     spaceBetween: number | 15;
-//     slidesPerView: number | string;
-//     loop: boolean | false;
-//     centeredSlides: boolean | false;
-//     autoplay: Autoplay | false;
-//     navigation: Navigation | null;
-//     pagination: Pagination | null;
-//     grabCursor: boolean | false;
-// }
-
 export interface SwiperInterface {
     container: string;
     slideClass: string;

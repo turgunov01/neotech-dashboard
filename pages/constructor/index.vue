@@ -29,7 +29,7 @@
             </div>
         </nav>
         <div class="main">
-            <div class="wrapper">
+            <div class="wrapper" style="margin-top: 0 !important;">
                 <aside class="aside" style="position: relative;">
                     <ConstructorSidebarElements />
                 </aside>

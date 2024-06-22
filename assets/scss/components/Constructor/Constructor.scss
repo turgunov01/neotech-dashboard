@@ -327,6 +327,7 @@
         }
     }
 
+
     &-pn {
         &-panel {
             padding: 2rem .5rem !important;
@@ -415,6 +416,16 @@
             &#gjs-clm-states {
                 text-align: center !important;
                 width: 80% !important;
+            }
+        }
+
+        &-checkbox {
+            & input {
+                &:checked {
+                    &+.gjs-chk-icon {
+                        border-color: #365BA7 !important;
+                    }
+                }
             }
         }
 

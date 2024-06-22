@@ -1,6 +1,6 @@
 import type { Editor } from "grapesjs"
-import { EditorPublish } from "../../init"
 import { componentsHandler } from "../managers/blocks"
+import { EditorPublish } from "../methods/sync/publish"
 
 async function AssetManager(editor: Editor) {
     const options = {
@@ -76,16 +76,6 @@ function buttonPublishHandler(editor: Editor) {
     })
 }
 
-export function extraction(editor: Editor) {
-    const container = editor as Editor
-    const params = {
-        html: container.getHtml(),
-        css: container.getCss(),
-        js: container.getJs()
-    }
-
-    return params
-}
 
 export async function runtime(editor: Editor) {
     await buildEditor(editor)
