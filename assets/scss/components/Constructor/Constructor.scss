@@ -188,16 +188,14 @@
     padding: 1.6rem;
 
     &-container {
-        height: 100vh !important;
+        height: 100% !important;
         width: 100%;
-        overflow: hidden;
-        overflow-y: scroll;
     }
 
     &-page {
         width: 100%;
         background: white;
-        min-height: 100vh;
+        min-height: 100%;
         border-radius: 1.2rem;
         color: #333;
         padding: 1.6rem;

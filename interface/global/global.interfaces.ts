@@ -1,4 +1,3 @@
-
 export interface GlobalInterface {
     name: string,
     html: string,

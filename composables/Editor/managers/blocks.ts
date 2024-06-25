@@ -26,7 +26,7 @@ export async function labels(component: GrapesInitInterface) {
         })
 }
 
-export async function FilterBlocksSettings(data: Response, component: any) {
+async function FilterBlocksSettings(data: Response, component: any) {
     const storedId = await getStoreData("init_filter")
 
     if (!storedId) {
@@ -34,27 +34,7 @@ export async function FilterBlocksSettings(data: Response, component: any) {
     }
 
     (data as Response | any).forEach((block: Object) => {
+        (block as any).category = "Шаблоны" as string
         (component as any).blockManager.blocks.push(block)
     })
-}
-
-export async function componentsHandler(editor: Editor) {
-    const blocks = ref([])
-
-    const options = customHeaders("GET")
-
-    await apiDataFetch(`${uri}/api/templates`, options)
-        .then(response => response.json())
-        .then(response => {
-            editor.Panels.addButton('open-blocks', {
-                id: 'open-blocks',
-                className: 'fa fa-th-large',
-                label: 'Blocks',
-                command: 'open-blocks',
-                attributes: {
-                    title: 'Blocks',
-                },
-            })
-        })
-
 }
