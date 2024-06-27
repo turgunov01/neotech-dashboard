@@ -1,4 +1,4 @@
-import grapesjs from "grapesjs";
+import grapesjs, { Editor } from "grapesjs";
 
 import { run } from "./Editor/config/run";
 import { translation } from "./Editor/i18n/locales";
@@ -17,6 +17,7 @@ export class EditorApp {
                 Authorization: `${localStorage.getItem("Authorization")}`,
             }
         };
+        // this.plugin = {} as DomTraitsInterface;
     }
 
     translate(editor: any) {
@@ -26,13 +27,27 @@ export class EditorApp {
         return this.editor.I18n.setMessages(this.translations)
     }
 
-    get components() {
-        return this.component
-    }
-
-    async buildEditor() {
+    async buildEditor(/* plugin: any */) {
         const container = await grapesjs.init(this.component)
         await this.translate(container)
         await run(container);
+
+        // this.setPlugin(plugin as DomTraitsInterface)
     }
+
+    // setPlugin(plugin: any) {
+    //     if (Array.isArray(plugin)) {
+    //         plugin.forEach((element, index) => {
+    //             this.component.plugins.push(plugin)
+    //         });
+    //     } else {
+    //         this.component.plugins.push(plugin);
+    //     }
+
+    //     console.log(this.component)
+    // }
+
+    // public plugins() {
+    //     return new Plugins(this.component).init(this.plugin)
+    // }
 }

@@ -598,4 +598,17 @@
         background: wheat;
         padding: 2rem;
     }
+
+    &-trait {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .5rem 1rem;
+
+        & input {
+            appearance: auto !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+    }
 }

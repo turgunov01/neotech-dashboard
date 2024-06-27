@@ -7,7 +7,8 @@ export interface GrapesInitInterface {
     panels: {
         default: Array<any> | []
     },
-    traits: Array<any> | null
+    traits: Array<any> | null,
+    plugins: any
 }
 
 

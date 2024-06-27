@@ -1,97 +1,67 @@
-import type { SwiperInterface } from "~/composables/Editor/interface/swiper";
+import type { Editor } from "grapesjs";
+import type { SwiperCssOptions, SwiperInterface } from "~/composables/Editor/interface/swiper";
 
 export class Swiper {
     [variable: string]: any
-    private container: any;
-    private slides: HTMLElement[];
-    private currentIndex: number = 0;
-    private slidesPerView: number;
-    private padding: number = 20;
-    private spaceBetween: number = 0;
-    private loop: boolean = false;
+    private container: HTMLIFrameElement;
+    private wrapper: HTMLElement | any;
 
-    constructor(options: SwiperInterface) {
-        this.container = document.querySelector(options.container) as HTMLElement
-        this.slides = Array.from(document.querySelectorAll(options.slideClass));
-        this.slidesPerView = options.slidesPerView || 1;
-        this.spaceBetween = options.spaceBetween || 0
-        this.navigation = {
-            nextEl: document.querySelector(options.navigation?.nextEl as string) || null,
-            prevEl: document.querySelector(options.navigation?.prevEl as string) || null,
+    constructor(container: string, options: SwiperInterface) {
+        const frame = document?.querySelector(".gjs-frame") as HTMLIFrameElement;
+        this.container = frame?.contentWindow?.document?.querySelector(container) as HTMLIFrameElement;
+        this.wrapper = this.container?.firstChild
+        this.slides = (this.wrapper as HTMLElement).querySelectorAll(".swiper-slide")
+        this.options = options as SwiperInterface;
+    }
+
+    private setSlides(editor: Editor) {
+        const key = this.options.slidesPerView
+
+        for (let i = 0; i < this.slides.length; i++) {
+            const element = this.slides[i] as HTMLElement;
+            element.setAttribute("data-swiper", "true")
+
+            const counter = `${(parseInt(this.options.css.width) / key).toFixed(2)}%`
+            element.style.width = counter
+
+            editor.Css.setRule(`${element.classList.replace(" ", ".")}`, { width: counter })
         }
-        this.position = 0
-        this.loop = options.loop || false
-
-        this.init()
     }
 
-    init() {
-        this.generate();
-    }
 
-    private generate() {
-        window.addEventListener('load', () => {
-            const key = 3; // Key value
+    private setWrapper(editor: Editor) {
+        this.list = this.wrapper.className.replace(" ", ".")
 
-            if (this.container && this.slides.length) {
-                const containerWidth = this.container.clientWidth;
-                const width = (containerWidth / key) - this.padding;
-                this.options = width
+        const css = {
+            width: "100%",
+            height: "auto",
+            overflow: "hidden",
+            gap: `${this.options.spaceBetween}`
+        }
 
-                this.slides.forEach((slide: HTMLElement, index) => {
-                    slide.style.width = `${width}px`
-                    slide.classList.remove('swiper-slide-active')
-                });
+        for (const key in css) {
+            if (Object.prototype.hasOwnProperty.call(css, key)) {
+                const element = (css as any)[key]
 
-                this.slides[this.currentIndex].classList.add('swiper-slide-active');
+                editor.Css.setRule(this.list.toString(), { [key]: element })
             }
-
-            ((this.container as HTMLElement).querySelector(".swiper-wrapper") as HTMLElement).style.gap = `${this.spaceBetween}px`;
-            ((this.container as HTMLElement).querySelector(".swiper-wrapper") as HTMLElement).style.transition = `300ms`
-        });
-    }
-
-    next() {
-        this.currentIndex++;
-
-        if (this.currentIndex == (this.slides.length - 2)) {
-            this.currentIndex = 0;
         }
-
-        this.slides.forEach(slide => {
-            slide.classList.remove('swiper-slide-active')
-        })
-
-
-        this.slides[this.currentIndex].classList.add('swiper-slide-active')
-
-
-        let wrapper = (this.container as HTMLElement).querySelector(".swiper-wrapper") as HTMLElement
-        wrapper.style.transform = `translate3d(${-this.currentIndex * (this.options + this.spaceBetween)}px, 0px, 0px)`
     }
 
-    prev() {
-        this.currentIndex--;
+    public run(editor: Editor) {
 
-        if (this.currentIndex < 0) {
-            this.currentIndex = this.slides.length - 3
+        this.setWrapper(editor)
+        this.setSlides(editor)
+
+    }
+
+    public async init(editor: Editor) {
+        await this.run(editor);
+
+        for (let index = 0; index < this.slides.length; index++) {
+            const element = this.slides[index] as HTMLElement;
+            element.setAttribute("data-swiper", "true")
         }
-
-        this.slides.forEach(slide => {
-            slide.classList.remove('swiper-slide-prev')
-            slide.classList.remove('swiper-slide-active')
-            slide.classList.remove('swiper-slide-next')
-        })
-
-        this.slides[this.currentIndex].classList.add('swiper-slide-active')
-
-
-        let wrapper = (this.container as HTMLElement).querySelector(".swiper-wrapper") as HTMLElement
-        wrapper.style.transform = `translate3d(${-this.currentIndex * (this.options + this.spaceBetween)}px, 0px, 0px)`
-    }
-
-    private loopNext() {
-
     }
 
 }

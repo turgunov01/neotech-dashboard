@@ -1,11 +1,10 @@
 export interface SwiperInterface {
-    container: string;
     slideClass: string;
     slidesPerView?: number;
     padding?: number | 20,
     navigation: Navigation | null,
     spaceBetween?: number | 30,
-    loop: boolean | false
+    loop: boolean | false,
 }
 
 interface Autoplay {

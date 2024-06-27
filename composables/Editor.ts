@@ -1,11 +1,12 @@
-import { ref, type Ref } from 'vue'
+import { ref } from 'vue'
 
 import { labels } from "./Editor/managers/blocks";
 import { EditorApp } from "./init";
-import Swiper from '~/plugins/swiper/swiper';
+// import Swiper from '~/plugins/swiper/swiper';
 import type { GrapesInitInterface } from '~/interface/grapejs';
+import { Plugins } from './Editor/managers/plugins';
 
-const component: Ref<GrapesInitInterface> = ref({
+const component = ref({
     container: '#gjs',
     fromElement: true,
     height: '100%',
@@ -14,15 +15,18 @@ const component: Ref<GrapesInitInterface> = ref({
     panels: {
         default: []
     },
-})
+    plugins: [Plugins]
+} as GrapesInitInterface)
+
 
 
 // Initialize the parameters for the Grapejs API
 export async function init() {
     await labels(component.value);
-    const editor = new EditorApp(component.value).buildEditor();
 
-    return editor
+    const editor = await new EditorApp(component.value).buildEditor();
+
+    return editor;
 }
 
 
