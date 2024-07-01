@@ -24,7 +24,7 @@ export class Swiper {
     public init(editor: Editor) {
         this.setSwiper(editor);
         this.setWrapper(editor);
-        this.setCarousel(editor);
+        this.setCarousel(editor, this.options.slidesPerView);
 
         this.setNavigation(editor);
 
@@ -66,8 +66,8 @@ export class Swiper {
         this.editor.Css.setRule(`.swiper-wrapper`, { ...manager })
     }
 
-    private setCarousel(editor: Editor) {
-        const counter = ((parseInt("100%") / this.options.slidesPerView));
+    setCarousel(editor: Editor, slidesPerView: number) {
+        const counter = ((parseInt("100%") / slidesPerView));
 
         editor.Css.setRule(".swiper-slide", { flex: `0 0 calc(${counter}%)`, 'min-height': "300px", padding: "30px" })
     }

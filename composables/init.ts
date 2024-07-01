@@ -31,23 +31,5 @@ export class EditorApp {
         const container = await grapesjs.init(this.component)
         await this.translate(container)
         await run(container);
-
-        // this.setPlugin(plugin as DomTraitsInterface)
     }
-
-    // setPlugin(plugin: any) {
-    //     if (Array.isArray(plugin)) {
-    //         plugin.forEach((element, index) => {
-    //             this.component.plugins.push(plugin)
-    //         });
-    //     } else {
-    //         this.component.plugins.push(plugin);
-    //     }
-
-    //     console.log(this.component)
-    // }
-
-    // public plugins() {
-    //     return new Plugins(this.component).init(this.plugin)
-    // }
 }

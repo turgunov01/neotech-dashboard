@@ -1,6 +1,5 @@
 import type { Editor } from "grapesjs"
 import { EditorPublish } from "../methods/sync/publish"
-import { componentHandler } from "../methods/build/component"
 
 async function AssetManager(editor: Editor) {
     const options = {
@@ -79,5 +78,4 @@ function buttonPublishHandler(editor: Editor) {
 export async function run(editor: Editor) {
     await buildEditor(editor)
     buttonPublishHandler(editor)
-    componentHandler(editor)
 }
