@@ -2,19 +2,21 @@ export interface SwiperInterface {
     slideClass: string;
     slidesPerView?: number;
     padding?: number | 20,
-    navigation: Navigation | null,
+    navigation: SwiperNavigation | null,
     spaceBetween?: number | 30,
     loop: boolean | false,
+    speed: number | 1000,
+    autoplay: Autoplay,
 }
 
-interface Autoplay {
+export interface Autoplay {
     delay: number | 1000;
     disableOnInteraction: boolean | true;
     pauseOnMouseEnter: boolean | false;
     waitForTransition: boolean | true
 }
 
-interface Navigation {
+export interface SwiperNavigation {
     nextEl: string | null;
     prevEl: string | null;
 }
@@ -24,4 +26,11 @@ interface Pagination {
     type: string,
     clickable: boolean | true;
     dynamicBullets: boolean | false;
+}
+
+export interface SwiperCssOptions {
+    width: string | "100%";
+    height: string | "auto";
+    overflow: string | "hidden";
+    position: string | "relative";
 }

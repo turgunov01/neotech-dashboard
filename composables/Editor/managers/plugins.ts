@@ -9,12 +9,12 @@ export function Plugins(editor: Editor) {
 
 export function swiper(editor: Editor) {
     editor.DomComponents.addType('swiper', {
-        isComponent: el => el?.classList?.contains("swiper"),
+        isComponent: element => element?.classList?.contains('swiper'),
         model: {
             defaults: {
                 traits: [
                     {
-                        type: 'href-next',
+                        type: 'swiper',
                         name: 'href',
                         label: 'New href',
                     },
@@ -23,7 +23,7 @@ export function swiper(editor: Editor) {
         }
     });
 
-    editor.TraitManager.addType('href-next', {
+    editor.TraitManager.addType('swiper', {
         noLabel: true,
 
         // Return a simple HTML string or an HTML element
@@ -46,29 +46,28 @@ export function swiper(editor: Editor) {
             return el;
         },
 
-        // onEvent({ elInput, component }) {
-
-        // },
+        onEvent({ elInput, component }) {
+        },
 
         onUpdate({ elInput, component }) {
             const input = elInput.querySelector('input');
+            console.log(component)
             const options = {
                 slidesPerView: 3,
                 spaceBetween: 30,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 3000,
+                }
             } as SwiperInterface
 
-            const css = editor.Css
 
-            if (input?.checked) {
-                const swiper = new Swiper('.swiper', options)
-            }
 
             (input as HTMLInputElement).addEventListener('change', async (event) => {
-                if ((event.target as HTMLInputElement).checked) {
-                    const swiper = new Swiper('.swiper', options).init(editor)
-                } else {
-                    return
-                }
+                const swiper = new Swiper('.swiper', options).init(editor)
             });
         },
     });

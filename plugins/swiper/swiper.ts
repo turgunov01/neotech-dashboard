@@ -1,69 +1,142 @@
 import type { Editor } from "grapesjs";
-import type { SwiperCssOptions, SwiperInterface } from "~/composables/Editor/interface/swiper";
+import type { Autoplay, SwiperInterface } from "~/composables/Editor/interface/swiper";
 
 export class Swiper {
-    [variable: string]: any
     private container: HTMLIFrameElement;
-    private wrapper: HTMLElement | any;
+    private carousel: HTMLIFrameElement;
+    private elements: HTMLIFrameElement;
+
+    private editor: Editor | any;
+
+    [variable: string]: any;
+
 
     constructor(container: string, options: SwiperInterface) {
         const frame = document?.querySelector(".gjs-frame") as HTMLIFrameElement;
-        this.container = frame?.contentWindow?.document?.querySelector(container) as HTMLIFrameElement;
-        this.wrapper = this.container?.firstChild
-        this.slides = (this.wrapper as HTMLElement).querySelectorAll(".swiper-slide")
-        this.options = options as SwiperInterface;
+        this.container = frame.contentWindow?.document.querySelector(container) as HTMLIFrameElement
+        this.carousel = (this.container as HTMLIFrameElement).querySelector(".swiper-wrapper") as HTMLIFrameElement
+        this.elements = (this.carousel as HTMLIFrameElement).childNodes as HTMLElement[] | any;
+        this.currentPosition = 0
+
+        this.options = options;
     }
 
-    private setSlides(editor: Editor) {
-        const key = this.options.slidesPerView
+    public init(editor: Editor) {
+        this.setSwiper(editor);
+        this.setWrapper(editor);
+        this.setCarousel(editor);
 
-        for (let i = 0; i < this.slides.length; i++) {
-            const element = this.slides[i] as HTMLElement;
-            element.setAttribute("data-swiper", "true")
+        this.setNavigation(editor);
 
-            const counter = `${(parseInt(this.options.css.width) / key).toFixed(2)}%`
-            element.style.width = counter
-
-            editor.Css.setRule(`${element.classList.replace(" ", ".")}`, { width: counter })
+        if (this.options.autoplay) {
+            this.setAutoplay()
         }
     }
 
-
-    private setWrapper(editor: Editor) {
-        this.list = this.wrapper.className.replace(" ", ".")
-
-        const css = {
-            width: "100%",
-            height: "auto",
-            overflow: "hidden",
-            gap: `${this.options.spaceBetween}`
+    private setSwiper(editor: Editor) {
+        const manager = {
+            "margin-right": "auto",
+            "margin-left": "auto",
+            "position": "relative",
+            "overflow": "hidden",
+            "list-style": "none",
+            "padding": "0",
+            "z-index": "1",
         }
 
-        for (const key in css) {
-            if (Object.prototype.hasOwnProperty.call(css, key)) {
-                const element = (css as any)[key]
-
-                editor.Css.setRule(this.list.toString(), { [key]: element })
+        for (const key in manager) {
+            if (Object.prototype.hasOwnProperty.call(manager, key)) {
+                this.container.style[key as any] = manager[key as never]
             }
         }
     }
 
-    public run(editor: Editor) {
+    private setWrapper(editor: Editor) {
 
-        this.setWrapper(editor)
-        this.setSlides(editor)
+        const manager = {
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            "z-index": "1",
+            display: "flex",
+            transition: this.options.speed
+        }
 
+        this.editor = editor;
+        this.editor.Css.setRule(`.swiper-wrapper`, { ...manager })
     }
 
-    public async init(editor: Editor) {
-        await this.run(editor);
+    private setCarousel(editor: Editor) {
+        const counter = ((parseInt("100%") / this.options.slidesPerView));
 
-        for (let index = 0; index < this.slides.length; index++) {
-            const element = this.slides[index] as HTMLElement;
-            element.setAttribute("data-swiper", "true")
+        editor.Css.setRule(".swiper-slide", { flex: `0 0 calc(${counter}%)`, 'min-height': "300px", padding: "30px" })
+    }
+
+    private setNavigation(editor: Editor) {
+        this.setNextButton()
+        this.setPrevButton()
+    }
+
+    private setNextButton() {
+        const button = document.createElement("button");
+        button.classList.add("swiper-button-next");
+        button.innerHTML = "NEXT";
+
+
+        button.addEventListener("click", () => {
+            this.currentPosition -= 1;
+            this.next();
+        });
+
+        if (this.carousel.childNodes.length > 3) {
+            this.container.appendChild(button);
         }
     }
 
+    private setPrevButton() {
+        const button = document.createElement("button");
+        button.classList.add("swiper-button-prev");
+        button.innerHTML = "PREV";
+
+        const translate = (100 / this.options.slidesPerView) * this.currentPosition
+
+        button.addEventListener("click", () => {
+            this.prev()
+            this.currentPosition += 1;
+            this.carousel.style.transform = `translateX(${translate}%)`;
+            console.log(this.currentPosition);
+        });
+
+        if (this.carousel.childNodes.length > 3) {
+            this.container.appendChild(button);
+        }
+    }
+
+    private setAutoplay() {
+        this.autoplay = {
+            delay: this.options.autoplay.delay || 1000,
+            disableOnInteraction: this.options.autoplay.disableOnInteraction || true,
+            pauseOnMouseEnter: this.options.autoplay.pauseOnMouseEnter || false,
+            waitForTransition: this.options.autoplay.waitForTransition || true,
+        } as Autoplay
+
+        setInterval(() => {
+            this.next();
+        }, this.options.autoplay.delay)
+    }
+
+    private next() {
+        const removed = this.carousel.childNodes[0]
+        this.carousel.removeChild(removed)
+        this.carousel.appendChild(removed)
+    }
+
+    private prev() {
+        const removed = this.carousel.lastChild;
+
+        this.carousel.removeChild(removed as HTMLIFrameElement)
+        this.carousel.insertBefore(removed as HTMLIFrameElement, this.carousel.firstChild)
+    }
 }
 
 export default Swiper;
