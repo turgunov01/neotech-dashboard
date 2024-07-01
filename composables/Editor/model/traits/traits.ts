@@ -12,3 +12,4 @@ export function TraitsModelHandler(parameters: DomTraitsInterface) {
     arr.push(options)
     return arr
 }
+

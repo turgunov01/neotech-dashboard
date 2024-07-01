@@ -1,9 +1,9 @@
 import type { Editor, Plugin, TraitGetValueOptions } from "grapesjs";
 import Swiper from "~/plugins/swiper/swiper";
 import type { SwiperInterface } from "../interface/swiper";
-import { TraitDomComponent, createElement } from "./traits";
+import { TraitDomComponent, TraitsCreateElement, createElement } from "./traits";
 import type { TraitsElementInterface } from "../interface/traits";
-import { modelEvent, selectElement } from "../model/traits/update";
+import { modelEvent, selectElement } from "../model/traits/events";
 
 const params = {
     slidesPerView: 3,
@@ -46,20 +46,18 @@ export function swiper(editor: Editor) {
     editor.TraitManager.addType(options.init.type, {
         noLabel: true,
 
+        // Return a simple HTML string or an HTML element
         createInput({ trait }) {
-            const el = createElement(options)
-            return el
+            return new TraitsCreateElement(editor, options).createInput({ trait })
         },
 
-        onUpdate({ elInput, component }) {
-            const init = selectElement(elInput, "input#init") as HTMLElement;
-
-            function handle() {
-                const swiper = new Swiper(".swiper", params).init(editor)
-                return swiper
+        onEvent({ elInput, component }) {
+            async function handle() {
+                const swiper = await new Swiper(".swiper", params).init(editor)
             }
 
-            modelEvent(init, handle)
+            return new TraitsCreateElement(editor, options).onEvent({ elInput, component, params, handle })
         },
     });
+
 }

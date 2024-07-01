@@ -10,12 +10,14 @@ export interface TraitManagerInterface {
     type: string,
     name: string,
     label: string,
-    createInput: ({ trait }: any) => HTMLElement | string,
-    onEvent: ({ elInput, component }: any) => void | null,
-    onUpdate: ({ elInput, component }: any) => void | null,
 }
 
 export interface TraitsElementInterface {
     init: TraitsElementInit,
 }
 
+export interface TraitsCreateElementInterface {
+    createInput: (params: { trait: any }) => HTMLElement | string;
+    onEvent: (params: { elInput: HTMLElement, component: any }) => void | null;
+    onUpdate: (params: { elInput: HTMLElement, component: any }) => void | null;
+}

@@ -1,6 +1,9 @@
-import type { Editor } from "grapesjs";
+import Swiper from "~/plugins/swiper/swiper";
 import type { DomTraitsInterface, TraitsElementInterface } from "../interface/traits";
 import { TraitsModelHandler } from "../model/traits/traits";
+import { modelEvent, selectElement } from "../model/traits/events";
+import type { SwiperInterface } from "../interface/swiper";
+import type { Editor } from "grapesjs";
 
 export function TraitDomComponent(options: DomTraitsInterface) {
     return {
@@ -29,3 +32,29 @@ export function createElement(options: TraitsElementInterface) {
     return el
 }
 
+
+
+export class TraitsCreateElement {
+    private options: TraitsElementInterface;
+    private editor: Editor;
+
+    constructor(editor: Editor, options: TraitsElementInterface) {
+        this.options = options;
+        this.editor = editor;
+    }
+
+    createInput({ trait }: { trait: any }): any {
+        const el = createElement(this.options)
+        return el
+    }
+
+    onEvent({ elInput, component, params, handle }: { elInput: HTMLElement, component: any, params: SwiperInterface, handle: Function }): void | null {
+        const init = selectElement(elInput, "input#init") as HTMLElement;
+        modelEvent(init, handle)
+    }
+
+    onUpdate({ elInput, component }: { elInput: HTMLElement, component: HTMLElement }): void | null {
+        elInput.setAttribute('data-updated', 'true');
+        return null;
+    }
+}
