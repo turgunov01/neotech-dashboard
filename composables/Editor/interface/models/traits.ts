@@ -4,7 +4,7 @@ interface TraitsElementStyle {
     "row-gap": string | number
 }
 
-export interface TraitsElementInit {
+export interface TraitsElement {
     type: string,
     name: string,
     label: string,

@@ -24,6 +24,7 @@
     "grapesjs-lory-slider": "^0.1.5",
     "grapesjs-swiper-slider": "^0.0.5",
     "sass": "^1.69.5",
+    "swiper": "^11.1.4",
     "vue-meta": "^2.4.0"
   }
 }

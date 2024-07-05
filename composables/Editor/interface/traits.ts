@@ -1,23 +1,31 @@
-import type { TraitsElementInit } from "./models/traits";
+import type { SwiperOptions } from "swiper/types";
+import type { TraitsElement } from "./models/traits";
+import type { SwiperInterface } from "./swiper";
 
 export interface DomTraitsInterface {
     type: string,
     name: string,
     label: string,
+    style: Object | {
+        display: string,
+        "flex-direction": string,
+        "row-gap": string | number
+    }
 }
 
 export interface TraitManagerInterface {
     type: string,
     name: string,
     label: string,
+    style: Object | {
+        display: string,
+        "flex-direction": string,
+        "row-gap": string | number
+    }
 }
 
-export interface TraitsElementInterface {
-    init: TraitsElementInit,
-}
-
-export interface TraitsCreateElementInterface {
-    createInput: (params: { trait: any }) => HTMLElement | string;
-    onEvent: (params: { elInput: HTMLElement, component: any }) => void | null;
+export interface TraitsManagerHandler {
+    createInput: (params: { trait: any }) => HTMLElement | string | void;
+    onEvent: (params: { elInput: HTMLElement, component: any, params: SwiperInterface }) => any;
     onUpdate: (params: { elInput: HTMLElement, component: any }) => void | null;
 }

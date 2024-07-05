@@ -26,6 +26,7 @@ export class EditorPublish {
             css: (extraction(editor).css as any) as string,
             sections: editor.getComponents() as any,
             cipher: cipher(extraction(editor).html).toString(),
+            javascript: localStorage.getItem("javascript") as string,
         }
 
         this.element = element
@@ -47,6 +48,7 @@ async function publish(model: GlobalInterface,) {
                     html: model.html,
                     css: model.css,
                     cipher: model.cipher,
+                    javascript: model.javascript,
                 })
         })
             .then(response => response.json())

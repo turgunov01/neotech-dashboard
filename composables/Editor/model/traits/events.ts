@@ -4,5 +4,5 @@ export function selectElement(element: HTMLElement, type: string) {
 }
 
 export function modelEvent(element: HTMLElement, func: Function) {
-    return element.addEventListener("change", func(), false)
+    return element?.addEventListener("change", func())
 }

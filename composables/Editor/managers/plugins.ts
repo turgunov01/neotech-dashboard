@@ -1,9 +1,7 @@
-import type { Editor, Plugin, TraitGetValueOptions } from "grapesjs";
-import Swiper from "~/plugins/swiper/swiper";
+import type { Component, ComponentAdd, Editor } from "grapesjs";
 import type { SwiperInterface } from "../interface/swiper";
-import { TraitDomComponent, TraitsCreateElement, createElement } from "./traits";
-import type { TraitsElementInterface } from "../interface/traits";
-import { modelEvent, selectElement } from "../model/traits/events";
+import { DomComponentTrait, TraitsHandler } from "./traits";
+import type { TraitManagerInterface } from "../interface/traits";
 
 const params = {
     slidesPerView: 3,
@@ -22,42 +20,58 @@ export function Plugins(editor: Editor) {
 };
 
 export function swiper(editor: Editor) {
-
-    const options = {
-        init: {
-            type: "swiper",
-            name: "Swiper",
-            label: `
+    const init = {
+        type: "swiper",
+        name: "Swiper",
+        label: `
             <div class="swiper-init" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-                 <p class="swiper-on">Turn on Swiper mode</p>
-                 <input type="checkbox" id="init" name="scales" />
+                <p class="swiper-on">Инициализация</p>
+                <input type="checkbox" checked id="init" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
+            </div>
+            <div class="swiper-autoplay" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
+                <div class="autoplay-init" style="display: flex; align-items: center; width: 100%; justify-content: space-between;">
+                    <p class="swiper-autoplay">Автоскролл</p>
+                    <input type="checkbox" checked id="autoplay" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
+                </div>
+                <div class="autoplay-delay" style="display: none; align-items: center; width: 100%; justify-content: space-between; border-top: 1px solid; padding-top: 5px;">
+                    <p class="swiper-autoplay-delay">Задержка (ms)</p>
+                    <input type="number" checked id="autoplay-delay" style="width: 75px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
+                </div>
+            </div>
+            <div class="swiper-slidesPerView" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
+                <p class="swiper-on">Количество слайдов</p>
+                <input type="number" id="slidesPerView" style="width: 50px !important; color: black; border-bottom: 1px solid;" name="calculate" />
+            </div>
+            <div class="swiper-navigation" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
+                <p class="swiper-on">Навигации</p>
+                <input type="checkbox" id="navigation" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
             </div>
         `,
-            style: {
-                display: "flex",
-                "flex-direction": "column",
-                "row-gap": "20px"
-            },
-        }
-    } as TraitsElementInterface
+        style: {
+            display: "flex",
+            "flex-direction": "column",
+            "row-gap": "20px"
+        },
+    } as TraitManagerInterface
 
-    editor.DomComponents.addType(options.init.type, TraitDomComponent(options.init))
-
-    editor.TraitManager.addType(options.init.type, {
+    editor.DomComponents.addType(init.type, DomComponentTrait(init))
+    editor.TraitManager.addType(init.type, {
         noLabel: true,
 
-        // Return a simple HTML string or an HTML element
         createInput({ trait }) {
-            return new TraitsCreateElement(editor, options).createInput({ trait })
+            return new TraitsHandler(init, editor).createInput({ trait })
         },
 
         onEvent({ elInput, component }) {
-            async function handle() {
-                const swiper = await new Swiper(".swiper", params).init(editor)
-            }
-
-            return new TraitsCreateElement(editor, options).onEvent({ elInput, component, params, handle })
+            return new TraitsHandler(init, editor).onEvent({ elInput, component, params })
         },
-    });
+
+        onUpdate({ elInput, component }) {
+            return new TraitsHandler(init, editor).onUpdate({ elInput, component })
+        }
+
+    })
+
+
 
 }

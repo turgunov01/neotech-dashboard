@@ -4,6 +4,7 @@ export interface GlobalInterface {
     css: string,
     sections: Array<GlobalAttributesInterface>,
     cipher: string,
+    javascript: string
 }
 
 export interface GlobalAttributesInterface {

@@ -1,4 +1,4 @@
-import type { Editor } from "grapesjs";
+import { Editor } from "grapesjs";
 import type { Autoplay, SwiperInterface } from "~/composables/Editor/interface/swiper";
 
 export class Swiper {
@@ -6,34 +6,30 @@ export class Swiper {
     private carousel: HTMLIFrameElement;
     private elements: HTMLIFrameElement;
 
-    private editor: Editor | any;
-
     [variable: string]: any;
 
 
     constructor(container: string, options: SwiperInterface) {
         const frame = document?.querySelector(".gjs-frame") as HTMLIFrameElement;
-        this.container = frame.contentWindow?.document.querySelector(container) as HTMLIFrameElement
-        this.carousel = (this.container as HTMLIFrameElement).querySelector(".swiper-wrapper") as HTMLIFrameElement
-        this.elements = (this.carousel as HTMLIFrameElement).childNodes as HTMLElement[] | any;
+        this.container = frame.contentDocument?.querySelector(container) as HTMLIFrameElement
+        this.carousel = (this.container as HTMLIFrameElement)?.querySelector(".swiper-wrapper") as HTMLIFrameElement
+        this.elements = (this.carousel as HTMLIFrameElement)?.childNodes as HTMLElement[] | any;
         this.currentPosition = 0
 
         this.options = options;
+
+        this.autoplay = false;
+
+        this.className = container
     }
 
     public init(editor: Editor) {
         this.setSwiper(editor);
         this.setWrapper(editor);
         this.setCarousel(editor, this.options.slidesPerView);
-
-        this.setNavigation(editor);
-
-        if (this.options.autoplay) {
-            this.setAutoplay()
-        }
     }
 
-    private setSwiper(editor: Editor) {
+    setSwiper() {
         const manager = {
             "margin-right": "auto",
             "margin-left": "auto",
@@ -67,14 +63,28 @@ export class Swiper {
     }
 
     setCarousel(editor: Editor, slidesPerView: number) {
-        const counter = ((parseInt("100%") / slidesPerView));
+        const number = slidesPerView || this.options.slidesPerView
+        const counter = ((parseInt("100%") / number));
 
-        editor.Css.setRule(".swiper-slide", { flex: `0 0 calc(${counter}%)`, 'min-height': "300px", padding: "30px" })
+        editor.Css.setRule(`${this.className} .swiper-slide`, { flex: `0 0 calc(${counter}%)`, 'min-height': "300px", padding: "30px" })
     }
 
-    private setNavigation(editor: Editor) {
+    setNavigation() {
         this.setNextButton()
         this.setPrevButton()
+    }
+
+    unsetNavigation() {
+        const nextButton = this.container.querySelector("button.swiper-button-next")
+        const prevButton = this.container.querySelector("button.swiper-button-prev")
+
+        if (nextButton) {
+            nextButton.remove()
+        }
+
+        if (prevButton) {
+            prevButton.remove()
+        }
     }
 
     private setNextButton() {
@@ -82,15 +92,30 @@ export class Swiper {
         button.classList.add("swiper-button-next");
         button.innerHTML = "NEXT";
 
+        button.addEventListener("click", async () => {
+            if (this.options.loop) {
+                const firstElement = this.carousel.firstChild
+                this.carousel.appendChild(firstElement as HTMLElement)
 
-        button.addEventListener("click", () => {
-            this.currentPosition -= 1;
-            this.next();
+                if (this.currentPosition % 2 === 0) {
+                    this.carousel.removeChild(firstElement as HTMLElement)
+                }
+            } else {
+                if (this.currentPosition >= 0 && this.currentPosition < this.carousel.childNodes.length - this.options.slidesPerView) {
+                    this.currentPosition += 1;
+                    await this.move(-(this.currentPosition))
+                }
+            }
         });
 
-        if (this.carousel.childNodes.length > 3) {
+
+        const hasButton = this.container.querySelector("button.swiper-button-next")
+
+        if (this.carousel.childNodes.length >= this.options.slidesPerView && !hasButton) {
             this.container.appendChild(button);
         }
+
+        return button
     }
 
     private setPrevButton() {
@@ -98,44 +123,58 @@ export class Swiper {
         button.classList.add("swiper-button-prev");
         button.innerHTML = "PREV";
 
-        const translate = (100 / this.options.slidesPerView) * this.currentPosition
-
-        button.addEventListener("click", () => {
-            this.prev()
-            this.currentPosition += 1;
-            this.carousel.style.transform = `translateX(${translate}%)`;
-            console.log(this.currentPosition);
+        button.addEventListener("click", async (event) => {
+            console.log(this.currentPosition, this.carousel.childNodes.length - this.options.slidesPerView)
+            if (this.currentPosition > 0 && this.currentPosition <= this.carousel.childNodes.length - 2) {
+                this.currentPosition -= 1;
+                await this.move(-(this.currentPosition))
+            }
         });
 
-        if (this.carousel.childNodes.length > 3) {
+        const hasButton = this.container.querySelector("button.swiper-button-prev")
+
+        if (this.carousel.childNodes.length >= this.options.slidesPerView && !hasButton) {
             this.container.appendChild(button);
         }
+
+        return button
     }
 
-    private setAutoplay() {
-        this.autoplay = {
-            delay: this.options.autoplay.delay || 1000,
-            disableOnInteraction: this.options.autoplay.disableOnInteraction || true,
-            pauseOnMouseEnter: this.options.autoplay.pauseOnMouseEnter || false,
-            waitForTransition: this.options.autoplay.waitForTransition || true,
-        } as Autoplay
+    setAutoplay(timer: number): void {
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
 
-        setInterval(() => {
-            this.next();
-        }, this.options.autoplay.delay)
+        this.interval = setInterval(() => {
+            if (this.currentPosition >= 0 && this.currentPosition < this.carousel.childNodes.length - this.options.slidesPerView) {
+                this.autoplay = true;
+
+                this.currentPosition += 1
+                this.move(-(this.currentPosition))
+            } else {
+                this.autoplay = true;
+
+                this.currentPosition = 0
+                this.move(-(this.currentPosition))
+            }
+        }, timer)
     }
 
-    private next() {
-        const removed = this.carousel.childNodes[0]
-        this.carousel.removeChild(removed)
-        this.carousel.appendChild(removed)
+    private move(position: number) {
+        this.carousel.style.transform = `translateX(${(parseInt("100%") / this.options.slidesPerView) * position}%)`
+        this.carousel.style.transition = `${this.options.speed ? this.options.speed : 300}ms`
     }
 
-    private prev() {
-        const removed = this.carousel.lastChild;
-
-        this.carousel.removeChild(removed as HTMLIFrameElement)
-        this.carousel.insertBefore(removed as HTMLIFrameElement, this.carousel.firstChild)
+    private clone(type: string) {
+        if (type === "next") {
+            const removed = this.carousel.firstChild as HTMLElement
+            this.carousel.removeChild(removed)
+            this.carousel.appendChild(removed)
+        } else if (type === "prev") {
+            const removed = this.carousel.lastChild;
+            this.carousel.removeChild(removed as HTMLIFrameElement)
+            this.carousel.insertBefore(removed as HTMLIFrameElement, this.carousel.firstChild)
+        }
     }
 }
 
