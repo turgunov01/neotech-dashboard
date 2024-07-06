@@ -24,7 +24,7 @@ export class Swiper {
     }
 
     public init(editor: Editor) {
-        this.setSwiper(editor);
+        this.setSwiper();
         this.setWrapper(editor);
         this.setCarousel(editor, this.options.slidesPerView);
     }
