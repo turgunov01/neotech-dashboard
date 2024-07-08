@@ -1,6 +1,8 @@
-import type { Component, ComponentAdd, Editor } from "grapesjs";
+import type { Component, ComponentAdd, Editor, Traits } from "grapesjs";
 import type { SwiperInterface } from "../interface/swiper";
-import { DomComponentTrait, TraitsHandler } from "./traits";
+
+import { FormDomTrait, SwiperDomTrait, SwiperTraitsHandler } from "./traits";
+
 import type { TraitManagerInterface } from "../interface/traits";
 
 const params = {
@@ -16,10 +18,11 @@ const params = {
 } as SwiperInterface
 
 export function Plugins(editor: Editor) {
-    return swiper(editor)
+    const arr = [SwiperPluginsHandler(editor)]
+    return arr
 };
 
-export function swiper(editor: Editor) {
+export function SwiperPluginsHandler(editor: Editor) {
     const init = {
         type: "swiper",
         name: "Swiper",
@@ -54,20 +57,20 @@ export function swiper(editor: Editor) {
         },
     } as TraitManagerInterface
 
-    editor.DomComponents.addType(init.type, DomComponentTrait(init))
+    editor.DomComponents.addType(init.type, SwiperDomTrait(init))
     editor.TraitManager.addType(init.type, {
         noLabel: true,
 
         createInput({ trait }) {
-            return new TraitsHandler(init, editor).createInput({ trait })
+            return new SwiperTraitsHandler(init, editor).createInput({ trait })
         },
 
         onEvent({ elInput, component }) {
-            return new TraitsHandler(init, editor).onEvent({ elInput, component, params })
+            return new SwiperTraitsHandler(init, editor).onEvent({ elInput, component, params })
         },
 
         onUpdate({ elInput, component }) {
-            return new TraitsHandler(init, editor).onUpdate({ elInput, component })
+            return new SwiperTraitsHandler(init, editor).onUpdate({ elInput, component })
         }
 
     })

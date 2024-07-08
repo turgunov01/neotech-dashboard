@@ -14,17 +14,22 @@ export interface DomTraitsInterface {
 }
 
 export interface TraitManagerInterface {
-    type: string,
-    name: string,
-    label: string,
+    type: string | "div",
+    name: string | "DIV",
+    label: string | "DIV",
     style: Object | {
         display: string,
         "flex-direction": string,
         "row-gap": string | number
-    }
+    } | {},
 }
 
-export interface TraitsManagerHandler {
+export interface FormManagerInterface {
+
+}
+
+
+export interface SwiperManagerHandler {
     createInput: (params: { trait: any }) => HTMLElement | string | void;
     onEvent: (params: { elInput: HTMLElement, component: any, params: SwiperInterface }) => any;
     onUpdate: (params: { elInput: HTMLElement, component: any }) => void | null;

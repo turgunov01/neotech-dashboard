@@ -1,12 +1,13 @@
-import Swiper from "~/plugins/swiper/swiper";
 import type { SwiperInterface } from "../interface/swiper";
-import type { DomTraitsInterface, TraitManagerInterface, TraitsManagerHandler } from "../interface/traits";
-import type { Editor } from "grapesjs";
 import { SwiperConfiguration } from "../config/swiper";
 
-export function DomComponentTrait(options: DomTraitsInterface) {
+import type { DomTraitsInterface, SwiperManagerHandler, TraitManagerInterface } from "../interface/traits";
+import type { Editor } from "grapesjs";
+
+
+export function SwiperDomTrait(options: DomTraitsInterface) {
     return {
-        isComponent: (element: { classList: { contains: (arg: string) => any; }; }) => element?.classList?.contains(options.type),
+        isComponent: (element: { classList: { contains: (arg: string) => any; }; tagName: { includes: (arg: string) => any } }) => element?.classList?.contains(options.type),
         model: {
             defaults: {
                 traits: [TraitsModelHandler(options)]
@@ -15,8 +16,30 @@ export function DomComponentTrait(options: DomTraitsInterface) {
     }
 }
 
+export function FormDomTrait(options: DomTraitsInterface) {
+    return {
+        isComponent: (element: HTMLElement): boolean => {
+            return (element as HTMLInputElement).tagName === "INPUT";
+        },
+        model: {
+            defaults: {
+                traits: [TraitsModelHandler(options)]
+            }
+        }
+    };
+}
 
-export function createElement(options: TraitManagerInterface) {
+function TraitsModelHandler(parameters: DomTraitsInterface) {
+    const options = {
+        type: parameters.type,
+        name: parameters.name,
+        label: parameters.label
+    }
+
+    return options
+}
+
+export function createSwiperElement(options: TraitManagerInterface) {
     const el = document.createElement("div");
     el.innerHTML = options.label
 
@@ -31,17 +54,7 @@ export function createElement(options: TraitManagerInterface) {
     return el
 }
 
-function TraitsModelHandler(parameters: DomTraitsInterface) {
-    const options = {
-        type: parameters.type,
-        name: parameters.name,
-        label: parameters.label
-    }
-
-    return options
-}
-
-export class TraitsHandler implements TraitsManagerHandler {
+export class SwiperTraitsHandler implements SwiperManagerHandler {
     private options: TraitManagerInterface;
     private editor: Editor;
 
@@ -51,13 +64,12 @@ export class TraitsHandler implements TraitsManagerHandler {
     }
 
     createInput({ trait }: { trait: any }): HTMLElement | string {
-        const element = createElement(this.options)
+        const element = createSwiperElement(this.options)
         return element
     }
 
     async onEvent({ elInput, component, params }: { elInput: HTMLElement, component: any, params: SwiperInterface }) {
         await SwiperConfiguration(elInput, params, this.editor)
-        
     }
 
     onUpdate({ elInput, component }: { elInput: HTMLElement, component: any }): void | null {
