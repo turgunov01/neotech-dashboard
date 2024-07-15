@@ -60,6 +60,27 @@ async function publish(model: GlobalInterface,) {
             })
     } catch (err) {
         alert(err)
+    } finally {
+        const log = {
+            username: showStoreData("username"),
+            email: showStoreData("email") ? showStoreData("email") : "sardorceeksamurai@gmail.com",
+            action: 4,
+            pagename: "test-stranitsa",
+        }
+
+        console.log(log)
+
+        await apiDataFetch(`${uri}/api/history`, {
+            ...customHeaders("POST"),
+            body: JSON.stringify(log)
+        })
+            .then(response => response.json())
+            .then(response => {
+                setTimeout(() => {
+                    location.reload()
+                }, 3000);
+                console.log(response)
+            })
     }
 }
 

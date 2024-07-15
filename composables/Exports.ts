@@ -21,6 +21,11 @@ export function getStoreData(name: string) {
     return true
 }
 
+export function showStoreData(name: string) {
+    const local = localStorage.getItem(name)
+    return local
+}
+
 export function customHeaders(type: string) {
     return {
         method: type,

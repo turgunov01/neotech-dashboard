@@ -117,7 +117,8 @@ const favorite = async (value: Boolean) => {
 }
 
 const currentMessage = ref(Object as any)
-const currentMessageOutgoing = ref(Object as any)
+
+const currentMessageOutgoing = ref({} as any)
 
 onMounted(async () => {
     await request()

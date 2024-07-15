@@ -113,7 +113,7 @@ const send = async () => {
         name: "Neotech Support Team",
         phone: "+998 71 201 22 22",
         date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()} `,
-        message: message.value.message.toString(),
+        messages: message.value.message.toString(),
         reply_to: $router.currentRoute.value.params.id
     }
 
