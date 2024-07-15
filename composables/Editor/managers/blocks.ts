@@ -34,7 +34,6 @@ async function FilterBlocksSettings(data: Response, component: any) {
     }
 
     (data as Response | any).forEach((block: Object) => {
-        (block as any).category = "Шаблоны" as string
         (component as any).blockManager.blocks.push(block)
     })
 }

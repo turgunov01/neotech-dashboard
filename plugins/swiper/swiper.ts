@@ -1,4 +1,4 @@
-import { Editor } from "grapesjs";
+import { Component, Editor } from "grapesjs";
 import type { Autoplay, SwiperInterface } from "~/composables/Editor/interface/swiper";
 
 export class Swiper {
@@ -27,6 +27,11 @@ export class Swiper {
         this.setSwiper();
         this.setWrapper(editor);
         this.setCarousel(editor, this.options.slidesPerView);
+
+        const number = this.options.slidesPerView
+        const counter = ((parseInt("100%") / number));
+
+        editor.Css.setRule(`.swiper .swiper-slide`, { flex: `0 0 ${counter}%`, 'min-height': "300px", padding: "30px" })
     }
 
     setSwiper() {
@@ -35,6 +40,10 @@ export class Swiper {
             "margin-left": "auto",
             "position": "relative",
             "overflow": "hidden",
+            "touch-action": "pan-y",
+            "touch-move-stop-propagation": "true",
+            "user-select": "none",
+            "-webkit-user-select": "none",
             "list-style": "none",
             "padding": "0",
             "z-index": "1",
@@ -66,7 +75,18 @@ export class Swiper {
         const number = slidesPerView || this.options.slidesPerView
         const counter = ((parseInt("100%") / number));
 
-        editor.Css.setRule(`${this.className} .swiper-slide`, { flex: `0 0 calc(${counter}%)`, 'min-height': "300px", padding: "30px" })
+
+        const component = editor.Components.getById(this.container.id)
+
+        component.setAttributes({ 'data-swiper': this.container.id })
+
+        editor.Css.setRule(`.swiper[data-swiper="${this.container.id}"] .swiper-slide`, { flex: `0 0 ${counter}%`, 'min-height': "300px", padding: "30px" })
+
+        this.carousel.childNodes.forEach((slide: any) => {
+            slide.style.flex = `0 0 ${counter}%`;
+            slide.style.minHeight = "300px";
+            slide.style.padding = "30px"
+        });
     }
 
     setNavigation() {
@@ -106,6 +126,8 @@ export class Swiper {
                     await this.move(-(this.currentPosition))
                 }
             }
+
+            console.log(1)
         });
 
 
@@ -178,4 +200,4 @@ export class Swiper {
     }
 }
 
-export default Swiper;
+export default Swiper

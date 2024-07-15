@@ -50,9 +50,6 @@
                         <p class="nav-item-name">Профиль</p>
                     </nuxt-link>
                     <!-- Test -->
-                    <nuxt-link :to="`/test`">
-                        <p class="nav-item-name">TEST</p>
-                    </nuxt-link>
                 </ul>
                 <div class="logout">
                     <button data-type="logout" @click="logout">

@@ -530,6 +530,14 @@
             }
         }
     }
+
+    &-frame {
+        overflow: hidden !important;
+
+        & html {
+            background: red;
+        }
+    }
 }
 
 .CodeMirror {

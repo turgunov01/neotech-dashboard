@@ -44,6 +44,16 @@ export const isRequestPopular = (query: string, value: string) => {
     return `?${query}=${value}`
 }
 
+export async function updateStructure(options: any) {
+    await apiDataFetch(`${uri}/api/update/test-stranitsa/javascript/${options.scriptType}`, {
+        ...customHeaders("PUT"),
+        body: JSON.stringify({
+            className: options.className,
+            slides: options.params
+        }, null)
+    })
+}
+
 export default {
     PORT,
     USER_FETCH_HOST,
@@ -51,5 +61,6 @@ export default {
     customHeaders,
     types,
     isRequestPopular,
-    uri
+    uri,
+    updateStructure
 }

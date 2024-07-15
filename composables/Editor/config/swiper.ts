@@ -1,4 +1,3 @@
-
 import Swiper from "~/plugins/swiper/swiper";
 import type { SwiperInterface } from "../interface/swiper";
 import type { Editor } from "grapesjs";
@@ -6,7 +5,9 @@ import type { Editor } from "grapesjs";
 export async function SwiperConfiguration(elInput: HTMLElement, params: SwiperInterface, editor: Editor,) {
     const frame = document.querySelector(".gjs-frame") as HTMLIFrameElement;
     const selected = frame.contentDocument?.querySelector(".gjs-selected") as HTMLIFrameElement;
-    const className = `.swiper#${selected.id}`
+    const className = `.swiper[data-swiper="${selected.dataset.swiper}"]`
+
+    const type = 'slider'
 
     const swiper = await new Swiper(className, params)
 
@@ -16,11 +17,19 @@ export async function SwiperConfiguration(elInput: HTMLElement, params: SwiperIn
     const delayInput = elInput.querySelector("input#autoplay-delay") as HTMLInputElement;
     const navigation = elInput.querySelector("input#navigation") as HTMLInputElement;
 
-    init?.addEventListener("change", (event) => {
+    init?.addEventListener("change", async (event) => {
         swiper.init(editor)
+
+        const config = {
+            scriptType: "slider",
+            className: className,
+            params: params,
+        }
+
+        // updateStructure(config)
     })
 
-    slidesPerView?.addEventListener("change", (event) => {
+    slidesPerView?.addEventListener("change", async (event) => {
         if (parseInt((event.target as HTMLInputElement).value) > 0 && parseInt((event.target as HTMLInputElement).value) < 6) {
             params.slidesPerView = parseInt((event.target as HTMLInputElement).value)
             swiper.setCarousel(editor, parseInt((event.target as HTMLInputElement).value))

@@ -1,9 +1,9 @@
 import type { SwiperInterface } from "../interface/swiper";
 import { SwiperConfiguration } from "../config/swiper";
 
-import type { DomTraitsInterface, SwiperManagerHandler, TraitManagerInterface } from "../interface/traits";
+import type { DomTraitsInterface, FormManagerHandler, SwiperManagerHandler, TraitManagerInterface } from "../interface/traits";
 import type { Editor } from "grapesjs";
-
+import Swiper from "~/plugins/swiper/swiper";
 
 export function SwiperDomTrait(options: DomTraitsInterface) {
     return {
@@ -16,30 +16,26 @@ export function SwiperDomTrait(options: DomTraitsInterface) {
     }
 }
 
-export function FormDomTrait(options: DomTraitsInterface) {
+export function FormDomTrait(options: TraitManagerInterface) {
     return {
-        isComponent: (element: HTMLElement): boolean => {
-            return (element as HTMLInputElement).tagName === "INPUT";
-        },
+        isComponent: (element: { tagName: string, classList: any }) => element.tagName === "FORM",
         model: {
             defaults: {
                 traits: [TraitsModelHandler(options)]
             }
         }
-    };
+    }
 }
 
-function TraitsModelHandler(parameters: DomTraitsInterface) {
+function TraitsModelHandler(parameters: any) {
     const options = {
-        type: parameters.type,
-        name: parameters.name,
-        label: parameters.label
+        ...parameters
     }
 
     return options
 }
 
-export function createSwiperElement(options: TraitManagerInterface) {
+export function createElement(options: TraitManagerInterface) {
     const el = document.createElement("div");
     el.innerHTML = options.label
 
@@ -64,7 +60,7 @@ export class SwiperTraitsHandler implements SwiperManagerHandler {
     }
 
     createInput({ trait }: { trait: any }): HTMLElement | string {
-        const element = createSwiperElement(this.options)
+        const element = createElement(this.options)
         return element
     }
 
@@ -77,4 +73,32 @@ export class SwiperTraitsHandler implements SwiperManagerHandler {
         return null;
     }
 
+}
+
+export class FormTraitsHandler implements FormManagerHandler {
+    private options: TraitManagerInterface;
+    private editor: Editor;
+
+    constructor(options: TraitManagerInterface, editor: Editor) {
+        this.options = options;
+        this.editor = editor as Editor;
+    }
+
+    createInput({ trait }: { trait: any }): HTMLElement | string {
+        const element = createElement(this.options)
+
+        return element
+    }
+
+    onEvent({ elInput, component }: { elInput: HTMLElement, component: any }) {
+        const frame = document.querySelector(".gjs-frame") as HTMLIFrameElement;
+        const selected = frame?.contentDocument?.querySelector(".gjs-selected") as HTMLIFrameElement;
+
+        const element = this.editor.Components.getById(selected.id)
+        element.setAttributes({ 'action': `${uri}/api/messages`, 'method': "POST", 'enctype': "application/json", id: selected.id, class: `form-${selected.id}` })
+    }
+
+    onUpdate({ elInput, component }: { elInput: HTMLElement, component: any }): void | null {
+
+    }
 }

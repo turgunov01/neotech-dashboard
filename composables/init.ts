@@ -29,6 +29,10 @@ export class EditorApp {
 
     async buildEditor(/* plugin: any */) {
         const container = await grapesjs.init(this.component)
+
+        const wrapper = container.getWrapper()
+        wrapper?.addStyle({ 'overflow': 'hidden' })
+
         await this.translate(container)
         await run(container);
     }
