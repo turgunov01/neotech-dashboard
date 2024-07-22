@@ -7,7 +7,6 @@ export async function SwiperConfiguration(elInput: HTMLElement, params: SwiperIn
     const selected = frame.contentDocument?.querySelector(".gjs-selected") as HTMLIFrameElement;
     const className = `.swiper[data-swiper="${selected.dataset.swiper}"]`
 
-    const type = 'slider'
 
     const swiper = await new Swiper(className, params)
 
@@ -20,11 +19,11 @@ export async function SwiperConfiguration(elInput: HTMLElement, params: SwiperIn
     init?.addEventListener("change", async (event) => {
         swiper.init(editor)
 
-        const config = {
-            scriptType: "slider",
-            className: className,
-            params: params,
-        }
+        // const config = {
+        //     scriptType: "slider",
+        //     className: className,
+        //     params: params,
+        // }
 
         // updateStructure(config)
     })

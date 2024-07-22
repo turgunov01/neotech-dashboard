@@ -63,12 +63,10 @@ async function publish(model: GlobalInterface,) {
     } finally {
         const log = {
             username: showStoreData("username"),
-            email: showStoreData("email") ? showStoreData("email") : "sardorceeksamurai@gmail.com",
+            email: showStoreData("email") ? showStoreData("email") : showStoreData("username") + "@gmail.com",
             action: 4,
             pagename: "test-stranitsa",
         }
-
-        console.log(log)
 
         await apiDataFetch(`${uri}/api/history`, {
             ...customHeaders("POST"),
@@ -76,9 +74,6 @@ async function publish(model: GlobalInterface,) {
         })
             .then(response => response.json())
             .then(response => {
-                setTimeout(() => {
-                    location.reload()
-                }, 3000);
                 console.log(response)
             })
     }

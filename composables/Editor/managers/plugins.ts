@@ -6,6 +6,7 @@ import { FormDomTrait, SwiperDomTrait, SwiperTraitsHandler } from "./traits";
 import type { TraitManagerInterface } from "../interface/traits";
 
 import { FormTraitsHandler as FormTraitController } from "./traits";
+import { customRTE } from "../config/selector";
 
 const params = {
     slidesPerView: 3,
@@ -20,7 +21,7 @@ const params = {
 } as SwiperInterface
 
 export function Plugins(editor: Editor) {
-    const arr = [SwiperPluginsHandler(editor), FormTraitsHandler(editor)]
+    const arr = [SwiperPluginsHandler(editor), FormTraitsHandler(editor), customRTE(editor)]
     return arr
 };
 
