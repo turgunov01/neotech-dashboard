@@ -129,7 +129,7 @@ onMounted(async () => {
     }
 
     currentMessageOutgoing.value = outgoings.value.messages.find(item => (item as any).id == $router.params.id)
-    currentMessage.value = outgoings.value.messages.find(item => (item as any).id == currentMessageOutgoing.value.id)
+    currentMessage.value = outgoings.value.messages.find(item => (item as any).id == currentMessageOutgoing.value.reply_to)
 })
 
 </script>

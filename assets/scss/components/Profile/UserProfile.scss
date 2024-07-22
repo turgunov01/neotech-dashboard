@@ -81,6 +81,9 @@
 
     &-container {
         border: .1rem solid #e5e5e5;
+        max-height: 90vh;
+        overflow: hidden;
+        overflow-y: auto;
     }
 
     &-title {
