@@ -114,7 +114,8 @@ const send = async () => {
         phone: "+998 71 201 22 22",
         date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()} `,
         messages: message.value.message.toString(),
-        reply_to: $router.currentRoute.value.params.id
+        reply_to: $router.currentRoute.value.params.id,
+        type: 2,
     }
 
     await apiDataFetch(`${uri}/api/messages?type=2`, {

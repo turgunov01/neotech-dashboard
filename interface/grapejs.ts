@@ -1,3 +1,5 @@
+import type { RichTextEditorConfig } from "grapesjs"
+
 export interface GrapesInitInterface {
     container: string,
     fromElement: boolean | true,
@@ -8,7 +10,7 @@ export interface GrapesInitInterface {
         default: Array<any> | []
     },
     traits: Array<any> | null,
-    plugins: any
+    plugins: any,
 }
 
 

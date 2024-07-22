@@ -3,7 +3,6 @@ import { SwiperConfiguration } from "../config/swiper";
 
 import type { DomTraitsInterface, FormManagerHandler, SwiperManagerHandler, TraitManagerInterface } from "../interface/traits";
 import type { Editor } from "grapesjs";
-import Swiper from "~/plugins/swiper/swiper";
 
 export function SwiperDomTrait(options: DomTraitsInterface) {
     return {

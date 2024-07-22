@@ -208,6 +208,29 @@
         font-family: "Arial", sans-serif !important;
     }
 
+    &-badge {
+        opacity: 0 !important;
+    }
+
+    &-rte {
+        &-toolbar {
+            border-radius: 6px !important;
+        }
+
+        &-action {
+            background: #F6F6F6 !important;
+            padding: .25rem !important;
+            border-radius: .6rem !important;
+
+            & .gjs {
+                &-field {
+                    border-radius: .6rem;
+                    font-size: 1.4rem !important;
+                }
+            }
+        }
+    }
+
 
     &-layer {
         &.gjs-selected {
@@ -417,6 +440,10 @@
 
     &-fields {
         border: .1rem solid #E5E5E5 !important;
+    }
+
+    select.gjs-field {
+        border: unset !important;
     }
 
     &-field {

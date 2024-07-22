@@ -6,7 +6,7 @@ import { EditorApp } from "./init";
 import type { GrapesInitInterface } from '~/interface/grapejs';
 import { Plugins } from './Editor/managers/plugins';
 
-const component = ref({
+export const component = ref({
     container: '#gjs',
     fromElement: true,
     height: '100%',
@@ -15,7 +15,7 @@ const component = ref({
     panels: {
         default: []
     },
-    plugins: [Plugins]
+    plugins: [Plugins],
 } as GrapesInitInterface)
 
 
@@ -25,7 +25,6 @@ export async function init() {
     await labels(component.value);
 
     const editor = await new EditorApp(component.value).buildEditor();
-
     return editor;
 }
 
