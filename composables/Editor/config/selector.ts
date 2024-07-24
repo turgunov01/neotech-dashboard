@@ -2,9 +2,10 @@ import type { Editor, RichTextEditorAction } from "grapesjs";
 import { EditorPublish } from "../methods/sync/publish";
 
 export function customRTE(editor: Editor) {
-    editor.on("component:selected", () => {
-        const frame = document.querySelector(".gjs-frame") as HTMLIFrameElement;
-        const selected = frame?.contentWindow?.document.querySelector(".gjs-selected") as HTMLIFrameElement;
+    let selected: any;
+
+    editor.on("rte:enable", () => {
+        selected = editor.getSelected()?.getEl();
         const rte = editor.RichTextEditor;
 
         const parameters = {
@@ -47,7 +48,7 @@ export function customRTE(editor: Editor) {
         });
 
         rte.add('fontSize', {
-            icon: `<select class="gjs-field" style="width: max-content !important; border: unset !important; background: white !important; padding: 5px">
+            icon: `<select class="gjs-field" style="width: max-content !important; border: unset !important; background: white !important; padding: 5px; height: 100%;">
                     ${parameters.fontSize.map((value, index) => `<option value="${value.index}" ${value.selected ? 'selected' : ''}>${value.value}</option>`)
                     .join('')}
                 </select>`,
@@ -72,7 +73,7 @@ export function customRTE(editor: Editor) {
 
         rte.add("fontFamily", {
             icon: `
-                <select class="gjs-field" style="width: max-content!important; border: unset!important; background: white!important; padding: 5px">
+                <select class="gjs-field" style="width: max-content!important; border: unset!important; background: white!important; padding: 5px; height: 100%;">
                     <option value="Arial">Arial</option>
                     <option value="Verdana">Verdana</option>
                     <option value="Helvetica">Helvetica</option>
@@ -95,6 +96,25 @@ export function customRTE(editor: Editor) {
             //     selected.style.fontFamily = value
             //     editor.Components.getById(selected.id).addStyle({ 'font-family': value })
             // },
+        })
+
+        rte.add("fontSizeNumeric", {
+            icon: `
+                <select class="gjs-field" style="width: 40px!important; border: unset!important; background: white!important; padding: 5px; height: 100%;">
+                    ${Array.from({ length: 100 }, (_, i) => i)
+                    .filter(i => i % 2 === 0)
+                    .map(i => `<option value="${i}">${i}</option>`)
+                    .join('')}
+                </select>
+            `,
+            attributes: {
+                style: "width: 40px; height: 40px"
+            },
+            result(rte, action) {
+                const value = (action.btn as HTMLSelectElement).value;
+                editor.Components.getById(selected.id).removeStyle('font-size')
+                editor.Components.getById(selected.id).addStyle({ 'font-size': `${value}px` })
+            },
         })
 
         rte.add("bold", {
@@ -166,17 +186,22 @@ export function customRTE(editor: Editor) {
                 const color = ((action.btn as HTMLElement).firstElementChild as HTMLInputElement).value;
                 editor.Components.getById(selected.id).removeStyle("color");
                 editor.Components.getById(selected.id).addStyle("color", `${color} !important`);
-                return new EditorPublish(editor).sync()
             },
         })
+    })
 
-        rte.add("clone", {
-            icon: `
-                <span style="background: white; padding: 7.5px; width: 100%; height: 100%; border-radius: 6px;"><svg viewBox="0 0 24 24"><path fill="black" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg></span>
-            `,
-            attributes: {
-                style: "width: 40px; height: 40px; background: white; display: flex; align-items: center; justify-content: center;"
-            }
-        })
+    editor.on("rte:disable", () => {
+        selected = null;
+
+        const rte = editor.RichTextEditor;
+        rte.actions?.forEach(async config => {
+            await rte.remove((config as RichTextEditorAction).name)
+            await rte.remove("wrap")
+            await rte.remove("strikethrough")
+            await rte.remove("link")
+            await rte.remove("italic")
+            await rte.remove("underline")
+            await rte.remove("bold")
+        });
     })
 }

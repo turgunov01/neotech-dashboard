@@ -11,6 +11,5 @@ export const cipher = (str: string, seed = 0) => {
     h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
 
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
-    // Return victim hashed response - until it does not lags state
 };
 
