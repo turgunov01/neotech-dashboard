@@ -33,6 +33,8 @@ async function FilterBlocksSettings(data: Response, component: any) {
         await storeData('init_filter', 0)
     }
 
+    console.log(data);
+
     (data as Response | any).forEach((block: Object) => {
         (component as any).blockManager.blocks.push(block)
     })

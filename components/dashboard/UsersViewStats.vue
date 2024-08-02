@@ -10,7 +10,7 @@
                 </div> -->
             </header>
             <section class="stats-detail">
-                <h1 class="stats-calculator">{{ visits }}</h1>
+                <h1 class="stats-calculator">{{ views }}</h1>
                 <span class="stats-calculator-name">просмотр страниц</span>
             </section>
         </div>
@@ -18,27 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import { apiDataFetch, uri } from "~/composables/exports"
-
-const visits = ref(0)
-
-const request = async () => {
-    const options = {
-        ...customHeaders("GET"),
+const props = defineProps({
+    views: {
+        type: Number,
+        default: 0
     }
-    await apiDataFetch(`${uri}/api/stats?type=views`, options)
-        .then(response => response.json())
-        .then(response => {
-            visits.value = response.views
-        })
-}
-
-
-onMounted(() => {
-    request()
 })
-
-
 </script>
 
 <style scoped></style>

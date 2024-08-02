@@ -45,7 +45,7 @@
     </div>
 
     <div class="mirror" v-if="showFrame" @click.self="showFrame = false">
-        <iframe src="http://constructor.neotech.uz/" class="mirror-player" frameborder="0" allowfullscreen></iframe>
+        <iframe src="http://localhost:5500" class="mirror-player" frameborder="0" allowfullscreen></iframe>
     </div>
 
 </template>

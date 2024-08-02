@@ -1,5 +1,4 @@
 import type { Editor, RichTextEditorAction } from "grapesjs";
-import { EditorPublish } from "../methods/sync/publish";
 
 export function customRTE(editor: Editor) {
     let selected: any;
@@ -58,6 +57,8 @@ export function customRTE(editor: Editor) {
                 const value = parseInt((((action.btn as any) as HTMLElement).firstChild as HTMLSelectElement).selectedOptions[0].value);
                 const calculated = value * 10
 
+                console.log({ 'font-size': `${calculated}px`, 'line-height': '100%' })
+
                 editor.Components.getById(selected.id).addStyle({ 'font-size': `${calculated}px`, 'line-height': '100%' })
             },
             // update: (rte, action) => {
@@ -101,9 +102,9 @@ export function customRTE(editor: Editor) {
         rte.add("fontSizeNumeric", {
             icon: `
                 <select class="gjs-field" style="width: 40px!important; border: unset!important; background: white!important; padding: 5px; height: 100%;">
-                    ${Array.from({ length: 100 }, (_, i) => i)
+                    ${Array.from({ length: 80 }, (_, i) => i)
                     .filter(i => i % 2 === 0)
-                    .map(i => `<option value="${i}">${i}</option>`)
+                    .map(i => `<option value="${i + 10}">${i + 10}</option>`)
                     .join('')}
                 </select>
             `,
@@ -111,7 +112,8 @@ export function customRTE(editor: Editor) {
                 style: "width: 40px; height: 40px"
             },
             result(rte, action) {
-                const value = (action.btn as HTMLSelectElement).value;
+                const value = ((action.btn as HTMLSelectElement).querySelector("select") as HTMLSelectElement).value;
+                console.log(value);
                 editor.Components.getById(selected.id).removeStyle('font-size')
                 editor.Components.getById(selected.id).addStyle({ 'font-size': `${value}px` })
             },
@@ -163,15 +165,23 @@ export function customRTE(editor: Editor) {
 
         rte.add('link', {
             icon: `
-                <span style="width: 40px; height: 100%; display: flex; align-items: center; justify-content: center; background: white; border-radius: 6px;">
+                <label for="linked" style="width: 40px; height: 100%; display: flex; align-items: center; justify-content: center; background: white; border-radius: 6px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="10" viewBox="0 0 18 10" fill="none">
                         <path d="M5.625 1.25H5.25C3.17893 1.25 1.5 2.92893 1.5 5C1.5 7.07107 3.17893 8.75 5.25 8.75H6.75C8.82107 8.75 10.5 7.07107 10.5 5M12.375 8.75H12.75C14.8211 8.75 16.5 7.07107 16.5 5C16.5 2.92893 14.8211 1.25 12.75 1.25H11.25C9.17893 1.25 7.5 2.92893 7.5 5" stroke="#919192" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                </span>
+                    <input id="linked" type="checkbox" hidden>
+                </label>
             `,
             attributes: { title: 'Link', style: "width: 40px;" },
             // Example on how to wrap selected content
-            result: rte => rte.insertHTML(`<a href="#">${rte.selection()}</a>`)
+            result: (rte, action) => {
+                const checked = (action.btn?.querySelector("label input[type='checkbox']") as HTMLInputElement).checked
+                if (checked) {
+                    rte.insertHTML(`<a href="#">${rte.selection()}</a>`)
+                } else {
+                    rte.insertHTML(`${rte.selection()}`)
+                }
+            }
         });
 
         rte.add("color", {

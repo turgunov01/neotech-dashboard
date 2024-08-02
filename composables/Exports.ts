@@ -1,5 +1,6 @@
 export const PORT = 5003
 export const USER_FETCH_HOST = 'http://localhost:5003'
+// export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz'
 
 export const uri = `${USER_FETCH_HOST}`
 
@@ -33,6 +34,19 @@ export function customHeaders(type: string) {
             'Content-Type': 'application/json',
         },
     }
+}
+
+export function getRandomColor() {
+    const getRandomValue = () => Math.floor(Math.random() * 256);
+
+    const red = getRandomValue();
+    const green = getRandomValue();
+    const blue = getRandomValue();
+
+    const toHex = (value: any) => value.toString(16).padStart(2, '0');
+
+    const randomColor = `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+    return randomColor;
 }
 
 
@@ -86,5 +100,6 @@ export default {
     types,
     isRequestPopular,
     uri,
-    updateStructure
+    updateStructure,
+    getRandomColor
 }

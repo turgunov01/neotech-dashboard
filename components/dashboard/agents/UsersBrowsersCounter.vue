@@ -1,5 +1,5 @@
 <template>
-    <div class="stats" v-if="loaded">
+    <div class="stats">
         <div class="stats-container">
             <header class="stats-header">
                 <h4 class="stats-heading">Браузеры</h4>
@@ -10,18 +10,16 @@
                 </div> -->
             </header>
             <section class="lines">
-                <div class="line" v-for="(agent, index) in agents" :key="index"
-                    :title="`Browser: ${(agent as any).name}`" :style="{
-        width: `100%`,
-        backgroundColor: (agent as any).color,
-        maxWidth: `${(agent as any).percentage}%`
-    }">
-
+                <div class="line" v-for="(agent, index) in browsers" style="color: white !important;" :key="index"
+                    :title="`Browser: ${(agent as any)}`" :style="{
+                        width: `${(results[index] as any)?.percentage}%`,
+                        backgroundColor: (agent as any)?.color,
+                    }">
                     <div class="line-info">
-                        <p class="line-info-name" :style="{ background: `${(agent as any).color}` }">
-                            {{ (agent as any).browser.name }}
+                        <p class="line-info-name" :style="{ background: `${(agent as any)?.color}` }">
+                            {{ (agent as any).browser }}
                         </p>
-                        <p class="line-info-name"> {{ (results as any)[index].percentage }}% </p>
+                        <p class="line-info-name"> {{ (agent as any).visits }} </p>
                     </div>
                 </div>
             </section>
@@ -29,7 +27,7 @@
                 <div class="result" v-for="(result, index) in results" :key="index">
                     <div class="result-static" style="display: flex; align-items: center;">
                         <div class="result-rectangle" :style="{ background: `${(result as any).color}` }"></div>
-                        <p class="result-agent"> {{ (agents[index] as any).browser.name }} </p>
+                        <p class="result-agent"> {{ (result as any).name }} </p>
                     </div>
                     <p class="result-percentage"> {{ (result as any).percentage }}% </p>
                 </div>
@@ -40,37 +38,54 @@
 
 <script setup lang="ts">
 
-const results: Array<any> = []
-const agents = ref([])
-const loaded = ref(false)
+const props = defineProps({
+    agents: {
+        type: Array,
+        required: true,
+        default: []
+    }
+})
 
-async function getBrowsers() {
-    await apiDataFetch(`${uri}/api/users/browsers`, customHeaders("GET"))
-        .then(response => response.json())
-        .then(response => {
-            response.browsers.forEach((item: Object) => {
-                agents.value.push(item as never)
-            })
+const browsers = ref([]) as any;
+
+async function getPlatforms() {
+    await apiDataFetch(`${uri}/stats/platforms`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${getStoreData("Authorization")}`,
+            "Content-Type": "application/json"
+        }
+    }).then(response => response.json()).then(response => {
+        const data = response;
+        data.forEach((item: any, index: number) => {
+            item.color = "";
+            item.color = getRandomColor();
+            browsers.value.push(item as never);
         })
+
+    })
 }
 
+const results = ref([])
 
 const percentageCounter = () => {
-    const totalCount = agents.value.reduce((total, agent) => total + (agent as any).count, 0);
-    agents.value.forEach(agent => {
+    const totalCount = browsers.value.reduce((total: any, agent: any) => total + (agent as any).visits, 0);
+    browsers.value.forEach((agent: any) => {
         const item = {
-            name: (agent as any).name,
-            percentage: ((agent as any).count / totalCount * 100).toFixed(2),
+            name: (agent as any).browser,
+            percentage: parseInt(((agent as any).visits / (totalCount as any) * 100).toFixed(2)),
             color: (agent as any).color
         };
-        results.push(item)
+
+        results.value.push(item as never)
     });
+
 }
 
 onMounted(async () => {
-    await getBrowsers()
-    await percentageCounter()
-    loaded.value = true
+    await getPlatforms()
+
+    percentageCounter()
 })
 
 

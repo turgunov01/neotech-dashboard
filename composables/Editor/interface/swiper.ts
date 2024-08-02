@@ -1,5 +1,5 @@
 export interface SwiperInterface {
-    slidesPerView?: number;
+    slidesPerView?: number | 3;
     padding?: number | 20,
     navigation: SwiperNavigation | null,
     spaceBetween?: number | 30,

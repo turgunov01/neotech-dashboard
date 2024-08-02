@@ -10,7 +10,8 @@
                 </div> -->
             </header>
             <section class="stats-detail">
-                <h1 class="stats-calculator"> {{ messages }} </h1>
+                <h1 class="stats-calculator"> {{ messages.length && messages.length !== 0 ? messages.length + 1 : 0 }}
+                </h1>
                 <span class="stats-calculator-name">раз</span>
             </section>
         </div>
@@ -20,24 +21,26 @@
 <script setup lang="ts">
 import { apiDataFetch, uri } from "~/composables/exports"
 
-const messages = ref(0)
+const counter = ref(0)
 
-const request = async () => {
-    const options = {
-        ...customHeaders("GET"),
-    }
-    await apiDataFetch(`${uri}/api/messages`, options)
-        .then(response => response.json())
-        .then(response => {
-            response.messages.forEach((message: Object) => {
-                messages.value += 1
-            })
-        })
+interface Messages {
+    id: number,
+    date: string,
+    user: string,
+    message: string,
+    phone: string,
+    type: number | 1,
+    reply_to: string | null
 }
 
+const props = defineProps({
+    messages: {
+        type: Array<Messages>,
+        default: []
+    }
+})
 
 onMounted(() => {
-    request()
 })
 </script>
 

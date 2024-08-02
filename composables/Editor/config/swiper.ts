@@ -4,81 +4,33 @@ import type { Editor } from "grapesjs";
 
 export async function SwiperConfiguration(elInput: HTMLElement, params: SwiperInterface, editor: Editor,) {
     const frame = document.querySelector(".gjs-frame") as HTMLIFrameElement;
-    const selected = frame.contentDocument?.querySelector(".gjs-selected") as HTMLIFrameElement;
-    const className = `.swiper[data-swiper="${selected.dataset.swiper}"]`
+    const container = frame?.contentWindow?.document.querySelector(".gjs-selected") as HTMLIFrameElement;
 
+    const component = editor.Components.getById(container?.id as string);
+    component.setAttributes({ "data-swiper": container?.id })
 
-    const swiper = await new Swiper(className, params)
+    // const className = `.swiper[data-swiper="${container?.id}"]`
 
-    const init = elInput.querySelector("input#init");
-    const slidesPerView = elInput.querySelector("input#slidesPerView") as HTMLInputElement;
-    const autoplay = elInput.querySelector("input#autoplay")
-    const delayInput = elInput.querySelector("input#autoplay-delay") as HTMLInputElement;
-    const navigation = elInput.querySelector("input#navigation") as HTMLInputElement;
+    const swiper = new Swiper(container, editor, params)
 
-    init?.addEventListener("change", async (event) => {
-        swiper.init(editor)
-
-        // const config = {
-        //     scriptType: "slider",
-        //     className: className,
-        //     params: params,
-        // }
-
-        // updateStructure(config)
-    })
-
-    slidesPerView?.addEventListener("change", async (event) => {
-        if (parseInt((event.target as HTMLInputElement).value) > 0 && parseInt((event.target as HTMLInputElement).value) < 6) {
-            params.slidesPerView = parseInt((event.target as HTMLInputElement).value)
-            swiper.setCarousel(editor, parseInt((event.target as HTMLInputElement).value))
-        } else {
-            (event.target as HTMLInputElement).value = params.slidesPerView as any
+    const init = elInput.querySelector(".swiper-init input") as HTMLElement;
+    init.addEventListener("change", (event) => {
+        if ((event.target as HTMLInputElement)?.checked) {
+            swiper.init()
         }
     })
 
-    autoplay?.addEventListener("change", (event) => {
-        const checked = (event.target as HTMLInputElement).checked
-
-        if (checked) {
-            if (delayInput && delayInput.parentElement) {
-                delayInput.parentElement.style.display = "flex";
-            }
+    const autoplay = elInput.querySelector(".swiper-autoplay") as HTMLElement;
+    const autoplayInput = autoplay.querySelector(".autoplay-init input") as HTMLInputElement;
+    autoplayInput.addEventListener("change", (event) => {
+        if ((event.target as HTMLInputElement)?.checked) {
+            swiper.autoplay()
         }
     })
 
-    delayInput.value = params.autoplay.delay.toString();
-    delayInput.addEventListener("input", async (event) => {
-        const number = (event.target as HTMLInputElement).value;
-
-        let delay = parseInt(number);
-        if (isNaN(delay)) {
-            console.error('Invalid number input');
-            return;
-        }
-
-        if (delay < 500) {
-            delay = 500;
-        }
-
-        params.autoplay.delay = delay;
-
-        try {
-            await swiper.setAutoplay(params.autoplay.delay);
-        } catch (error) {
-            return alert('Error updating autoplay delay');
-        }
-    });
-
-    navigation?.addEventListener("change", async (event) => {
-        const checked = (event.target as HTMLInputElement).checked;
-
-        if (checked) {
-            swiper.setNavigation()
-        } else {
-            swiper.unsetNavigation()
-        }
+    const autoplayDelay = autoplay.querySelector(".autoplay-delay input")
+    autoplayDelay?.addEventListener("change", () => {
     })
 
-    return null;
+
 }
