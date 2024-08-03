@@ -11,6 +11,12 @@
                     <img src="/assets/tick.svg" alt="">
                 </div>
                 <input type="text" placeholder="Neotech Веб-сайт" value="Neotech Веб-сайт">
+                <select name="pages" class="pages-select" @change="choose($event)">
+                    <option :value="page.id"
+                        :selected="page.id === useRouter().currentRoute.value.query.uid ? true : false"
+                        v-for="page in pages">{{ page.name?.toUpperCase() }}
+                    </option>
+                </select>
             </div>
             <div class="nav-event">
                 <div class="backward">
@@ -56,7 +62,72 @@ import ConstructorSidebarElements from '../../components/Models/ConstructorSideb
 
 import 'grapesjs/dist/css/grapes.min.css';
 
-const loaded = ref(false)
+interface Page {
+    id: string,
+    name?: string,
+    route: string,
+    length: number | 0,
+    sections: Array<any>,
+    html: string,
+    css: string,
+    cipher: string,
+}
+
+const pages = ref([] as Page[])
+
+const getList = () => {
+    const options = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('Authorization')}`,
+        }
+    }
+
+    apiDataFetch(`${uri}/pages/all`, options)
+        .then(response => response.json())
+        .then(response => {
+            response.forEach(async (item: any) => {
+                const name = item.replace("pages/", "").replace(".json", "");
+
+                await apiDataFetch(`${uri}/pages/${name}`, options)
+                    .then(data => data.json())
+                    .then(data => {
+
+                        const object = {
+                            id: data.id,
+                            name: name,
+                            route: `/${name}`,
+                            length: 0,
+                            sections: data.sections ? data.sections : [],
+                            html: data.html,
+                            css: data.css ? data.css : '',
+                        } as Page;
+
+                        pages.value.push(object);
+                        if (!useRouter().currentRoute.value.query.uid) {
+                            useRouter().push({ query: { uid: pages.value[0].id } })
+                        } else {
+                            return
+                        }
+
+                    })
+
+            })
+        })
+
+}
+
+const choose = (event: any) => {
+    const page = event.target.value;
+    useRouter().push({ query: { uid: page } })
+    setTimeout(() => {
+        location.reload();
+    }, 300);
+}
+
+
+const loaded = ref(true)
 const clicked = ref(false)
 
 const showFrame = ref(false)
@@ -77,17 +148,10 @@ const iframe = (bool: Boolean) => {
 
 
 onMounted(async () => {
-    loaded.value = true
+    loaded.value = false
+    init()
 
-    try {
-        await init()
-    } catch (err) {
-        alert(err)
-    } finally {
-        setTimeout(() => {
-            loaded.value = false
-        }, 100);
-    }
+    await getList();
 })
 
 
@@ -132,6 +196,18 @@ span {
         max-width: 1728px;
         height: 80vh;
         border-radius: .8rem
+    }
+}
+
+.pages {
+    &-select {
+        background: white;
+        color: black;
+        border: 1px solid #344054;
+        height: 39px;
+        border-radius: 5px;
+        padding: 5px 10px;
+        appearance: none;
     }
 }
 </style>

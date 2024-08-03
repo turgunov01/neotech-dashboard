@@ -100,7 +100,7 @@ const statistics = async () => {
             analytics.messages = data;
         })
 }
- 
+
 onMounted(async () => {
     await statistics();
     loaded.value = true;

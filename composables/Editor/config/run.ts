@@ -1,5 +1,7 @@
 import type { Editor } from "grapesjs"
 import { EditorPublish } from "../methods/sync/publish"
+import type { Container } from "../interface/container"
+
 
 async function AssetManager(editor: Editor) {
     const options = {
@@ -38,28 +40,22 @@ async function AssetManager(editor: Editor) {
 }
 
 export async function buildEditor(editor: Editor) {
-    const query = {
-        type: "popular",
-        value: "*"
+    const options = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("Authorization")}`
+        }
     }
 
-    try {
-        await apiDataFetch(`${uri}/api/pages/test-stranitsa?${query.type}=${query.value}`, {
-            ...customHeaders("GET"),
+    await apiDataFetch(`${uri}/pages/single/${useRouter().currentRoute.value.query.uid}`, options)
+        .then(response => response.json())
+        .then(async response => {
+            const pages = response;
+
+            editor.setComponents(pages.sections);
+            editor.Css.addRules(pages.css);
         })
-            .then(response => response.json())
-            .then(async response => {
-                const data = response
-                const assets = await AssetManager(editor)
-
-                editor.setComponents(data.sections)
-                editor.Css.addRules(data.css)
-                editor.Assets.add(assets)
-            })
-    }
-    catch (err) {
-        console.log(err)
-    }
 }
 
 function buttonPublishHandler(editor: Editor) {

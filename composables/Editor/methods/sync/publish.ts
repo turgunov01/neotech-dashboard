@@ -39,25 +39,24 @@ export class EditorPublish {
 
 async function publish(model: GlobalInterface,) {
     try {
-        await apiDataFetch(`${uri}/api/pages/test-stranitsa`, {
-            ...customHeaders("PUT"),
-            body:
-                JSON.stringify({
-                    name: model.name,
-                    sections: model.sections,
-                    html: model.html,
-                    css: model.css,
-                    cipher: model.cipher,
-                    javascript: model.javascript,
-                })
-        })
-            .then(response => response.json())
-            .then(response => {
-                if (response.status && response.status === 403) {
-                    alert(`Status: ${response.status}. You are not allowed to publish existing page!`)
-                }
-
-            })
+        // await apiDataFetch(`${uri}/api/pages/test-stranitsa`, {
+        //     ...customHeaders("PUT"),
+        //     body:
+        //         JSON.stringify({
+        //             name: model.name,
+        //             sections: model.sections,
+        //             html: model.html,
+        //             css: model.css,
+        //             cipher: model.cipher,
+        //             javascript: model.javascript,
+        //         })
+        // })
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         if (response.status && response.status === 403) {
+        //             alert(`Status: ${response.status}. You are not allowed to publish existing page!`)
+        //         }
+        // })
     } catch (err) {
         alert(err)
     } finally {
@@ -68,14 +67,14 @@ async function publish(model: GlobalInterface,) {
             pagename: "test-stranitsa",
         }
 
-        await apiDataFetch(`${uri}/api/history`, {
-            ...customHeaders("POST"),
-            body: JSON.stringify(log)
-        })
-            .then(response => response.json())
-            .then(response => {
-                console.log(response)
-            })
+        // await apiDataFetch(`${uri}/api/history`, {
+        //     ...customHeaders("POST"),
+        //     body: JSON.stringify(log)
+        // })
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         console.log(response)
+        //     })
     }
 }
 
