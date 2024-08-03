@@ -1,45 +1,63 @@
 <template>
-    <div class="mail" v-if="loaded">
+    <div class="mail">
         <div class="mail-container">
             <aside class="mail-sidebar">
-                <UsersFormRequest :data="(messages as any)" />
+                <div class="sidebar-conf">
+                    <div class="sidebar-params">
+                        <h2 class="sidebar-params-title"> Входящие </h2>
+                    </div>
+                    <ul class="sidebar-list" v-for="(data, index) in messages">
+                        <li class="sidebar-item" :class="routeId === data.id ? 'active' : ''" v-if="data.type === 1">
+                            <nuxt-link :to="`${data.id}`" v-if="data.type === 1">
+                                <h4 class="sidebar-item-message"> {{ data.message }} </h4>
+                                <h6 class="sidebar-item-author"> {{ data.user }} </h6>
+                                <p class="sidebar-item-date"> {{ data.date.replace(/\./g, '/') }} </p>
+                            </nuxt-link>
+                            <img src="../../../assets/star-in.svg" class="sidebar-item-star"
+                                :class="data.liked === true ? 'active' : ''" alt="">
+                        </li>
+                    </ul>
+                </div>
             </aside>
             <section class="mail-section">
-                <span class="mail-favorite" @click="favorite(false)" v-if="(message as any).isFav == 'true'">
+                <span class="mail-favorite" @click="like()" v-if="(selectedMessage as any).liked == true">
                     <img src="../../../assets/star-in.svg" alt="">
                     <p class="mail-favorite-heading">В избранных</p>
                 </span>
-                <span class="mail-favorite" @click="favorite(true)"
-                    v-else-if="(message as any).isFav == 'false' || !(message as any).isFav">
+                <span class="mail-favorite" @click="like()"
+                    v-else-if="(selectedMessage as any).liked == false || !(selectedMessage as any).liked">
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
                 <div class="mail-content">
                     <div class="mail-params">
                         <div class="mail-user-data">
-                            <h4 class="mail-user-data-text"> {{ (message as any).name }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (selectedMessage as any).user }} </h4>
+                            <span v-if="selectedMessage.email">/</span>
+                            <h4 class="mail-user-data-text"> {{ (selectedMessage as any).email }} </h4>
                             <span>/</span>
-                            <h4 class="mail-user-data-text"> {{ (message as any).email }} </h4>
-                            <span>/</span>
-                            <h4 class="mail-user-data-text"> {{ (message as any).phone }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (selectedMessage as any).phone }} </h4>
                         </div>
                         <p class="mail-user-date">
-                            {{ (message as any).date.replace(/\./g, "/").replace(/\,/g, "").replace(/\:/g,
-        "-") }}
+                            {{ (selectedMessage as any).date }}
                         </p>
                     </div>
                     <div class="mail-message">
-                        <div class="mail-message-box" v-html="(message as any).messages"></div>
+                        <div class="mail-message-box" v-html="(selectedMessage as any).message"></div>
                     </div>
                     <div class="mail-message reply">
                         <span class="reply-span">
                             <img src="/assets/icons/mailbox/reply.svg" alt="">
-                            <p class="replied-person"> {{ (message as any).email }} </p>
+                            <p class="replied-person">
+                                Новое обращение к пользователю <b>{{ (selectedMessage as any).user }}</b>
+                            </p>
                         </span>
-                        <textarea name="mail-reply" id="mail-reply" v-model="message.message" cols="30"
-                            rows="10">Новое обращение пользователю {{ (message as any).email }}</textarea>
+                        <textarea name="mail-reply" id="mail-reply" v-model="currentMessage.message" cols="30"
+                            rows="10">Новое обращение пользователю {{ (currentMessage as any).user }}</textarea>
                     </div>
-                    <button class="mail-send" @click.prevent="send()">Отправить</button>
+                    <button class="mail-send" @click="adminSend()" :style="{
+                        'cursor': !selectedMessage.email ? 'not-allowed' : 'pointer'
+                    }">Отправить</button>
                 </div>
             </section>
         </div>
@@ -48,92 +66,105 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import UsersFormRequest from '../../../components/Models/UsersFormRequestSidebar.vue'
 
-const $router = useRouter()
+interface Message {
+    id: number,
+    date: string,
+    message: string,
+    type: number,
+    phone: string,
+    reply_to: number | null,
+    user: string,
+    liked?: boolean | null,
+    email?: string | null,
+}
 
-const param = $router.currentRoute.value.params.id
-const loaded = ref(false)
-
-
-const message = ref({
-    message: "Новое обращение ...",
-})
-
-const messages = ref({
-    title: "Почта",
-    type: "incoming",
-    messages: []
-})
+const $router = useRouter();
+const routeId = parseInt($router.currentRoute.value.params.id as string);
+const messages = ref([] as Message[]);
+const selectedMessage = ref({} as Message);
+const currentMessage = ref({
+    message: 'Новое обращение от администратора',
+    type: 2,
+    phone: '+998 71 201 22 22',
+    reply_to: null,
+    user: 'Neotech Support Team',
+    liked: null,
+    email: 'support@neotech.uz',
+} as Message);
 
 const request = async () => {
-    await apiDataFetch(`${uri}/api/messages`, {
-        ...customHeaders("GET")
+
+    await apiDataFetch(`${uri}/messages/all`, {
+        method: "GET",
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("Authorization")
+        },
     })
         .then(response => response.json())
         .then(async response => {
-            await response.messages.forEach((msg: any) => {
-                messages.value.messages.push(msg as never)
+            const data = response.data;
 
-                if (msg.id == param) {
-                    message.value = msg as never
+            data.forEach((msg: Message) => {
+                messages.value.push(msg);
+
+                if (msg.id === parseInt($router.currentRoute.value.params.id as any)) {
+                    selectedMessage.value = msg;
+                    console.log(selectedMessage.value);
                 }
             })
-
         })
 }
 
-const favorite = async (value: Boolean) => {
+const like = async () => {
     const options = {
-        ...customHeaders("PUT"),
-        body: JSON.stringify({
-            ...message.value
-        })
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
+            "Content-type": "application/json"
+        }
     }
 
-
-    await apiDataFetch(`${uri}/api/messages/${$router.currentRoute.value.params.id.toString()}?action=${value}`, options)
-        .then(res => res.json())
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-        .finally(() => {
+    await apiDataFetch(`${uri}/messages/like/${selectedMessage.value.id}`, options)
+        .then(response => response.json())
+        .then(response => {
+            if (response.message) { return response.message }
             setTimeout(() => {
-                location.reload()
-            }, 300);
+                location.reload();
+            }, 1000);
         })
 }
 
-const send = async () => {
-    const params = {
-        email: "support@neotech.uz",
-        name: "Neotech Support Team",
-        phone: "+998 71 201 22 22",
-        date: `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()} `,
-        messages: message.value.message.toString(),
-        reply_to: $router.currentRoute.value.params.id,
-        type: 2,
+function truncate(str: string, length: number, suffix = '...') {
+    if (str.length > length) {
+        return str.slice(0, length) + suffix;
+    }
+    return str;
+}
+
+const adminSend = async () => {
+    const options = {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: currentMessage.value.message
+        })
     }
 
-    await apiDataFetch(`${uri}/api/messages?type=2`, {
-        ...customHeaders("POST"),
-        body: JSON.stringify(params)
-    })
-        .then((res: Response) => res.json())
-        .then(res => {
-            const data = res
-            console.log(data)
+    await apiDataFetch(`${uri}/messages/app/${$router.currentRoute.value.params.id}`, options)
+        .then(response => response.json())
+        .then(response => {
+
         })
 }
 
 
 
 onMounted(async () => {
-    await request()
-    loaded.value = true
+    await request();
 })
 
 </script>

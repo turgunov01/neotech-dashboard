@@ -1,4 +1,5 @@
 <template>
+    <Loader :height="'100%'" v-if="!loader" />
     <div class="wrapper" v-if="!$router.currentRoute.value.path.includes('constructor')">
         <div class="nav-wrapper">
             <div class="nav">
@@ -71,6 +72,10 @@
 </template>
 
 <script lang="ts" setup>
+import Loader from '~/components/Loader.vue';
+
+const loader = ref(true)
+
 const logout = async () => {
     removeStoreData("Authorization")
     removeStoreData("username")
@@ -81,6 +86,14 @@ const logout = async () => {
     }, 300);
 }
 
+onMounted(() => {
+    useRouter().afterEach(() => {
+        loader.value = false
+        setTimeout(() => {
+            loader.value = true
+        }, 400)
+    })
+})
 </script>
 
 <style scoped lang="scss">

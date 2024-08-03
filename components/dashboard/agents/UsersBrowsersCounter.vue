@@ -52,7 +52,7 @@ async function getPlatforms() {
     await apiDataFetch(`${uri}/stats/platforms`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${getStoreData("Authorization")}`,
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
             "Content-Type": "application/json"
         }
     }).then(response => response.json()).then(response => {

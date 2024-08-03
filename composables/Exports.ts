@@ -27,14 +27,7 @@ export function showStoreData(name: string) {
     return local
 }
 
-export function customHeaders(type: string) {
-    return {
-        method: type,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    }
-}
+
 
 export function getRandomColor() {
     const getRandomValue = () => Math.floor(Math.random() * 256);
@@ -84,7 +77,6 @@ export const isRequestPopular = (query: string, value: string) => {
 
 export async function updateStructure(options: any) {
     await apiDataFetch(`${uri}/api/update/test-stranitsa/javascript/${options.scriptType}`, {
-        ...customHeaders("PUT"),
         body: JSON.stringify({
             className: options.className,
             slides: options.params
@@ -96,7 +88,6 @@ export default {
     PORT,
     USER_FETCH_HOST,
     apiDataFetch,
-    customHeaders,
     types,
     isRequestPopular,
     uri,

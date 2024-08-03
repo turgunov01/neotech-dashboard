@@ -1,62 +1,75 @@
 <template>
-    <div class="mail" v-if="loaded">
+    <div class="mail">
         <div class="mail-container">
             <aside class="mail-sidebar">
-                <UsersFormRequest :data="(outgoings as any)" />
+                <div class="sidebar-conf">
+                    <div class="sidebar-params">
+                        <h2 class="sidebar-params-title"> Отправленные </h2>
+                    </div>
+                    <ul class="sidebar-list">
+                        <li class="sidebar-item" :style="{
+                            display: data.type != 2 ? 'none' : 'block'
+                        }" :class="routeId == data.id ? 'active' : ''" :data-type="`${data.type}-messages`"
+                            v-for="data in messages">
+                            <nuxt-link :to="`${data.id}`" v-if="data.type === 2">
+                                <h4 class="sidebar-item-message"> {{ data.message }} </h4>
+                                <h6 class="sidebar-item-author"> {{ data.user }} </h6>
+                                <p class="sidebar-item-date"> {{ data.date }} </p>
+                            </nuxt-link>
+                            <img src="../../../assets/star-in.svg" class="sidebar-item-star"
+                                :class="data.liked == true ? 'active' : ''" alt="">
+                        </li>
+                    </ul>
+                </div>
             </aside>
             <section class="mail-section">
-                <span class="mail-favorite" @click="favorite(false)" v-if="currentMessage.isFav == 'true'">
+                <span class="mail-favorite" @click="like" v-if="selectedMessage.liked == true">
                     <img src="../../../assets/star-in.svg" alt="">
                     <p class="mail-favorite-heading">В избранных</p>
                 </span>
-                <span class="mail-favorite" @click="favorite(true)"
-                    v-else-if="currentMessage.isFav == 'false' || !currentMessage.isFav">
+                <span class="mail-favorite" @click="like"
+                    v-else-if="selectedMessage.liked == false || !selectedMessage.liked">
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
-                <div class="mail-content" v-if="currentMessage && currentMessageOutgoing">
+                <div class="mail-content" v-if="selectedMessage">
                     <div class="mail-params">
                         <div class="mail-user-data">
-                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).name }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (selectedMessage as Message).user }} </h4>
+                            <span v-if="selectedMessage.email">/</span>
+                            <h4 class="mail-user-data-text"> {{ (selectedMessage as Message).email }} </h4>
                             <span>/</span>
-                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).email }} </h4>
-                            <span>/</span>
-                            <h4 class="mail-user-data-text"> {{ (currentMessage as any).phone }} </h4>
+                            <h4 class="mail-user-data-text"> {{ (selectedMessage as Message).phone }} </h4>
                         </div>
                         <p class="mail-user-date">
-                            {{ (currentMessage as any)
-        .date
-        .replace(/\./g, "/")
-        .replace(/\,/g, "")
-        .replace(/\:/g,
-            "-") }}
+                            {{ (selectedMessage as Message).date }}
                         </p>
                     </div>
                     <div class="mail-message">
-                        <div class="mail-message-box" v-html="(currentMessage as any).messages"></div>
+                        <div class="mail-message-box" v-html="(selectedMessage as Message).message"></div>
                     </div>
                     <div class="mail-message reply">
                         <span class="reply-span">
                             <img src="/assets/icons/mailbox/reply.svg" alt="">
                             <div class="mail-user-data">
-                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).name }} </h4>
+                                <h4 class="mail-user-data-text"> {{ (currentMessage as Message).user }} </h4>
                                 <span>/</span>
-                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).email }}
+                                <h4 class="mail-user-data-text"> {{ (currentMessage as Message).email }}
                                 </h4>
                                 <span>/</span>
-                                <h4 class="mail-user-data-text"> {{ (currentMessageOutgoing as any).phone }}
+                                <h4 class="mail-user-data-text"> {{ (currentMessage as Message).phone }}
                                 </h4>
                             </div>
                         </span>
 
                         <div class="mail-message">
-                            <div class="mail-message-box" v-html="(currentMessageOutgoing as any).messages"></div>
+                            <div class="mail-message-box" v-html="(currentMessage as Message).message"></div>
                         </div>
                     </div>
-                    <button class="mail-send" disabled :style="{
+                    <!-- <button class="mail-send" disabled :style="{
                         cursor: 'not-allowed',
                         opacity: '0.5'
-                    }">Отправить</button>
+                    }">Отправить</button> -->
                 </div>
             </section>
         </div>
@@ -64,72 +77,75 @@
 </template>
 
 <script lang="ts" setup>
-import UsersFormRequest from '../../../components/Models/UsersFormRequestSidebar.vue'
+
+interface Message {
+    id: number,
+    date: string,
+    message: string,
+    type: number,
+    phone: string,
+    reply_to: Message | null,
+    user: string,
+    liked?: boolean | null,
+    email?: string | null,
+}
+
 
 const $router = useRouter().currentRoute.value
+const routeId = parseInt($router.params.id as string);
+const messages = ref([] as Message[])
 
-const loaded = ref(false)
-const outgoings = ref({
-    title: "Отправленные",
-    type: "outgoing",
-    messages: []
-})
+const selectedMessage = ref({} as Message);
+const currentMessage = ref({} as Message);
 
 const request = async () => {
-    const options = {
-        ...customHeaders("GET"),
-    }
 
-    await apiDataFetch(`${uri}/api/messages`, options)
-        .then(res => res.json())
-        .then(res => {
+    await apiDataFetch(`${uri}/messages/all`, {
+        method: "GET",
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("Authorization")
+        },
+    })
+        .then(response => response.json())
+        .then(async response => {
+            const data = response.data;
 
-            res.messages.forEach((item: Object, index: number) => {
-                if ((item as any).type === 2) {
-                    outgoings.value.messages.push(item as never)
+            data.forEach((msg: Message) => {
+                messages.value.push(msg);
+
+                if (msg.reply_to !== null || msg.reply_to == $router.params["id"]) {
+                    selectedMessage.value = msg.reply_to;
+                    msg.email = "support@neotech.uz"
+                    currentMessage.value = msg;
                 }
+                // if (reply_to?.id == parseInt($router.params.id as string)) {
+                //     console.log(reply_to)
+                // }
             })
         })
 }
 
-const favorite = async (value: Boolean) => {
+const like = async () => {
     const options = {
-        ...customHeaders("PUT"),
-        body: JSON.stringify({
-            ...currentMessage.value
-        })
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
+            "Content-type": "application/json"
+        }
     }
 
-
-    await apiDataFetch(`${uri}/api/messages/${useRouter().currentRoute.value.params.id.toString()}?action=${value}`, options)
-        .then(res => res.json())
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => {
-            console.log(err)
-        })
-        .finally(() => {
+    await apiDataFetch(`${uri}/messages/like/${selectedMessage.value.id}`, options)
+        .then(response => response.json())
+        .then(response => {
+            if (response.message) { return response.message }
             setTimeout(() => {
-                location.reload()
-            }, 300);
+                location.reload();
+            }, 1000);
         })
 }
 
-const currentMessage = ref(Object as any)
-
-const currentMessageOutgoing = ref({} as any)
-
 onMounted(async () => {
     await request()
-    loaded.value = true
-
-    if (!outgoings.value.messages.length) {
-        useRouter().push("/mail/incoming/")
-    }
-
-    currentMessageOutgoing.value = outgoings.value.messages.find(item => (item as any).id == $router.params.id)
-    currentMessage.value = outgoings.value.messages.find(item => (item as any).id == currentMessageOutgoing.value.reply_to)
 })
 
 </script>
