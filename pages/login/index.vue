@@ -32,46 +32,30 @@ const user = ref({
 })
 
 const login = async () => {
-    if (user.value.username !== "" && user.value.password !== "") {
 
-        const options = {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user.value)
-        };
-
-        await apiDataFetch(uri + "/api/valid/token", {
-            ...options
-        })
-            .then(response => response.json())
-            .then(response => {
-                try {
-                    storeData("Authorization", response.user.token)
-                    storeData("username", response.user.username)
-                    storeData("password", response.user.password)
-
-                    const avail = {
-                        username: getStoreData("username"),
-                        password: getStoreData("password"),
-                        token: getStoreData("Authorization")
-                    }
-
-                    if (avail.username && avail.password && avail.token) {
-                        $router.push("/")
-
-                        setTimeout(() => {
-                            location.reload()
-                        }, 200);
-                    }
-                } catch (err) {
-                    console.log(err)
-                }
-            })
-    } else {
-        alert("Заполните все поля")
+    if (!user.value.username || !user.value.password) {
+        alert("Заполните все поля!")
     }
+
+    const options = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user.value)
+    }
+
+    await apiDataFetch(`${uri}/users/signin`, options)
+        .then(response => response.json())
+        .then(response => {
+            const data = response;
+            const user = data.user;
+
+            localStorage.setItem("Authorization", user.hash);
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        })
 }
 
 
