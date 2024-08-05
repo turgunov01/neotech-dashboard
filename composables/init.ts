@@ -20,20 +20,11 @@ export class EditorApp {
         // this.plugin = {} as DomTraitsInterface;
     }
 
-    translate(editor: any) {
-        this.editor = editor
-        this.translations = translation
-
-        return this.editor.I18n.setMessages(this.translations)
-    }
-
     async buildEditor(/* plugin: any */) {
         const container = await grapesjs.init(this.component);
         await run(container);
 
         const wrapper = container.getWrapper()
         wrapper?.addStyle({ 'overflow': 'hidden' })
-
-        // await this.translate(container)
     }
 }

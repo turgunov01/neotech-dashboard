@@ -21,15 +21,15 @@ export class EditorPublish {
         this.editor = editor as Editor;
 
         const element: GlobalInterface = {
-            name: "test-stranitsa",
+            id: useRouter().currentRoute.value.query.uid as string,
+            name: useRouter().currentRoute.value.query.details as string,
             html: extraction(editor).html,
             css: (extraction(editor).css as any) as string,
             sections: editor.getComponents() as any,
             cipher: cipher(extraction(editor).html).toString(),
-            javascript: localStorage.getItem("javascript") as string,
         }
 
-        this.element = element
+        this.element = element;
     }
 
     sync() {
@@ -37,45 +37,23 @@ export class EditorPublish {
     }
 }
 
-async function publish(model: GlobalInterface,) {
-    try {
-        // await apiDataFetch(`${uri}/api/pages/test-stranitsa`, {
-        //     ...customHeaders("PUT"),
-        //     body:
-        //         JSON.stringify({
-        //             name: model.name,
-        //             sections: model.sections,
-        //             html: model.html,
-        //             css: model.css,
-        //             cipher: model.cipher,
-        //             javascript: model.javascript,
-        //         })
-        // })
-        //     .then(response => response.json())
-        //     .then(response => {
-        //         if (response.status && response.status === 403) {
-        //             alert(`Status: ${response.status}. You are not allowed to publish existing page!`)
-        //         }
-        // })
-    } catch (err) {
-        alert(err)
-    } finally {
-        const log = {
-            username: showStoreData("username"),
-            email: showStoreData("email") ? showStoreData("email") : showStoreData("username") + "@gmail.com",
-            action: 4,
-            pagename: "test-stranitsa",
-        }
-
-        // await apiDataFetch(`${uri}/api/history`, {
-        //     ...customHeaders("POST"),
-        //     body: JSON.stringify(log)
-        // })
-        //     .then(response => response.json())
-        //     .then(response => {
-        //         console.log(response)
-        //     })
+async function publish(model: GlobalInterface) {
+    console.log(model)
+    const options = {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
+        },
+        body: JSON.stringify(model)
     }
+    await apiDataFetch(`${uri}/pages/${model.name}?uid=${useRouter().currentRoute.value.query.uid}`, options)
+        .then(res => res.json())
+        .then(res => {
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        })
 }
 
 export default { EditorPublish }

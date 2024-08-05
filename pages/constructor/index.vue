@@ -106,7 +106,7 @@ const getList = () => {
 
                         pages.value.push(object);
                         if (!useRouter().currentRoute.value.query.uid) {
-                            useRouter().push({ query: { uid: pages.value[0].id } })
+                            useRouter().push({ query: { details: pages.value[0].name, uid: pages.value[0].id } })
                         } else {
                             return
                         }
@@ -119,8 +119,11 @@ const getList = () => {
 }
 
 const choose = (event: any) => {
-    const page = event.target.value;
-    useRouter().push({ query: { uid: page } })
+    const uid = event.target.value;
+
+    const element = pages.value.find(page => page.id === uid);
+
+    useRouter().push({ query: { details: element?.name as any, uid: uid } })
     setTimeout(() => {
         location.reload();
     }, 300);
@@ -137,15 +140,13 @@ const load = () => {
 
     setTimeout(() => {
         clicked.value = false
-        location.reload()
+        // location.reload()
     }, 1500);
 }
 
 const iframe = (bool: Boolean) => {
     showFrame.value = true
 }
-
-
 
 onMounted(async () => {
     loaded.value = false

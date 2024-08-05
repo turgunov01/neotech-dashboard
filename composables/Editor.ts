@@ -4,6 +4,7 @@ import { EditorApp } from "./init";
 // import Swiper from '~/plugins/swiper/swiper';
 import type { GrapesInitInterface } from '~/interface/grapejs';
 import { Plugins } from './Editor/managers/plugins';
+import { getLabels } from './Editor/managers/blocks';
 
 export const component = ref({
     container: '#gjs',
@@ -33,32 +34,7 @@ const object = {
 
 // Initialize the parameters for the Grapejs API
 export async function init() {
-    (component.value as any).blockManager = {
-        appendTo: '.insert-cards',
-        blocks: []
-    }
-
-    const options = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("Authorization")}`
-        }
-    }
-
-    await apiDataFetch(`${uri}/components/templates`, options)
-        .then(response => response.json())
-        .then(response => {
-            const data = response;
-
-
-
-            (data as Response | any).forEach((block: Object) => {
-                (component.value as any).blockManager.blocks.push(block);
-            });
-
-            (component.value as any).blockManager.blocks.push(object);
-        })
+    await getLabels(component.value);
 
     const editor = new EditorApp(component.value).buildEditor();
     return editor;

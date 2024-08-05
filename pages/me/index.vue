@@ -18,6 +18,4 @@ import UsersInfo from '~/components/Models/UsersProfileInfo.vue';
 
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
