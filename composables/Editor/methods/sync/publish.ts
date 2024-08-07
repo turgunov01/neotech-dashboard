@@ -38,7 +38,6 @@ export class EditorPublish {
 }
 
 async function publish(model: GlobalInterface) {
-    console.log(model)
     const options = {
         method: "PUT",
         headers: {

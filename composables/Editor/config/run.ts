@@ -49,14 +49,23 @@ export async function buildEditor(editor: Editor) {
         }
     }
 
-    await apiDataFetch(`${uri}/pages/single/${useRouter().currentRoute.value.query.uid}`, options)
-        .then(response => response.json())
-        .then(async response => {
-            const pages = response;
+    await setTimeout(async () => {
+        try {
+            await apiDataFetch(`${uri}/pages/single/${useRouter().currentRoute.value.query.uid}`, options)
+                .then(response => response.json())
+                .then(async response => {
+                    const pages = response;
 
-            editor.setComponents(pages.sections);
-            editor.Css.addRules(pages.css);
-        })
+                    editor.setComponents(pages.sections);
+                    editor.Css.addRules(pages.css);
+                })
+        } catch (err) {
+            await FailedAlert((err as Error).message);
+            setTimeout(() => {
+                location.reload()
+            }, 3000);
+        }
+    }, 100);
 }
 
 function buttonPublishHandler(editor: Editor) {

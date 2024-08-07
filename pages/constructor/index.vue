@@ -94,20 +94,25 @@ const getList = () => {
                     .then(data => data.json())
                     .then(data => {
 
-                        const object = {
-                            id: data.id,
-                            name: name,
-                            route: `/${name}`,
-                            length: 0,
-                            sections: data.sections ? data.sections : [],
-                            html: data.html,
-                            css: data.css ? data.css : '',
-                        } as Page;
+                        try {
+                            const object = {
+                                id: data.id,
+                                name: name,
+                                route: `/${name}`,
+                                length: 0,
+                                sections: data.sections ? data.sections : [],
+                                html: data.html,
+                                css: data.css ? data.css : '',
+                            } as Page;
 
-                        pages.value.push(object);
-                        if (!useRouter().currentRoute.value.query.uid) {
-                            useRouter().push({ query: { details: pages.value[0].name, uid: pages.value[0].id } })
-                        } else {
+                            pages.value.push(object);
+                            if (!useRouter().currentRoute.value.query.uid) {
+                                useRouter().push({ query: { details: pages.value[0].name, uid: pages.value[0].id } })
+                            } else {
+                                return
+                            }
+                        } catch (err) {
+                            alert(err);
                             return
                         }
 
