@@ -3,6 +3,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   css: ['/assets/scss/style.scss'],
-  modules: ['@nuxt/ui'],
+  modules: ['@nuxt/ui', 'nuxt-keen-slider'],
   ui: {}
 })

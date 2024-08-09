@@ -1,14 +1,19 @@
 import type { SwiperInterface } from "../interface/swiper";
-import { SwiperConfiguration } from "../config/swiper";
 
 import type { DomTraitsInterface, FormManagerHandler, SwiperManagerHandler, TraitManagerInterface } from "../interface/traits";
 import type { Editor } from "grapesjs";
+
+const script = function (this: { script: () => void; traits: any[]; }) {
+    const container = this;
+};
+
 
 export function SwiperDomTrait(options: DomTraitsInterface) {
     return {
         isComponent: (element: { classList: { contains: (arg: string) => any; }; tagName: { includes: (arg: string) => any } }) => element?.classList?.contains(options.type),
         model: {
             defaults: {
+                script,
                 traits: [TraitsModelHandler(options)]
             }
         }
@@ -47,31 +52,6 @@ export function createElement(options: TraitManagerInterface) {
     }
 
     return el
-}
-
-export class SwiperTraitsHandler implements SwiperManagerHandler {
-    private options: TraitManagerInterface;
-    private editor: Editor;
-
-    constructor(options: TraitManagerInterface, editor: Editor) {
-        this.options = options;
-        this.editor = editor as Editor;
-    }
-
-    createInput({ trait }: { trait: any }): HTMLElement | string {
-        const element = createElement(this.options)
-        return element
-    }
-
-    async onEvent({ elInput, component, params }: { elInput: HTMLElement, component: any, params: SwiperInterface }) {
-        await SwiperConfiguration(elInput, params, this.editor)
-    }
-
-    onUpdate({ elInput, component }: { elInput: HTMLElement, component: any }): void | null {
-        elInput.setAttribute("data-set", "true");
-        return null;
-    }
-
 }
 
 export class FormTraitsHandler implements FormManagerHandler {

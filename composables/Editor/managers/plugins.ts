@@ -1,7 +1,7 @@
-import type { Editor } from "grapesjs";
+import { Traits, type Editor } from "grapesjs";
 import type { SwiperInterface } from "../interface/swiper";
 
-import { FormDomTrait, SwiperDomTrait, SwiperTraitsHandler } from "./traits";
+import { FormDomTrait, SwiperDomTrait } from "./traits";
 
 import type { TraitManagerInterface } from "../interface/traits";
 
@@ -65,19 +65,38 @@ export async function SwiperPluginsHandler(editor: Editor) {
         noLabel: true,
 
         createInput({ trait }) {
-            return new SwiperTraitsHandler(init, editor).createInput({ trait })
+            const traitOpts = trait.get('options') || [];
+            console.log(traitOpts)
+            const options = traitOpts.length ? traitOpts : [
+                { id: 'url', label: 'URL' },
+                { id: 'email', label: 'Email' },
+            ];
+
+            const el = document.createElement('div');
+            el.innerHTML = `
+                <select class="href-next__type">
+                    ${options.map(opt => `<option value="${opt.id}">${opt.label}</option>`).join('')}
+                </select>
+                <div class="href-next__url-inputs">
+                    <input class="href-next__url" placeholder="Insert URL"/>
+                </div>
+                <div class="href-next__email-inputs">
+                    <input class="href-next__email" placeholder="Insert email"/>
+                    <input class="href-next__email-subject" placeholder="Insert subject"/>
+                </div>
+            `;
+
+            return el;
         },
 
         onEvent({ elInput, component }) {
-            return new SwiperTraitsHandler(init, editor).onEvent({ elInput, component, params })
+
         },
 
         onUpdate({ elInput, component }) {
-            return new SwiperTraitsHandler(init, editor).onUpdate({ elInput, component })
+
         }
     })
-
-
 }
 
 export function FormTraitsHandler(editor: Editor) {

@@ -5,6 +5,7 @@ import { EditorApp } from "./init";
 import type { GrapesInitInterface } from '~/interface/grapejs';
 import { Plugins } from './Editor/managers/plugins';
 import { getLabels } from './Editor/managers/blocks';
+import type { EditorConfig } from 'grapesjs';
 
 export const component = ref({
     container: '#gjs',
@@ -16,7 +17,7 @@ export const component = ref({
         default: []
     },
     plugins: [Plugins],
-} as GrapesInitInterface)
+} as EditorConfig)
 
 const object = {
     id: 11,
