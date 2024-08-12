@@ -1,5 +1,11 @@
 <template>
     <div class="hst">
+        <div class="hst-layer">
+            <div class="hst-layer-container">
+                <p class="hst-layer-title">В разработке</p>
+            </div>
+        </div>
+
         <div class="hst-container">
             <header class="stats-header">
                 <h4 class="stats-heading">Просмотры</h4>
@@ -73,10 +79,10 @@ const history = ref([
         origin: "https://neotech.uz",
     }
 ])
+
 </script>
 
 <style lang="scss" scoped>
-
 .stats {
     &-header {
         border-bottom: .1rem solid #e5e5e5;
@@ -84,4 +90,33 @@ const history = ref([
     }
 }
 
+.hst {
+    position: relative;
+    border: 1px solid #e5e5e5;
+
+    &-layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+
+        &-container {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-title {
+            font-size: 32px;
+            font-weight: 600;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            text-transform: uppercase;
+        }
+    }
+}
 </style>

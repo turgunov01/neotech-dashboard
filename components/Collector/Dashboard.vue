@@ -10,10 +10,10 @@
     <div class="dash-blocks" v-if="loaded">
         <div class="dash-block">
             <UsersFormCount :messages="analytics.messages" />
-            <UsersBrowsersCounter :agents="analytics.browsers" />
+            <UsersRouteActivity />
         </div>
         <div class="dash-block">
-            <UsersRouteActivity />
+            <UsersBrowsersCounter :agents="analytics.browsers" />
         </div>
     </div>
 </template>
@@ -29,11 +29,11 @@ import UsersRouteActivity from '~/components/dashboard/history/UsersRouteActivit
 const loaded = ref(false);
 
 function formatSecondsToMinutes(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(remainingSeconds).padStart(2, '0');
-    return `${formattedMinutes}:${formattedSeconds}`;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 }
 
 interface Browser {
