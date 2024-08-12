@@ -65,7 +65,7 @@ export async function buildEditor(editor: Editor) {
                 location.reload()
             }, 3000);
         }
-    }, 100);
+    }, 1000);
 }
 
 function buttonPublishHandler(editor: Editor) {

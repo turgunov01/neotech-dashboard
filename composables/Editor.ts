@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 
 import { EditorApp } from "./init";
-// import Swiper from '~/plugins/swiper/swiper';
 import type { GrapesInitInterface } from '~/interface/grapejs';
 import { Plugins } from './Editor/managers/plugins';
 import { getLabels } from './Editor/managers/blocks';

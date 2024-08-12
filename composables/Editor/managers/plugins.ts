@@ -1,5 +1,4 @@
 import { Traits, type Editor } from "grapesjs";
-import type { SwiperInterface } from "../interface/swiper";
 
 import { FormDomTrait, SwiperDomTrait } from "./traits";
 
@@ -8,17 +7,6 @@ import type { TraitManagerInterface } from "../interface/traits";
 import { FormTraitsHandler as FormTraitController } from "./traits";
 import { customRTE } from "../config/selector";
 
-const params = {
-    slidesPerView: 3,
-    spaceBetween: 30,
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
-    autoplay: {
-        delay: 1000,
-    }
-} as SwiperInterface
 
 export function Plugins(editor: Editor) {
     const arr = [SwiperPluginsHandler(editor), FormTraitsHandler(editor), customRTE(editor)]
@@ -34,25 +22,27 @@ export async function SwiperPluginsHandler(editor: Editor) {
                 <p class="swiper-on">Инициализация</p>
                 <input type="checkbox" checked id="init" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
             </div>
-            <div class="swiper-autoplay" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-                <div class="autoplay-init" style="display: flex; align-items: center; width: 100%; justify-content: space-between;">
-                    <p class="swiper-autoplay">Автоскролл</p>
-                    <input type="checkbox" checked id="autoplay" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
-                </div>
-                <div class="autoplay-delay" style="display: none; align-items: center; width: 100%; justify-content: space-between; border-top: 1px solid; padding-top: 5px;">
-                    <p class="swiper-autoplay-delay">Задержка (ms)</p>
-                    <input type="number" checked id="autoplay-delay" style="width: 75px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
-                </div>
-            </div>
-            <div class="swiper-slidesPerView" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-                <p class="swiper-on">Количество слайдов</p>
-                <input type="number" id="slidesPerView" style="width: 50px !important; color: black; border-bottom: 1px solid;" name="calculate" />
-            </div>
-            <div class="swiper-navigation" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-                <p class="swiper-on">Навигации</p>
-                <input type="checkbox" id="navigation" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
-            </div>
         `,
+
+        // <div class="swiper-autoplay" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
+        //     <div class="autoplay-init" style="display: flex; align-items: center; width: 100%; justify-content: space-between;">
+        //         <p class="swiper-autoplay">Автоскролл</p>
+        //         <input type="checkbox" checked id="autoplay" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
+        //     </div>
+        //     <div class="autoplay-delay" style="display: none; align-items: center; width: 100%; justify-content: space-between; border-top: 1px solid; padding-top: 5px;">
+        //         <p class="swiper-autoplay-delay">Задержка (ms)</p>
+        //         <input type="number" checked id="autoplay-delay" style="width: 75px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
+        //     </div>
+        // </div>
+        // <div class="swiper-slidesPerView" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
+        //     <p class="swiper-on">Количество слайдов</p>
+        //     <input type="number" id="slidesPerView" style="width: 50px !important; color: black; border-bottom: 1px solid;" name="calculate" />
+        // </div>
+        // <div class="swiper-navigation" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
+        //     <p class="swiper-on">Навигации</p>
+        //     <input type="checkbox" id="navigation" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
+        // </div>
+
         style: {
             display: "flex",
             "flex-direction": "column",
@@ -65,35 +55,127 @@ export async function SwiperPluginsHandler(editor: Editor) {
         noLabel: true,
 
         createInput({ trait }) {
-            const traitOpts = trait.get('options') || [];
-            console.log(traitOpts)
-            const options = traitOpts.length ? traitOpts : [
-                { id: 'url', label: 'URL' },
-                { id: 'email', label: 'Email' },
-            ];
+            // const options = traitOpts.length ? traitOpts : [
+            //     { id: 'url', label: 'URL' },
+            //     { id: 'email', label: 'Email' },
+            // ];
 
-            const el = document.createElement('div');
-            el.innerHTML = `
-                <select class="href-next__type">
-                    ${options.map(opt => `<option value="${opt.id}">${opt.label}</option>`).join('')}
-                </select>
-                <div class="href-next__url-inputs">
-                    <input class="href-next__url" placeholder="Insert URL"/>
-                </div>
-                <div class="href-next__email-inputs">
-                    <input class="href-next__email" placeholder="Insert email"/>
-                    <input class="href-next__email-subject" placeholder="Insert subject"/>
-                </div>
-            `;
+            // const el = document.createElement('div');
+            // el.innerHTML = ``;
 
-            return el;
+            return init.label;
         },
 
         onEvent({ elInput, component }) {
+            const carousel = {
+                perview: 3,
+                loop: false,
+                between: 20,
+                navigation: false,
+                pagination: false,
+                autoplay: false,
+                timeout: 1000,
+            };
 
+            const device = editor.getDevice();
+            const container = ((document.querySelector(".gjs-frame") as HTMLIFrameElement).contentDocument as any).querySelector(".gjs-selected") as HTMLIFrameElement;
+            container.classList.add("swiper-initialized");
+            container.setAttribute('data-swiper', container?.id)
+
+            if (container.getBoundingClientRect().width < 1024) {
+                carousel.perview = 2;
+            }
+
+            const wrapper = container.querySelector(".swiper-wrapper") as HTMLElement;
+            const elements = wrapper?.childNodes;
+
+            function isAtPosition(element: Element, position: number) {
+                const parent = element.parentNode;  // Get the parent node
+                const children = Array.from((parent as ParentNode).childNodes).filter(node => node.nodeType === Node.ELEMENT_NODE);  // Convert childNodes to an array and filter only element nodes
+
+                if (position < 1 || position > children.length) {
+                    return false;
+                }
+
+                return element === children[position - 1];
+            }
+
+
+            elements?.forEach((element: HTMLElement | any, index: number) => {
+                const calculate = `calc(100% / ${carousel.perview})`;
+                const result = isAtPosition(element, carousel.perview);
+                element.style.flexShrink = 0;
+
+                if (!result) {
+                    element.style.marginRight = `30px`;
+                    element.style.width = `calc(100% / 3 - 30px)`
+                } else {
+                    element.style.width = calculate;
+                }
+            })
+
+            if (wrapper.childNodes) {
+                container.style.overflow = "hidden";
+                container.style.width = "100%"
+
+                wrapper.style.overflow = "visible"; /* Allow elements to overflow */
+                wrapper.style.display = "flex";
+                wrapper.style.flexWrap = "nowrap";
+            }
         },
 
         onUpdate({ elInput, component }) {
+            const device = editor.getDevice();
+            const container = ((document.querySelector(".gjs-frame") as HTMLIFrameElement).contentDocument as any).querySelector(".gjs-selected") as HTMLIFrameElement;
+            container.classList.add("swiper-initialized");
+            container.setAttribute('data-swiper', container?.id)
+            const carousel = {
+                perview: 3,
+                loop: false,
+                between: 20,
+                navigation: false,
+                pagination: false,
+                autoplay: false,
+                timeout: 1000,
+            };
+
+            const wrapper = container.querySelector(".swiper-wrapper") as HTMLElement;
+            const elements = wrapper?.childNodes;
+
+            function isAtPosition(element: Element, position: number) {
+                const parent = element.parentNode;  // Get the parent node
+                const children = Array.from((parent as ParentNode).childNodes).filter(node => node.nodeType === Node.ELEMENT_NODE);  // Convert childNodes to an array and filter only element nodes
+
+                if (position < 1 || position > children.length) {
+                    return false;
+                }
+
+                return element === children[position - 1];
+            }
+
+
+            elements?.forEach((element: HTMLElement | any, index: number) => {
+                const calculate = `calc(100% / ${carousel.perview})`;
+                const result = isAtPosition(element, carousel.perview);
+                element.style.flexShrink = 0;
+
+                if (!result) {
+                    element.style.marginRight = `30px`;
+                    element.style.width = `calc(100% / 3 - 30px)`
+                } else {
+                    element.style.width = calculate;
+                }
+            })
+
+            if (wrapper.childNodes) {
+                container.style.overflow = "hidden";
+                container.style.width = "100%"
+
+                wrapper.style.overflow = "visible"; /* Allow elements to overflow */
+                wrapper.style.display = "flex";
+                wrapper.style.flexWrap = "nowrap";
+            }
+
 
         }
     })

@@ -1,11 +1,7 @@
-import type { SwiperInterface } from "../interface/swiper";
-
-import type { DomTraitsInterface, FormManagerHandler, SwiperManagerHandler, TraitManagerInterface } from "../interface/traits";
+// import Swiper from "~/plugins/swiper/swiper";
+import type { DomTraitsInterface, FormManagerHandler, TraitManagerInterface } from "../interface/traits";
 import type { Editor } from "grapesjs";
 
-const script = function (this: { script: () => void; traits: any[]; }) {
-    const container = this;
-};
 
 
 export function SwiperDomTrait(options: DomTraitsInterface) {
@@ -13,7 +9,6 @@ export function SwiperDomTrait(options: DomTraitsInterface) {
         isComponent: (element: { classList: { contains: (arg: string) => any; }; tagName: { includes: (arg: string) => any } }) => element?.classList?.contains(options.type),
         model: {
             defaults: {
-                script,
                 traits: [TraitsModelHandler(options)]
             }
         }

@@ -1,4 +1,3 @@
-import type { SwiperInterface } from "./swiper";
 
 export interface DomTraitsInterface {
     type: string,
@@ -32,8 +31,8 @@ interface NonModelTraitsInterface {
 }
 
 export interface SwiperManagerHandler {
-    createInput: (params: { trait: any, params: SwiperInterface }) => HTMLElement | string | void;
-    onEvent: (params: { elInput: HTMLElement, component: any, params: SwiperInterface }) => any;
+    createInput: (params: { trait: any, params: any }) => HTMLElement | string | void;
+    onEvent: (params: { elInput: HTMLElement, component: any, params: any }) => any;
     onUpdate: (params: { elInput: HTMLElement, component: any }) => void | null;
 }
 

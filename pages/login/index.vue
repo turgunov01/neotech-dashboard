@@ -34,28 +34,32 @@ const user = ref({
 const login = async () => {
 
     if (!user.value.username || !user.value.password) {
-        alert("Заполните все поля!")
+        return alert("Заполните все поля!")
+    } else {
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user.value)
+        }
+
+        await apiDataFetch(`${uri}/users/signin`, options)
+            .then(response => response.json())
+            .then(response => {
+                const data = response;
+                const user = data.user;
+
+                if (!response.error) {
+                    localStorage.setItem("Authorization", user.hash)
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                }
+            })
     }
 
-    const options = {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user.value)
-    }
 
-    await apiDataFetch(`${uri}/users/signin`, options)
-        .then(response => response.json())
-        .then(response => {
-            const data = response;
-            const user = data.user;
-
-            localStorage.setItem("Authorization", user.hash);
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
-        })
 }
 
 
