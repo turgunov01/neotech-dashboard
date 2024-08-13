@@ -1,11 +1,21 @@
 export const PORT = 5003
-// export const USER_FETCH_HOST = 'http://localhost:5003'
-export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz'
+export const USER_FETCH_HOST = 'http://localhost:5003'
+// export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz'
 
 export const uri = `${USER_FETCH_HOST}`
 
 export function apiDataFetch(url: string, options: RequestInit) {
     return fetch(url, options)
+}
+
+export async function apiDataFetchV2(path: string, options: RequestInit) {
+    const { data, pending } = await useAsyncData(() => $fetch(`${uri}${path}`, options as any), {
+        lazy: true,
+        server: false,
+    })
+
+
+    return { data, pending }
 }
 
 export async function storeData(name: string, value: any) {
@@ -86,6 +96,7 @@ export default {
     PORT,
     USER_FETCH_HOST,
     apiDataFetch,
+    apiDataFetchV2,
     types,
     isRequestPopular,
     uri,

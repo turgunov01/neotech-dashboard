@@ -53,15 +53,9 @@ const options = {
 }
 
 async function getLogs() {
-    await apiDataFetch(`${uri}/api/history/${localStorage.getItem('username')}`, options)
-        .then(res => res.json())
-        .then(res => {
-            const data = res.data
-
-            data.history.forEach((item: any, index: number) => {
-                tables.value.push(item as never)
-            });
-        })
+    const options = {
+        method: "PATCH"
+    }
 }
 
 onMounted(() => {

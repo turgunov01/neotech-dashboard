@@ -1,30 +1,27 @@
 <template>
     <div class="dash-blocks" v-if="loaded">
         <div class="dash-block">
-            <UsersViewStats :views="analytics.views" />
+            <DashboardUsersViewStats :views="analytics.views" />
         </div>
         <div class="dash-block">
-            <UsersTimerStats :time="analytics.time" />
+            <DashboardUsersTImerStats :time="analytics.time" />
         </div>
     </div>
     <div class="dash-blocks" v-if="loaded">
         <div class="dash-block">
-            <UsersFormCount :messages="analytics.messages" />
-            <UsersRouteActivity />
+            <DashboardUsersFormCount :messages="analytics.messages" />
+            <DashboardAgentsUsersBrowsersCounter :agents="analytics.browsers" />
+            <DashboardAgentsUsersGeolocation />
         </div>
         <div class="dash-block">
-            <UsersBrowsersCounter :agents="analytics.browsers" />
+            <DashboardHistoryUsersRouteActivity />
         </div>
     </div>
 </template>
 
 
 <script lang="ts" setup>
-import UsersViewStats from '~/components/dashboard/UsersViewStats.vue'
-import UsersTimerStats from '../dashboard/UsersTImerStats.vue'
-import UsersFormCount from '~/components/dashboard/UsersFormCount.vue'
-import UsersBrowsersCounter from '~/components/dashboard/agents/UsersBrowsersCounter.vue'
-import UsersRouteActivity from '~/components/dashboard/history/UsersRouteActivity.vue'
+import { apiDataFetchV2 } from '~/composables/exports';
 
 const loaded = ref(false);
 
@@ -101,8 +98,20 @@ const statistics = async () => {
         })
 }
 
+const regioncontroller = async () => {
+    const options = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+}
+
+
 onMounted(async () => {
     await statistics();
+    await regioncontroller()
+
     loaded.value = true;
 })
 
