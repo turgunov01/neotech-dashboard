@@ -2,6 +2,7 @@ import type { Editor } from "grapesjs"
 import { EditorPublish } from "../methods/sync/publish"
 import type { Container } from "../interface/container"
 import { translation } from "../i18n/locales"
+import { getSwipersConfigs } from "../model/traits/events"
 
 
 async function AssetManager(editor: Editor) {
@@ -9,7 +10,7 @@ async function AssetManager(editor: Editor) {
         method: "GET",
         headers: {
             "Content-Language": "ru-RU",
-            Authorization: `${localStorage.getItem("Authorization")}`,
+            Authorization: `${sessionStorage.getItem("Authorization")}`,
         }
     }
 
@@ -45,7 +46,7 @@ export async function buildEditor(editor: Editor) {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("Authorization")}`
+            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`
         }
     }
 
@@ -82,6 +83,7 @@ function buttonPublishHandler(editor: Editor) {
 }
 
 export async function run(editor: Editor) {
+    getSwipersConfigs(editor);
     await buildEditor(editor)
     buttonPublishHandler(editor)
     editor.I18n.setMessages(translation)

@@ -98,7 +98,7 @@ const request = async () => {
     await apiDataFetch(`${uri}/messages/all`, {
         method: "GET",
         headers: {
-            Authorization: "Bearer " + localStorage.getItem("Authorization")
+            Authorization: "Bearer " + sessionStorage.getItem("Authorization")
         },
     })
         .then(response => response.json())
@@ -120,7 +120,7 @@ const like = async () => {
     const options = {
         method: "PATCH",
         headers: {
-            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
+            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`,
             "Content-type": "application/json"
         }
     }
@@ -146,7 +146,7 @@ const adminSend = async () => {
     const options = {
         method: "POST",
         headers: {
-            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
+            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({

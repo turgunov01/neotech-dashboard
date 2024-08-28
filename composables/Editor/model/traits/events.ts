@@ -1,8 +1,14 @@
-export function selectElement(element: HTMLElement, type: string) {
-    const selected = element.querySelector(type) as HTMLElement;
-    return selected
-}
+import type { Editor } from "grapesjs";
+import { customSwiper } from "../../config/swiper";
 
-export function modelEvent(element: HTMLElement, func: Function) {
-    return element?.addEventListener("change", func())
+export function getSwipersConfigs(editor: Editor) {
+    const frame = document.querySelector(".gjs-frame") as HTMLIFrameElement;
+
+    editor.on("component:add", (model) => {
+        const element = model;
+        if (element.toJSON().type === "swiper") {
+            const swiper = element.toJSON().classes.toJSON()[0];
+            return customSwiper(swiper);
+        }
+    })
 }

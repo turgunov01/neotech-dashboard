@@ -44,14 +44,14 @@ const login = async () => {
             body: JSON.stringify(user.value)
         }
 
-        await apiDataFetch(`${uri}/users/signin`, options)
+        await apiDataFetch(`${uri}/users/verify`, options)
             .then(response => response.json())
             .then(response => {
                 const data = response;
                 const user = data.user;
 
                 if (!response.error) {
-                    localStorage.setItem("Authorization", user.hash)
+                    sessionStorage.setItem("Authorization", data.token);
                     setTimeout(() => {
                         location.reload();
                     }, 1000);

@@ -1,4 +1,4 @@
-import type { Block } from "grapesjs";
+import type { Block, Editor } from "grapesjs";
 
 export async function getLabels(component: any) {
     (component as any).blockManager = {
@@ -11,7 +11,7 @@ export async function getLabels(component: any) {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("Authorization")}`
+            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`
         }
     }
 

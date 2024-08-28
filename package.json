@@ -15,7 +15,6 @@
     "@types/crypto-js": "^4.2.1",
     "@types/vue": "^2.0.0",
     "nuxt": "^3.8.1",
-    "nuxt-keen-slider": "^1.1.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },
@@ -26,6 +25,7 @@
     "grapesjs-swiper-slider": "^0.0.5",
     "sass": "^1.69.5",
     "sweetalert2": "^11.12.4",
+    "swiper": "^11.1.10",
     "vue-meta": "^2.4.0"
   }
 }

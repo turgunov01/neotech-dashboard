@@ -19,21 +19,21 @@ export async function apiDataFetchV2(path: string, options: RequestInit) {
 }
 
 export async function storeData(name: string, value: any) {
-    localStorage.setItem(name, value)
+    sessionStorage.setItem(name, value)
 }
 export async function removeStoreData(name: string) {
-    localStorage.removeItem(name)
+    sessionStorage.removeItem(name)
 }
 
 export function getStoreData(name: string) {
-    const local = localStorage.getItem(name)
+    const local = sessionStorage.getItem(name)
 
     if (!local) return false
     return true
 }
 
 export function showStoreData(name: string) {
-    const local = localStorage.getItem(name)
+    const local = sessionStorage.getItem(name)
     return local
 }
 

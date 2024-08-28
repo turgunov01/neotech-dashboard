@@ -3,7 +3,6 @@ import type { DomTraitsInterface, FormManagerHandler, TraitManagerInterface } fr
 import type { Editor } from "grapesjs";
 
 
-
 export function SwiperDomTrait(options: DomTraitsInterface) {
     return {
         isComponent: (element: { classList: { contains: (arg: string) => any; }; tagName: { includes: (arg: string) => any } }) => element?.classList?.contains(options.type),

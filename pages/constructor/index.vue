@@ -61,6 +61,7 @@ import Constructor from '~/components/Constructor.vue';
 import ConstructorSidebarElements from '../../components/Models/ConstructorSidebarElements.vue'
 
 import 'grapesjs/dist/css/grapes.min.css';
+import "swiper/css";
 
 interface Page {
     id: string,
@@ -80,7 +81,7 @@ const getList = () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem('Authorization')}`,
+            "Authorization": `Bearer ${sessionStorage.getItem('Authorization')}`,
         }
     }
 
@@ -106,11 +107,7 @@ const getList = () => {
                             } as Page;
 
                             pages.value.push(object);
-                            if (!useRouter().currentRoute.value.query.uid) {
-                                useRouter().push({ query: { details: pages.value[0].name, uid: pages.value[0].id } })
-                            } else {
-                                return
-                            }
+                            useRouter().push({ query: { details: pages.value[0].name, uid: pages.value[0].id } })
                         } catch (err) {
                             alert(err);
                             return

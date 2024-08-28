@@ -14,7 +14,7 @@ export class EditorApp {
             method: "GET",
             headers: {
                 "Content-Language": "ru-RU",
-                Authorization: `${localStorage.getItem("Authorization")}`,
+                Authorization: `${sessionStorage.getItem("Authorization")}`,
             }
         };
         // this.plugin = {} as DomTraitsInterface;

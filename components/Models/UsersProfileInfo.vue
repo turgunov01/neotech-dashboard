@@ -6,7 +6,6 @@
                 <p class="security-data-name">Пользователь 1</p>
                 <div class="security-data-info">
                     <p class="security-data-info-content"> {{ user.username }} </p>
-                    <img src="/assets/edit.svg" @click="openuser()" alt="">
                 </div>
             </div>
             <div class="security-data">
@@ -61,6 +60,8 @@
 </template>
 
 <script lang="ts" setup>
+import Swal from 'sweetalert2';
+
 
 const username = ref(false)
 const password = ref(false)
@@ -77,13 +78,38 @@ const getUser = async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`
+            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
         }
     }
 
     await apiDataFetch(`${uri}/users/verify`, options)
         .then(response => response.json())
         .then(response => {
+
+            if (response === false) {
+                sessionStorage.removeItem("Authorization");
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+
+                Toast.fire({
+                    icon: "error",
+                    title: "Verification Failed"
+                });
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            }
+
             user.value.username = response.username;
             user.value.password = response.password;
         })
@@ -93,7 +119,7 @@ const changeData = async () => {
     const options = {
         method: "PATCH",
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -109,8 +135,8 @@ const changeData = async () => {
             const data = response;
 
             if (data.token) {
-                localStorage.removeItem("Authorization");
-                localStorage.setItem("Authorization", data.token);
+                sessionStorage.removeItem("Authorization");
+                sessionStorage.setItem("Authorization", data.token);
 
                 setTimeout(() => {
                     location.reload();
@@ -123,7 +149,7 @@ const changePassword = async () => {
     const options = {
         method: "PATCH",
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -139,8 +165,8 @@ const changePassword = async () => {
             const data = response;
 
             if (data.token) {
-                localStorage.removeItem("Authorization");
-                localStorage.setItem("Authorization", data.token);
+                sessionStorage.removeItem("Authorization");
+                sessionStorage.setItem("Authorization", data.token);
 
                 setTimeout(() => {
                     location.reload();
