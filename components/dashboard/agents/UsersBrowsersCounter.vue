@@ -10,13 +10,13 @@
                 </div> -->
             </header>
             <section class="lines">
-                <div class="line" v-for="(agent, index) in browsers" style="color: white !important;" :key="index"
-                    :title="`Browser: ${(agent as any)}`" :style="{
+                <div class="line" v-for="(agent, index) in agents" style="color: white !important;" :key="index"
+                    :title="`Browser: ${(agent as any).browser}`" :style="{
                         width: `${(results[index] as any)?.percentage}%`,
-                        backgroundColor: (agent as any)?.color,
+                        backgroundColor: (results as any)[index]?.color,
                     }">
                     <div class="line-info">
-                        <p class="line-info-name" :style="{ background: `${(agent as any)?.color}` }">
+                        <p class="line-info-name" :style="{ background: `${(results as any)[index]?.color}` }">
                             {{ (agent as any).browser }}
                         </p>
                         <p class="line-info-name"> {{ (agent as any).visits }} </p>
@@ -46,35 +46,20 @@ const props = defineProps({
     }
 })
 
-const browsers = ref([]) as any;
 
-async function getPlatforms() {
-    await apiDataFetch(`${uri}/stats/platforms`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`,
-            "Content-Type": "application/json"
-        }
-    }).then(response => response.json()).then(response => {
-        const data = response;
-        data.forEach((item: any, index: number) => {
-            item.color = "";
-            item.color = getRandomColor();
-            browsers.value.push(item as never);
-        })
-
-    })
+const filter = async () => {
+    await percentageCounter();
 }
 
 const results = ref([])
 
 const percentageCounter = () => {
-    const totalCount = browsers.value.reduce((total: any, agent: any) => total + (agent as any).visits, 0);
-    browsers.value.forEach((agent: any) => {
+    const totalCount = props.agents.reduce((total: any, agent: any) => total + (agent as any).visits, 0);
+    props.agents.forEach((agent: any) => {
         const item = {
             name: (agent as any).browser,
             percentage: parseInt(((agent as any).visits / (totalCount as any) * 100).toFixed(2)),
-            color: (agent as any).color
+            color: getRandomColor()
         };
 
         results.value.push(item as never)
@@ -83,9 +68,7 @@ const percentageCounter = () => {
 }
 
 onMounted(async () => {
-    await getPlatforms()
-
-    percentageCounter()
+    filter();
 })
 
 

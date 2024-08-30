@@ -1,4 +1,4 @@
-import type { Block, Editor } from "grapesjs";
+import type { Block, BlockManagerConfig, Editor } from "grapesjs";
 
 export async function getLabels(component: any) {
     (component as any).blockManager = {
@@ -15,13 +15,36 @@ export async function getLabels(component: any) {
         }
     }
 
-    await apiDataFetch(`${uri}/components/app`, options)
+    await apiDataFetch(`${uri}/components/blocks`, options)
         .then(response => response.json())
         .then(response => {
-            const data = response;
-            data.forEach((cmp: Block) => {
-                component.blockManager.blocks.push(cmp)
+            console.log(response)
+            response.forEach((item: any) => {
+
+                (component as any).blockManager.blocks.push({
+                    tagName: "section",
+                    label: `<img src="${item.label}" alt="${item.name}">`,
+                    category: "Блоки",
+                    content: item.html
+                });
             });
+
+        })
+
+    await apiDataFetch(`${uri}/components/collect`, options)
+        .then(response => response.json())
+        .then(response => {
+            console.log(response)
+            response.forEach((item: any) => {
+
+                (component as any).blockManager.blocks.push({
+                    tagName: "section",
+                    label: `<img src="${item.label}" alt="${item.name}">`,
+                    category: "Шаблоны",
+                    content: item.html
+                });
+            });
+
         })
 
     // console.log(component.blockManager.blocks)

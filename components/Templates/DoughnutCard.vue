@@ -1,0 +1,33 @@
+<template>
+    <canvas id="myDoughnutChart"></canvas>
+</template>
+
+<script setup>
+import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js'
+
+Chart.register(DoughnutController, ArcElement, Tooltip, Legend)
+
+const controller = () => {
+    const ctx = document.getElementById('myDoughnutChart').getContext('2d')
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow'],
+            datasets: [{
+                label: 'My First Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        },
+    })
+}
+
+onMounted(() => {
+    controller()
+})
+</script>

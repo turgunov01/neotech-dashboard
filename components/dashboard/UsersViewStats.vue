@@ -11,7 +11,6 @@
             </header>
             <section class="stats-detail">
                 <h1 class="stats-calculator">{{ views }}</h1>
-                <span class="stats-calculator-name">просмотр страниц</span>
             </section>
         </div>
     </div>

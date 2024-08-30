@@ -1,6 +1,15 @@
 <template>
     <div class="dash">
-        <h2 class="dash-heading">Статистика</h2>
+        <div class="dash-header">
+            <h2 class="dash-heading">Статистика</h2>
+            <div class="dash-header-buttons">
+                <div class="dash-header-button-dates">
+                    <button class="dash-header-button-date">За день</button>
+                    <button class="dash-header-button-date">За месяц</button>
+                    <button class="dash-header-button-date">За год</button>
+                </div>
+            </div>
+        </div>
         <Dashboard />
     </div>
 </template>
@@ -16,23 +25,31 @@ import Dashboard from '~/components/Collector/Dashboard.vue'
     width: 100%;
 }
 
-.dash-blocks {
-    margin-top: 3.2rem;
-    display: flex;
-    justify-content: space-between;
-}
+.dash {
+    &-header {
+        border: .1rem solid #e5e5e5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-.dash-block {
-    width: 100%;
-    max-width: calc((100% / 2) - 1.6rem);
-}
+    &-blocks {
+        margin-top: 3.2rem;
+        display: flex;
+        justify-content: space-between;
+    }
 
-.dash-heading {
-    font-size: 2rem;
-    line-height: 3rem;
-    font-weight: 500;
-    width: 100%;
-    padding: 2.4rem;
-    border: .1rem solid #e5e5e5;
+    &-block {
+        width: 100%;
+        max-width: calc((100% / 4) - 1.2rem);
+    }
+
+    &-heading {
+        font-size: 2rem;
+        line-height: 3rem;
+        font-weight: 500;
+        width: 100%;
+        padding: 2.4rem;
+    }
 }
 </style>

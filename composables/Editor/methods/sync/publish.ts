@@ -21,12 +21,10 @@ export class EditorPublish {
         this.editor = editor as Editor;
 
         const element: GlobalInterface = {
-            id: useRouter().currentRoute.value.query.uid as string,
             name: useRouter().currentRoute.value.query.details as string,
             html: extraction(editor).html,
             css: (extraction(editor).css as any) as string,
             sections: editor.getComponents() as any,
-            cipher: cipher(extraction(editor).html).toString(),
         }
 
         this.element = element;
@@ -46,12 +44,16 @@ async function publish(model: GlobalInterface) {
         },
         body: JSON.stringify(model)
     }
-    await apiDataFetch(`${uri}/pages/${model.name}?uid=${useRouter().currentRoute.value.query.uid}`, options)
+
+    await apiDataFetch(`${uri}/constructor/update/${useRouter().currentRoute.value.query.id}`, options)
         .then(res => res.json())
         .then(res => {
             setTimeout(() => {
                 location.reload();
-            }, 1000);
+            }, 1500);
+        })
+        .catch((err) => {
+            console.log(err);
         })
 }
 

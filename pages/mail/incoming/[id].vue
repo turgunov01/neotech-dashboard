@@ -103,7 +103,7 @@ const request = async () => {
     })
         .then(response => response.json())
         .then(async response => {
-            const data = response.data;
+            const data = response.messages;
 
             data.forEach((msg: Message) => {
                 messages.value.push(msg);
@@ -129,10 +129,11 @@ const like = async () => {
         .then(response => response.json())
         .then(response => {
             if (response.message) { return response.message }
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
         })
+
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
 }
 
 function truncate(str: string, length: number, suffix = '...') {
@@ -150,14 +151,17 @@ const adminSend = async () => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            message: currentMessage.value.message
+            message: currentMessage.value.message,
+            phone: currentMessage.value.phone
         })
     }
 
     await apiDataFetch(`${uri}/messages/app/${$router.currentRoute.value.params.id}`, options)
         .then(response => response.json())
         .then(response => {
-
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         })
 }
 

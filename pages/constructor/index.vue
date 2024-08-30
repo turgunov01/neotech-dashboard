@@ -13,7 +13,7 @@
                 <input type="text" placeholder="Neotech Веб-сайт" value="Neotech Веб-сайт">
                 <select name="pages" class="pages-select" @change="choose($event)">
                     <option :value="page.id"
-                        :selected="page.id === useRouter().currentRoute.value.query.uid ? true : false"
+                        :selected="page.id === useRouter().currentRoute.value.query.id ? true : false"
                         v-for="page in pages">{{ page.name?.toUpperCase() }}
                     </option>
                 </select>
@@ -76,7 +76,7 @@ interface Page {
 
 const pages = ref([] as Page[])
 
-const getList = () => {
+const getList = async () => {
     const options = {
         method: "GET",
         headers: {
@@ -85,37 +85,12 @@ const getList = () => {
         }
     }
 
-    apiDataFetch(`${uri}/pages/all`, options)
+    await apiDataFetch(`${uri}/constructor/web`, options)
         .then(response => response.json())
         .then(response => {
-            response.forEach(async (item: any) => {
-                const name = item.replace("pages/", "").replace(".json", "");
-
-                await apiDataFetch(`${uri}/pages/${name}`, options)
-                    .then(data => data.json())
-                    .then(data => {
-
-                        try {
-                            const object = {
-                                id: data.id,
-                                name: name,
-                                route: `/${name}`,
-                                length: 0,
-                                sections: data.sections ? data.sections : [],
-                                html: data.html,
-                                css: data.css ? data.css : '',
-                            } as Page;
-
-                            pages.value.push(object);
-                            useRouter().push({ query: { details: pages.value[0].name, uid: pages.value[0].id } })
-                        } catch (err) {
-                            alert(err);
-                            return
-                        }
-
-                    })
-
-            })
+            response.forEach((item: any) => {
+                pages.value.push(item);
+            });
         })
 
 }

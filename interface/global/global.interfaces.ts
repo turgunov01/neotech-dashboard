@@ -1,10 +1,8 @@
 export interface GlobalInterface {
-    id: string,
     name: string,
     html: string,
     css: string,
     sections: Array<GlobalAttributesInterface>,
-    cipher: string,
 }
 
 export interface GlobalAttributesInterface {

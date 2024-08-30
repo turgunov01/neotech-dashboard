@@ -1,5 +1,5 @@
 <template>
-    <div class="mail">
+    <div class="mail" v-if="loaded">
         <div class="mail-container">
             <aside class="mail-sidebar">
                 <div class="sidebar-conf">
@@ -17,18 +17,18 @@
                                 <p class="sidebar-item-date"> {{ data.date }} </p>
                             </nuxt-link>
                             <img src="../../../assets/star-in.svg" class="sidebar-item-star"
-                                :class="data.liked == true ? 'active' : ''" alt="">
+                                :class="data.liked == 1 ? 'active' : ''" alt="">
                         </li>
                     </ul>
                 </div>
             </aside>
             <section class="mail-section">
-                <span class="mail-favorite" @click="like" v-if="selectedMessage.liked == true">
+                <span class="mail-favorite" @click="like" v-if="selectedMessage.liked == 1">
                     <img src="../../../assets/star-in.svg" alt="">
                     <p class="mail-favorite-heading">В избранных</p>
                 </span>
                 <span class="mail-favorite" @click="like"
-                    v-else-if="selectedMessage.liked == false || !selectedMessage.liked">
+                    v-else-if="selectedMessage.liked == 0 || !selectedMessage.liked">
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
@@ -78,6 +78,8 @@
 
 <script lang="ts" setup>
 
+const loaded = ref(false);
+
 interface Message {
     id: number,
     date: string,
@@ -86,7 +88,7 @@ interface Message {
     phone: string,
     reply_to: Message | null,
     user: string,
-    liked?: boolean | null,
+    liked?: number | 0,
     email?: string | null,
 }
 
@@ -108,15 +110,22 @@ const request = async () => {
     })
         .then(response => response.json())
         .then(async response => {
-            const data = response.data;
+            const data = response.messages;
 
-            data.forEach((msg: Message) => {
+            data.forEach(async (msg: Message) => {
                 messages.value.push(msg);
 
                 if (msg.reply_to !== null || msg.reply_to == $router.params["id"]) {
-                    selectedMessage.value = msg.reply_to;
-                    msg.email = "support@neotech.uz"
                     currentMessage.value = msg;
+                    msg.email = "support@neotech.uz"
+
+                    await apiDataFetch(`${uri}/messages/single/${msg.reply_to}`,
+                        { method: "GET", headers: { 'Content-Type': 'application/json' } })
+                        .then(response => response.json())
+                        .then(response => {
+                            selectedMessage.value = response.message;
+                        })
+
                 }
                 // if (reply_to?.id == parseInt($router.params.id as string)) {
                 //     console.log(reply_to)
@@ -145,7 +154,8 @@ const like = async () => {
 }
 
 onMounted(async () => {
-    await request()
+    await request();
+    loaded.value = true;
 })
 
 </script>
