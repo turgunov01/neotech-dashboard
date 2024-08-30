@@ -1,7 +1,8 @@
 <template>
     <div class="loader loader--style3" title="2" :style="{
         height: height,
-        borderRadius: curved ? curved : '0'
+        borderRadius: curved ? curved : '0',
+        background: hasBackground ? '#fff' : 'unset'
     }">
         <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px" width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;"
@@ -24,6 +25,9 @@ const props = defineProps({
     },
     curved: {
         type: String
+    },
+    hasBackground: {
+        type: Boolean,
     }
 })
 
@@ -41,6 +45,5 @@ const props = defineProps({
     align-items: center;
     justify-content: center;
     z-index: 999;
-    background: #fff;
 }
 </style>

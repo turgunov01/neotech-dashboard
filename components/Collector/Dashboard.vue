@@ -1,26 +1,50 @@
 <template>
-    <div class="dash-blocks" v-if="loaded">
+    <div class="dash-blocks">
         <div class="dash-block">
-            <DashboardUsersViewStats :views="analytics.views" />
+            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <DashboardUsersViewStats :views="analytics.views" :style="{
+                opacity: loaded ? 1 : 0,
+                transition: 'all 500ms ease',
+            }" />
         </div>
         <div class="dash-block">
-            <DashboardUsersCalculate />
+            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <DashboardUsersCalculate :style="{
+                opacity: loaded ? 1 : 0,
+                transition: 'all 500ms ease',
+                transitionDelay: '100ms'
+            }" />
         </div>
         <div class="dash-block">
-            <DashboardUsersTImerStats :time="analytics.time" />
+            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <DashboardUsersTImerStats :time="analytics.time" :style="{
+                opacity: loaded ? 1 : 0,
+                transition: 'all 500ms ease',
+                transitionDelay: '100ms'
+            }" />
         </div>
         <div class="dash-block">
-            <DashboardUsersFormCount :messages="analytics.messages" />
+            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <DashboardUsersFormCount :messages="analytics.messages" :style="{
+                opacity: loaded ? 1 : 0,
+                transition: 'all 500ms ease',
+                transitionDelay: '100ms'
+            }" />
         </div>
 
     </div>
-    <div class="dash-blocks" v-if="loaded">
+    <div class="dash-blocks">
         <div class="dash-block screen50">
-            <DashboardAgentsUsersBrowsersCounter :agents="analytics.browsers" />
-            <DoughnutCard />
+            <div class="dash-block-nest">
+                <DashboardAgentsUsersBrowsersCounter v-if="loaded" :agents="analytics.browsers" />
+            </div>
+            <div class="dash-block-nest">
+                <h4 class="dash-block-nest-title">Устройства</h4>
+                <DoughnutCard />
+            </div>
         </div>
         <div class="dash-block screen50">
-            <DashboardHistoryUsersRouteActivity />
+            <DashboardHistoryUsersRouteActivity v-if="loaded" />
         </div>
     </div>
 </template>
@@ -150,9 +174,43 @@ onMounted(async () => {
     &-block {
         width: 100%;
         max-width: calc((100% / 4) - 1.2rem);
+        position: relative;
 
         &.screen50 {
             max-width: calc(100% / 2 - .8rem);
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 2.4rem;
+            width: 100%;
+        }
+
+        &-nest {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid #E5E5E5;
+
+            &-title {
+                width: 100%;
+                padding: 2.4rem;
+                font-size: 1.6rem;
+                line-height: 2.4rem;
+                border-bottom: .1rem solid #e5e5e5;
+            }
+        }
+    }
+
+    &-pie {
+        &-chart {
+            width: 30rem !important;
+            height: 30rem !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
         }
     }
 

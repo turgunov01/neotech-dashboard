@@ -76,10 +76,12 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .stats {
+    width: 100%;
     &-container {
         justify-content: flex-start;
         max-height: unset;
         padding-bottom: 2.4rem;
+        border: unset !important;
     }
 }
 

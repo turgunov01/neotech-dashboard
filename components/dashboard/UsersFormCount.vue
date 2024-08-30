@@ -1,5 +1,5 @@
 <template>
-    <div class="stats">
+    <div class="stats" v-if="loaded">
         <div class="stats-container">
             <header class="stats-header">
                 <h4 class="stats-heading">Заявка на форму</h4>
@@ -18,9 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { apiDataFetch, uri } from "~/composables/exports"
-
 const counter = ref(0)
+const loaded = ref(false)
 
 interface Messages {
     id: number,
@@ -40,6 +39,7 @@ const props = defineProps({
 })
 
 onMounted(() => {
+    loaded.value = true;
 })
 </script>
 
