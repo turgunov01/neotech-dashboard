@@ -36,7 +36,7 @@
     <div class="dash-blocks">
         <div class="dash-block screen50">
             <div class="dash-block-nest">
-                <DashboardAgentsUsersBrowsersCounter v-if="loaded" :agents="analytics.browsers" />
+                <UsersBrowsersCounter v-if="loaded" :agents="analytics.browsers" />
             </div>
             <div class="dash-block-nest">
                 <h4 class="dash-block-nest-title">Устройства</h4>
@@ -44,13 +44,20 @@
             </div>
         </div>
         <div class="dash-block screen50">
-            <DashboardHistoryUsersRouteActivity v-if="loaded" />
+            <div class="dash-block-nest">
+                <UsersRouteActivity v-if="loaded" />
+            </div>
+            <div class="dash-block-nest">
+                
+            </div>
         </div>
     </div>
 </template>
 
 
 <script lang="ts" setup>
+import UsersBrowsersCounter from '../dashboard/UsersBrowsersCounter.vue';
+import UsersRouteActivity from '../dashboard/UsersRouteActivity.vue';
 import DoughnutCard from '../Templates/DoughnutCard.vue';
 
 const loaded = ref(false);

@@ -92,7 +92,6 @@ const history = ref([
 
 .hst {
     position: relative;
-    border: 1px solid #e5e5e5;
     width: 100%;
 
     &-layer {
