@@ -48,7 +48,7 @@
                 <UsersRouteActivity v-if="loaded" />
             </div>
             <div class="dash-block-nest">
-                
+                <DashboardRegionController />
             </div>
         </div>
     </div>
@@ -56,8 +56,8 @@
 
 
 <script lang="ts" setup>
-import UsersBrowsersCounter from '../dashboard/UsersBrowsersCounter.vue';
-import UsersRouteActivity from '../dashboard/UsersRouteActivity.vue';
+import UsersBrowsersCounter from '../Dashboard/UsersBrowsersCounter.vue';
+import UsersRouteActivity from '../Dashboard/UsersRouteActivity.vue';
 import DoughnutCard from '../Templates/DoughnutCard.vue';
 
 const loaded = ref(false);
