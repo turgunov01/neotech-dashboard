@@ -34,6 +34,7 @@
             </div>
         </div>
     </div>
+    <div class="dash-block-nodata" v-if="props.agents.length === 0 || results.length === 0">No data available!</div>
 </template>
 
 <script setup lang="ts">
@@ -77,6 +78,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .stats {
     width: 100%;
+
     &-container {
         justify-content: flex-start;
         max-height: unset;
@@ -87,5 +89,21 @@ onMounted(async () => {
 
 .line-info-name:last-of-type {
     color: black;
+}
+
+.dash-block-nodata {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.2rem;
+    line-height: 100%;
+    font-weight: 700;
+    color: black
 }
 </style>

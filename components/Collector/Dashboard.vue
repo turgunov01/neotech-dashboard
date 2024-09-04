@@ -48,7 +48,7 @@
                 <UsersRouteActivity v-if="loaded" />
             </div>
             <div class="dash-block-nest">
-                <DashboardRegionController />
+                <DashboardRegionController v-if="loaded" />
             </div>
         </div>
     </div>

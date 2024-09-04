@@ -9,11 +9,12 @@
                 <span class="dash-result-icon" :style="{
                     backgroundColor: (item as any).color,
                 }"></span>
-                <p class="dash-result-text"> {{ (item as any).name }} </p>
+                <p class="dash-result-text"> {{ (item as any).device_type }} </p>
             </div>
             <p class="dash-result-percen"> {{ (item as any).percent }} </p>
         </div>
     </div>
+    <h4 class="dash-block-nodata" v-if="!calculations.length">No data available!</h4>
 </template>
 
 <script setup lang="ts">
@@ -37,6 +38,12 @@ const config = {
     },
 } as ChartConfiguration
 
+interface Device {
+    device_type: string;
+    visits: number;
+    color: string
+}
+
 const calculations = ref([])
 
 const getDevices = async () => {
@@ -50,36 +57,16 @@ const getDevices = async () => {
         return uniqueIPs.size;
     }
 
-    function calculateDeviceTypePercentages(dataArray: any) {
-        const deviceCounts = {} as any;
+    function calculateDeviceTypePercentages(dataArray: { device_type: string; visits: number, color: string }[]) {
+        // Step 1: Calculate the total number of visits
+        const totalVisits = dataArray.reduce((sum, item) => sum + item.visits, 0);
 
-        dataArray.forEach((item: any) => {
-            if (deviceCounts[item.device_type]) {
-                deviceCounts[item.device_type]++;
-            } else {
-                deviceCounts[item.device_type] = 1;
-            }
-        })
-
-        const totalCount = dataArray.length;
-
-        // Convert to array of objects with percentage
-        const devicePercentages = Object.keys(deviceCounts).map(deviceType => {
-            return {
-                name: deviceType,
-                percent: ((deviceCounts[deviceType] / totalCount) * 100) + '%',
-            };
+        // Step 2: Calculate the percentage for each device type
+        dataArray.forEach(item => {
+            (item as any).percent = ((item.visits * 100) / totalVisits).toFixed(2) + '%';
         });
 
-        return devicePercentages;
-    }
-
-    // Calculate total number of entries
-
-
-    interface Device {
-        device_type: string,
-        visits: number | 0,
+        return dataArray;
     }
 
     const options = {
@@ -93,28 +80,21 @@ const getDevices = async () => {
     await apiDataFetch(`${uri}/stats/devices`, options)
         .then(response => response.json())
         .then(async response => {
-            const devices = response?.devices;
+            const devices = calculateDeviceTypePercentages(response?.devices)
 
-            config.data.labels = devices.map((device: Device) => device.device_type);
+            config.data.labels = devices.map((device: any) => device.device_type);
 
             for (let i = 0; i < devices.length; i++) {
-                const color = getRandomColor() as String;
+                const color = getRandomColor();
                 (((config as ChartConfiguration).data.datasets as any)[0].backgroundColor[i]) = color;
+                devices[i].color = color;
                 await apiDataFetch(`${uri}/stats/devices/${devices[i].device_type}`, options)
                     .then(data => data.json())
-                    .then(data => {
-                        const filter = data;
-
-                        const uniqueIPs = countUniqueIPs(filter);
-                        const devicePercentages = calculateDeviceTypePercentages(filter);
-
-                        devicePercentages.forEach(device => {
-                            (device as any).color = color;
-                            calculations.value.push(device as never)
-                        })
-
-                        config.data.datasets[0].data.push(uniqueIPs);
+                    .then(async data => {
+                        config.data.datasets[0].data.push(devices[i].visits);
                     })
+
+                calculations.value.push(devices[i] as never)
             }
 
 
@@ -146,6 +126,9 @@ onMounted(async () => {
     &-results {
         width: 100%;
         padding: 2.4rem;
+        display: flex;
+        flex-direction: column;
+        row-gap: 1.8rem;
 
         &>div {
             display: flex;
@@ -167,6 +150,23 @@ onMounted(async () => {
                 align-items: center;
                 justify-content: center;
             }
+        }
+    }
+
+    &-block {
+        &-nodata {
+            position: absolute;
+            left: 0;
+            top: 7.29rem;
+            width: 100%;
+            height: calc(100% - 7.29rem);
+            background: rgba(255, 255, 255);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            line-height: 100%;
+            font-weight: 700;
         }
     }
 }
