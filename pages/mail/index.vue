@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router';
 
 onMounted(() => {
     const $router = useRouter()
-    $router.push('/mail/incoming')
+    $router.push('/mail/incoming/')
 })
 
 

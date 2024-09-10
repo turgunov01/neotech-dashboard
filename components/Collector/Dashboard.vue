@@ -9,7 +9,7 @@
         </div>
         <div class="dash-block">
             <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersCalculate :style="{
+            <DashboardUsersCalculate :count="analytics.users" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
                 transitionDelay: '100ms'
@@ -60,7 +60,12 @@ import UsersBrowsersCounter from '../Dashboard/UsersBrowsersCounter.vue';
 import UsersRouteActivity from '../Dashboard/UsersRouteActivity.vue';
 import DoughnutCard from '../Templates/DoughnutCard.vue';
 
+import { USER_FETCH_HOST } from '#imports';
+
+const $router = useRouter();
 const loaded = ref(false);
+
+const query = $router.currentRoute.value.query.filter || $router.currentRoute.value.query.devices ? true : false;
 
 function formatSecondsToMinutes(seconds: number): string {
     const hours = Math.floor(seconds / 3600);
@@ -81,7 +86,8 @@ const analytics = {
     time: "00:00",
     browsers: [],
     routes: [],
-    messages: []
+    messages: [],
+    users: 0,
 }
 
 const views = async () => {
@@ -92,7 +98,7 @@ const views = async () => {
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + "/stats/views", options)
+    await apiDataFetch(USER_FETCH_HOST + `/stats/views${query ? $router.currentRoute.value.fullPath : ''}`, options)
         .then(response => response.json())
         .then(response => {
             analytics.views = response.views;
@@ -107,7 +113,7 @@ const timeline = async () => {
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + "/stats/timeline", options)
+    await apiDataFetch(USER_FETCH_HOST + `/stats/timeline${query ? $router.currentRoute.value.fullPath : ''}`, options)
         .then(response => response.json())
         .then(response => {
             analytics.time = formatSecondsToMinutes(response.timeout);
@@ -122,7 +128,7 @@ const messages = async () => {
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + "/messages/all", options)
+    await apiDataFetch(USER_FETCH_HOST + `/messages/all${query ? $router.currentRoute.value.fullPath : ''}`, options)
         .then(response => response.json())
         .then(response => {
             analytics.messages = response.messages;
@@ -137,23 +143,45 @@ const browsers = async () => {
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + "/stats/browsers", options)
+    await apiDataFetch(USER_FETCH_HOST + `/stats/browsers${query ? '?filter=' + $router.currentRoute.value.query.filter : ''}`, options)
         .then(response => response.json())
         .then(response => {
-            response.browsers.forEach((item: any) => {
+            response.devices.forEach((item: any) => {
                 analytics.browsers.push(item as never)
             })
         })
 }
 
+const users = async () => {
+    const options = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
+        }
+    }
+
+    await apiDataFetch(USER_FETCH_HOST + `/stats/users${query ? $router.currentRoute.value.fullPath : ''}`, options)
+        .then(response => response.json())
+        .then(response => {
+            analytics.users = response.users;
+        })
+}
+
 
 onMounted(async () => {
-    await Promise.all(
-        [views(), timeline(), messages(), browsers()]
-    )
+    if (!query) {
+        await $router.push({ query: { filter: "today" } });
+        location.reload();
+    }
+    await setTimeout(async () => {
+        await views();
+        await timeline();
+        await messages();
+        await browsers();
+        await users();
+        loaded.value = true;
 
-    loaded.value = true;
-
+    }, 100);
 })
 
 </script>

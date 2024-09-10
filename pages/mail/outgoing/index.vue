@@ -138,8 +138,34 @@ const param = $router.currentRoute.value.params.id
 //     ],
 // }
 
-onMounted(() => {
-    $router.push(`/mail/outgoing/1`)
+onMounted(async () => {
+    const options = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Authorization')}`,
+            Accept: "application/json",
+        }
+    }
+
+    await apiDataFetch(`${USER_FETCH_HOST}/messages/all`, options)
+        .then(response => response.json())
+        .then(response => {
+
+            if (response.messages.length === 0) {
+                FailedAlert("No messages were found!");
+                setTimeout(() => {
+                    $router.push("/")
+                    location.reload();
+                }, 3000);
+            }
+
+            response.messages.forEach((message: any) => {
+                if (message.type === 2) {
+                    return $router.push(`/mail/outgoing/${message.id}`)
+                }
+            })
+
+        })
 })
 </script>
 

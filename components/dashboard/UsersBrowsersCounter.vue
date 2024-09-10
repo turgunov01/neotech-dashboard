@@ -56,6 +56,7 @@ const results = ref([])
 
 const percentageCounter = () => {
     const totalCount = props.agents.reduce((total: any, agent: any) => total + (agent as any).visits, 0);
+    
     props.agents.forEach((agent: any) => {
         const item = {
             name: (agent as any).browser,

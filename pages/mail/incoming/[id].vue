@@ -14,7 +14,7 @@
                                 <p class="sidebar-item-date"> {{ data.date.replace(/\./g, '/') }} </p>
                             </nuxt-link>
                             <img src="../../../assets/star-in.svg" class="sidebar-item-star"
-                                :class="data.liked === true ? 'active' : ''" alt="">
+                                :class="data.liked === 1 ? 'active' : ''" alt="">
                         </li>
                     </ul>
                 </div>
@@ -75,7 +75,7 @@ interface Message {
     phone: string,
     reply_to: number | null,
     user: string,
-    liked?: boolean | null,
+    liked?: number,
     email?: string | null,
 }
 
@@ -89,7 +89,7 @@ const currentMessage = ref({
     phone: '+998 71 201 22 22',
     reply_to: null,
     user: 'Neotech Support Team',
-    liked: null,
+    liked: 0,
     email: 'support@neotech.uz',
 } as Message);
 
@@ -151,17 +151,23 @@ const adminSend = async () => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
+            user: "Neotech",
             message: currentMessage.value.message,
-            phone: currentMessage.value.phone
+            phone: currentMessage.value.phone,
+            type: 2,
+            reply_to: $router.currentRoute.value.params.id,
+            liked: currentMessage.value.liked,
+            email: "support@neotech.uz",
+            isViewed: 0
         })
     }
 
     await apiDataFetch(`${uri}/messages/app/${$router.currentRoute.value.params.id}`, options)
         .then(response => response.json())
         .then(response => {
-            setTimeout(() => {
-                location.reload();
-            }, 1000);
+            // setTimeout(() => {
+            //     location.reload();
+            // }, 1000);
         })
 }
 

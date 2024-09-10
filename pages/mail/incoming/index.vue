@@ -8,10 +8,35 @@
 </template>
 
 <script lang="ts" setup>
-import type { routerKey } from 'vue-router';
+
+onMounted(async () => {
+    const options = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Authorization')}`,
+            Accept: "application/json",
+        }
+    }
+
+    await apiDataFetch(`${USER_FETCH_HOST}/messages/all`, options)
+        .then(response => response.json())
+        .then(response => {
+
+            if (response.messages.length === 0) {
+                FailedAlert("No messages were found!");
+                setTimeout(() => {
+                    useRouter().push("/")
+                    location.reload();
+                }, 3000);
+            } else {
+                useRouter().push("/mail/incoming/1")
+            }
 
 
-useRouter().push("/mail/incoming/1")
+
+        })
+})
+
 
 </script>
 

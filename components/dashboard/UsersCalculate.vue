@@ -10,7 +10,7 @@
                 </div> -->
             </header>
             <section class="stats-detail">
-                <h1 class="stats-calculator"> {{ time }} </h1>
+                <h1 class="stats-calculator"> {{ count }} </h1>
             </section>
         </div>
     </div>
@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 const props = defineProps({
-    time: {
+    count: {
         type: Number,
         default: 0
     }

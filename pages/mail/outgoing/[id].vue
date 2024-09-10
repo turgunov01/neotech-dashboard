@@ -14,7 +14,7 @@
                             <nuxt-link :to="`${data.id}`" v-if="data.type === 2">
                                 <h4 class="sidebar-item-message"> {{ data.message }} </h4>
                                 <h6 class="sidebar-item-author"> {{ data.user }} </h6>
-                                <p class="sidebar-item-date"> {{ data.date }} </p>
+                                <p class="sidebar-item-date"> {{ data.phone }} </p>
                             </nuxt-link>
                             <img src="../../../assets/star-in.svg" class="sidebar-item-star"
                                 :class="data.liked == 1 ? 'active' : ''" alt="">
@@ -54,8 +54,7 @@
                             <div class="mail-user-data">
                                 <h4 class="mail-user-data-text"> {{ (currentMessage as Message).user }} </h4>
                                 <span>/</span>
-                                <h4 class="mail-user-data-text"> {{ (currentMessage as Message).email }}
-                                </h4>
+                                <h4 class="mail-user-data-text"> support@neotech.uz </h4>
                                 <span>/</span>
                                 <h4 class="mail-user-data-text"> {{ (currentMessage as Message).phone }}
                                 </h4>
@@ -114,23 +113,14 @@ const request = async () => {
 
             data.forEach(async (msg: Message) => {
                 messages.value.push(msg);
-
-                if (msg.reply_to !== null || msg.reply_to == $router.params["id"]) {
-                    currentMessage.value = msg;
-                    msg.email = "support@neotech.uz"
-
-                    await apiDataFetch(`${uri}/messages/single/${msg.reply_to}`,
-                        { method: "GET", headers: { 'Content-Type': 'application/json' } })
-                        .then(response => response.json())
-                        .then(response => {
-                            selectedMessage.value = response.message;
-                        })
-
-                }
-                // if (reply_to?.id == parseInt($router.params.id as string)) {
-                //     console.log(reply_to)
-                // }
             })
+        });
+
+    (currentMessage as any).value = await messages.value.find(msg => msg.id === Number($router.params["id"]));
+    await apiDataFetch(`${uri}/messages/single/${currentMessage.value.reply_to}`, { method: "GET", headers: { Authorization: `Bearer ${sessionStorage.getItem("Authorization")}` } })
+        .then(response => response.json())
+        .then(response => {
+            selectedMessage.value = response.message;
         })
 }
 

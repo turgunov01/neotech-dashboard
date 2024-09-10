@@ -65,6 +65,11 @@ textarea {
     padding: 0;
 }
 
+.swal2-title {
+    font-size: 16px !important;
+}
+
+
 @import './components/nav.css';
 @import './components/UsersStatistics/stats.scss';
 @import './components/UsersFormRequest/UsersMail.scss';

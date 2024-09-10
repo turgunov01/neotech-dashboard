@@ -1,6 +1,6 @@
 export const PORT = 5003
 // export const USER_FETCH_HOST = 'http://localhost:5003'
-export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz'
+export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz';
 
 export const uri = `${USER_FETCH_HOST}`
 
@@ -9,7 +9,7 @@ export function apiDataFetch(url: string, options: RequestInit) {
 }
 
 export async function apiDataFetchV2(path: string, options: RequestInit) {
-    const { data, pending } = await useAsyncData(() => $fetch(`${uri}${path}`, options as any), {
+    const { data, pending } = await useAsyncData(() => $fetch(`${USER_FETCH_HOST}${path}`, options as any), {
         lazy: true,
         server: false,
     })
@@ -38,18 +38,17 @@ export function showStoreData(name: string) {
 }
 
 export function getRandomColor() {
-    const getRandomValue = () => Math.floor(Math.random() * 256);
+    const getRandomValue = () => Math.floor(Math.random() * 128) + 127; // Ensures values between 127 and 255
 
     const red = getRandomValue();
     const green = getRandomValue();
     const blue = getRandomValue();
 
-    const toHex = (value: any) => value.toString(16).padStart(2, '0');
+    const toHex = (value: number) => value.toString(16).padStart(2, '0');
 
-    const randomColor = `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
-    return randomColor;
+    const randomLightColor = `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+    return randomLightColor;
 }
-
 
 export function isValidAnchor(rte: any): boolean {
     const selection = rte.selection();

@@ -69,10 +69,13 @@
     <div class="wrapper" v-else>
         <slot />
     </div>
+    <PushComponent />
 </template>
 
 <script lang="ts" setup>
 import Loader from '~/components/Loader.vue';
+import PushComponent from '~/components/Notifications/PushComponent.vue';
+
 
 const loader = ref(true)
 

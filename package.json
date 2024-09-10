@@ -21,12 +21,17 @@
   "dependencies": {
     "@builder.io/sdk-vue": "^1.0.27",
     "chart.js": "^3.9.1",
+    "date-fns": "^2.30.0",
     "grapesjs": "^0.21.10",
     "grapesjs-lory-slider": "^0.1.5",
     "grapesjs-swiper-slider": "^0.0.5",
+    "nuxt-socket-io": "^3.0.13",
     "sass": "^1.69.5",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "sweetalert2": "^11.12.4",
     "swiper": "^11.1.10",
+    "v-calendar": "^3.1.2",
     "vue-chart-3": "^3.1.8",
     "vue-meta": "^2.4.0"
   }
