@@ -88,11 +88,8 @@ const getDevices = async () => {
                 const color = getRandomColor();
                 (((config as ChartConfiguration).data.datasets as any)[0].backgroundColor[i]) = color;
                 devices[i].color = color;
-                await apiDataFetch(`${uri}/stats/devices/${devices[i].device_type}`, options)
-                    .then(data => data.json())
-                    .then(async data => {
-                        config.data.datasets[0].data.push(devices[i].visits);
-                    })
+
+                config.data.datasets[0].data.push(devices[i].visits);
 
                 calculations.value.push(devices[i] as never)
             }

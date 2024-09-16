@@ -62,6 +62,7 @@ import ConstructorSidebarElements from '../../components/Models/ConstructorSideb
 
 import 'grapesjs/dist/css/grapes.min.css';
 import "swiper/css";
+import { setActivityMiddleware } from '~/middleware/history.activity';
 
 interface Page {
     id: string,
@@ -100,7 +101,7 @@ const choose = (event: any) => {
 
     const element = pages.value.find(page => page.id === uid);
 
-    useRouter().push({ query: { details: element?.name as any, uid: uid } })
+    useRouter().push({ query: { id: uid } })
     setTimeout(() => {
         location.reload();
     }, 300);
@@ -126,6 +127,8 @@ const iframe = (bool: Boolean) => {
 }
 
 onMounted(async () => {
+    setActivityMiddleware(`Зашел в конструктор`, `constructor_opened`);
+
     loaded.value = false
     init()
 

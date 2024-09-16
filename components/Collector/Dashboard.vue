@@ -48,7 +48,7 @@
                 <UsersRouteActivity v-if="loaded" />
             </div>
             <div class="dash-block-nest">
-                <DashboardRegionController v-if="loaded" />
+                <DashboardRegionController v-if="loaded" :statistics="analytics.regions" />
             </div>
         </div>
     </div>
@@ -88,9 +88,10 @@ const analytics = {
     routes: [],
     messages: [],
     users: 0,
+    regions: [],
 }
 
-const views = async () => {
+const all = async () => {
     const options = {
         method: "GET",
         headers: {
@@ -98,27 +99,43 @@ const views = async () => {
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + `/stats/views${query ? $router.currentRoute.value.fullPath : ''}`, options)
+    await apiDataFetch(USER_FETCH_HOST + `/stats/all${query ? $router.currentRoute.value.fullPath : ''}`, options)
         .then(response => response.json())
         .then(response => {
-            analytics.views = response.views;
+            const time = ref(0);
+            const regionsMap = new Map<string, number>();
+            const setUsers = new Set();
+
+            if (response) {
+                response.forEach((el: any) => {
+                    analytics.views = response.length;
+
+                    // Добавляем пользователя
+                    setUsers.add(el.ip);
+                    analytics.users = setUsers.size;
+
+                    // Увеличиваем время
+                    time.value += el.timeout;
+
+                    // Увеличиваем количество посещений региона или добавляем новый
+                    if (regionsMap.has(el.region)) {
+                        regionsMap.set(el.region, regionsMap.get(el.region)! + 1);
+                    } else {
+                        regionsMap.set(el.region, 1);
+                    }
+                });
+
+                // Преобразуем карту в массив для последующего использования
+                const regions = Array.from(regionsMap, ([region, visits]) => ({ region, visits }));
+
+                // Если regions требуется в объекте analytics
+                analytics.regions = regions as any;
+
+                analytics.time = formatSecondsToMinutes(time.value);
+            }
         })
 }
 
-const timeline = async () => {
-    const options = {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
-        }
-    }
-
-    await apiDataFetch(USER_FETCH_HOST + `/stats/timeline${query ? $router.currentRoute.value.fullPath : ''}`, options)
-        .then(response => response.json())
-        .then(response => {
-            analytics.time = formatSecondsToMinutes(response.timeout);
-        })
-}
 
 const messages = async () => {
     const options = {
@@ -131,7 +148,13 @@ const messages = async () => {
     await apiDataFetch(USER_FETCH_HOST + `/messages/all${query ? $router.currentRoute.value.fullPath : ''}`, options)
         .then(response => response.json())
         .then(response => {
-            analytics.messages = response.messages;
+            if (response.messages.length > 0) {
+                response.messages.forEach((msg: any) => {
+                    analytics.messages.push(msg as never)
+                })
+            } else {
+                analytics.messages = response.messages;
+            }
         })
 }
 
@@ -152,20 +175,6 @@ const browsers = async () => {
         })
 }
 
-const users = async () => {
-    const options = {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
-        }
-    }
-
-    await apiDataFetch(USER_FETCH_HOST + `/stats/users${query ? $router.currentRoute.value.fullPath : ''}`, options)
-        .then(response => response.json())
-        .then(response => {
-            analytics.users = response.users;
-        })
-}
 
 
 onMounted(async () => {
@@ -174,14 +183,18 @@ onMounted(async () => {
         location.reload();
     }
     await setTimeout(async () => {
-        await views();
-        await timeline();
+        await all();
+        // await timeline();
         await messages();
         await browsers();
-        await users();
-        loaded.value = true;
+        // await users();
 
-    }, 100);
+        setTimeout(() => {
+            loaded.value = true;
+        }, 1000);
+    }, 500);
+
+
 })
 
 </script>

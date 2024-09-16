@@ -12,7 +12,7 @@
                 <p class="security-data-name">Пароль</p>
                 <div class="security-data-info">
                     <p class="security-data-info-content"> {{ user.password }} </p>
-                    <img src="/assets/edit.svg" alt="" @click="openpassword()">
+                    <!-- <img src="/assets/edit.svg" alt="" @click="openpassword()"> -->
                 </div>
             </div>
         </div>
@@ -67,8 +67,8 @@ const username = ref(false)
 const password = ref(false)
 
 const user = ref({
-    username: "",
-    password: "",
+    username: sessionStorage.getItem("username"),
+    password: sessionStorage.getItem("password"),
     new_username: "",
     new_password: ""
 })
@@ -79,7 +79,11 @@ const getUser = async () => {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
-        }
+        },
+        body: JSON.stringify({
+            username: user.value.username,
+            password: user.value.password
+        })
     }
 
     await apiDataFetch(`${uri}/users/verify`, options)
@@ -110,8 +114,8 @@ const getUser = async () => {
                 }, 3000);
             }
 
-            user.value.username = response.username;
-            user.value.password = response.password;
+            user.value.username = response.user.username;
+            user.value.password = response.user.password;
         })
 }
 

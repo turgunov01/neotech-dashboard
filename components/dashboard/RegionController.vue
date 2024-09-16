@@ -2,7 +2,13 @@
 const countries = ref();
 const abilityTooltip = ref(false);
 
-const statistics = ref([]);
+
+const props = defineProps({
+    statistics: {
+        type: Array,
+        required: true
+    }
+})
 
 const regionController = async () => {
     const options = {
@@ -19,7 +25,7 @@ const regionController = async () => {
             const data = response.regions;
 
             data.forEach((element: { region: string, visits: number }, index: number) => {
-                statistics.value.push(element as never)
+                props.statistics.push(element as never)
             });
         })
 }
@@ -32,7 +38,7 @@ const tooltip = ref({
 })
 
 const getIcons = async () => {
-    await regionController();
+    // await regionController();
     const path = countries.value.querySelectorAll("svg > path");
     for (let i = 0; i < path.length; i++) {
         path[i].addEventListener("mouseenter", onMouseEnter)

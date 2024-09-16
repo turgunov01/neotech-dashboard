@@ -13,17 +13,14 @@
                 </thead>
                 <tbody>
                     <tr class="history-table-body" v-for="(log, index) in tables" :key="index">
-                        <th class="history-table-body-item">{{ (log as Log).username }}</th>
-                        <th class="history-table-body-item">{{ (log as Log).email }}</th>
+                        <th class="history-table-body-item">{{ (log as any).data.user.role }}</th>
+                        <th class="history-table-body-item">{{ (log as any).data.user.id }}</th>
                         <th class="history-table-body-item">
-                            {{ (log as Log).date }}
+                            {{ new Date((log as any).data.event.timestamp).toLocaleTimeString() }}
+                            {{ new Date((log as any).data.event.timestamp).toLocaleDateString() }}
                         </th>
                         <th class="history-table-body-item">
-                            <span v-if="(log as Log).action == 1">Создал</span>
-                            <span v-if="(log as Log).action == 2">Удалил</span>
-                            <span v-if="(log as Log).action == 3">Редактировал</span>
-                            <span v-if="(log as Log).action == 4">Опубликовал</span>
-                            элемент на странице "{{ (log as Log).pagename }}"
+                            {{ (log as any).data.event.type }}
                         </th>
                     </tr>
                 </tbody>
@@ -33,33 +30,43 @@
 </template>
 
 <script lang="ts" setup>
+import { setActivityMiddleware } from '~/middleware/history.activity';
 
-interface Log {
-    username: string,
-    date: string,
-    email: string,
-    action: number,
-    pagename: string,
-}
 
 const tables = ref([])
 
-const options = {
-    method: "GET",
-    headers: {
-        "Content-Type": "application/json",
-        "Content-Language": "ru"
-    }
-}
-
-async function getLogs() {
+const getLogs = async () => {
     const options = {
-        method: "PATCH"
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`,
+        }
     }
+    await apiDataFetch(USER_FETCH_HOST + "/activity/all", options)
+        .then(response => response.json())
+        .then(response => {
+            const data = response;
+
+            const username = sessionStorage.getItem("username");
+
+            data.forEach((log: any) => {
+                if (log.data.user.role === 0) {
+                    log.data.user.role = 'Администратор';
+                    tables.value.push(log as never);
+                } else {
+                    if (log.data.user.id === username) {
+                        log.data.user.role = 'Пользователь'
+                        tables.value.push(log as never);
+                    }
+                }
+            })
+        })
 }
 
-onMounted(() => {
-    getLogs()
+onMounted(async () => {
+    await getLogs();
+    setActivityMiddleware("Вход в профиль", "profile");
 })
 
 </script>

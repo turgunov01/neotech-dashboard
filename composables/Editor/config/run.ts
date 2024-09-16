@@ -120,4 +120,19 @@ export async function run(editor: Editor) {
     buttonPublishHandler(editor)
     editor.I18n.setMessages(translation)
     editor.I18n.setLocale('ru');
+
+    editor.on('asset:add', (asset) => {
+        if (asset.get('type') === 'image') { // Проверяем, что это изображение
+            const img = new Image();
+            img.src = asset.get('src'); // Получаем ссылку на изображение
+
+            img.onload = () => {
+                if (img.width > 300) {
+                    // Удаляем изображение из asset manager, если его ширина > 300px
+                    editor.AssetManager.remove(asset);
+                    alert('Изображение слишком широкое. Максимальная ширина — 300px.');
+                }
+            };
+        }
+    });
 }

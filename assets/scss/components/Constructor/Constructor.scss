@@ -371,14 +371,14 @@
         }
 
         &-views {
+            width: 20% !important;
+
             &-container {
                 max-height: 100% !important;
                 overflow: auto !important;
                 padding-top: 7rem !important;
                 width: 20% !important;
             }
-
-            width: 20% !important;
 
             &>div {
                 justify-content: center !important;

@@ -23,12 +23,12 @@
                 </div>
             </aside>
             <section class="mail-section">
-                <span class="mail-favorite" @click="like" v-if="selectedMessage.liked == 1">
+                <span class="mail-favorite" @click="like" v-if="selectedMessage?.liked == 1">
                     <img src="../../../assets/star-in.svg" alt="">
                     <p class="mail-favorite-heading">В избранных</p>
                 </span>
                 <span class="mail-favorite" @click="like"
-                    v-else-if="selectedMessage.liked == 0 || !selectedMessage.liked">
+                    v-else-if="selectedMessage?.liked == 0">
                     <img src="../../../assets/star.svg" alt="">
                     <p class="mail-favorite-heading">Добавить в избранные</p>
                 </span>
@@ -76,6 +76,8 @@
 </template>
 
 <script lang="ts" setup>
+import { setActivityMiddleware } from '~/middleware/history.activity';
+
 
 const loaded = ref(false);
 
@@ -109,15 +111,15 @@ const request = async () => {
     })
         .then(response => response.json())
         .then(async response => {
-            const data = response.messages;
+            const data = await response.messages;
 
-            data.forEach(async (msg: Message) => {
+            data?.forEach(async (msg: Message) => {
                 messages.value.push(msg);
             })
         });
 
     (currentMessage as any).value = await messages.value.find(msg => msg.id === Number($router.params["id"]));
-    await apiDataFetch(`${uri}/messages/single/${currentMessage.value.reply_to}`, { method: "GET", headers: { Authorization: `Bearer ${sessionStorage.getItem("Authorization")}` } })
+    await apiDataFetch(`${uri}/messages/single/${currentMessage?.value?.reply_to}`, { method: "GET", headers: { Authorization: `Bearer ${sessionStorage.getItem("Authorization")}` } })
         .then(response => response.json())
         .then(response => {
             selectedMessage.value = response.message;
@@ -141,9 +143,14 @@ const like = async () => {
                 location.reload();
             }, 1000);
         })
+
+    setActivityMiddleware(`Поменял марку ${routeId}-ого сообщение "избранное сообщение"`, `outgoing_messages_like_${routeId}`);
+
 }
 
 onMounted(async () => {
+    setActivityMiddleware(`Открыл ${routeId}-ое сообщение в разделе отправленных сообщении`, `outgoing_messages_read_${routeId}`);
+
     await request();
     loaded.value = true;
 })

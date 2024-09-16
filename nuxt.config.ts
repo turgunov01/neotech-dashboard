@@ -3,17 +3,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   css: ['/assets/scss/style.scss'],
-  modules: ['@nuxt/ui', 'nuxt-socket-io'],
+  modules: ['@nuxt/ui'],
   ui: {},
-  io: {
-    sockets: [
-      {
-        name: "message-handler-socket",
-        url: "http://localhost:5003",
-        default: true,
-
-      }
-    ],
-    server: {}
-  }
 })

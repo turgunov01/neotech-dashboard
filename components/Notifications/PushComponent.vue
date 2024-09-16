@@ -22,6 +22,10 @@ function onConnect() {
 
 function onResponse() {
     isConnected.value = "Pending";
+    const url = "https://www.zedge.net/notification-sounds/1921bd91-fe05-4ba3-8e09-97bf661b4020";
+
+    const audio = new Audio(url);
+    audio.play();
 
     PushNotification("Новое сообщение!")
 
@@ -43,6 +47,8 @@ socket.on("chat message", onResponse);
 onBeforeUnmount(() => {
     socket.off("disconnect", onDisconnect);
 });
+
+onMounted(() => {})
 
 </script>
 

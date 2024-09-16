@@ -14,8 +14,12 @@
                 </div>
                 <div class="dash-header-devices">
                     <div class="dash-header-devices">
-                        <span class="dash-header-device-icon" @click="filterDevice('PC')" v-html="laptop"></span>
-                        <span class="dash-header-device-icon" @click="filterDevice('Mobile')" v-html="phone"></span>
+                        <span class="dash-header-device-icon"
+                            :class="$router.currentRoute.value.query.devices && $router.currentRoute.value.query.devices === 'PC' ? 'active' : ''"
+                            @click="filterDevice('PC')" v-html="laptop"></span>
+                        <span class="dash-header-device-icon"
+                            :class="$router.currentRoute.value.query.devices && $router.currentRoute.value.query.devices === 'Mobile' ? 'active' : ''"
+                            @click="filterDevice('Mobile')" v-html="phone"></span>
                     </div>
                 </div>
             </div>
@@ -30,6 +34,7 @@ import Dashboard from '~/components/Collector/Dashboard.vue';
 
 import laptop from '@/assets/laptop.svg?raw';
 import phone from '@/assets/phone.svg?raw'
+import { setActivityMiddleware } from '~/middleware/history.activity';
 
 const loaded = ref(false);
 const dates = ref();
@@ -58,7 +63,6 @@ const onTap = (event: any) => {
             location.reload();
         }, 1000);
     }
-
 }
 
 const activate = () => {
@@ -71,6 +75,8 @@ const activate = () => {
             element.classList.remove("active");
         }
     });
+
+    setActivityMiddleware("Вход в Дашбоард", "dashboard")
 }
 
 onMounted(async () => {
@@ -140,6 +146,14 @@ onMounted(async () => {
                 border-radius: .4rem;
                 background: white;
                 cursor: pointer;
+
+                &.active {
+                    background: #F1F9FE;
+
+                    & * {
+                        fill: #0054FF;
+                    }
+                }
 
                 &:last-of-type {
                     border-top-left-radius: 0;

@@ -21,9 +21,14 @@
                                 <span>
                                     <img src="/assets/icons/navigation/messages.svg" alt="">
                                 </span>
-                                <p class="nav-item-name">Сообщения</p>
+                                <p class="nav-item-name">
+                                    <span>Сообщения</span>
+                                </p>
                             </div>
-                            <img class="mail-tick" src="../assets/tick.svg" alt="">
+                            <div class="mail-counter">
+                                <img class="mail-tick" src="../assets/tick.svg" alt="">
+                                <span>{{ count }}</span>
+                            </div>
                         </div>
                         <span>
                             <ul class="sub-menu">
@@ -76,6 +81,38 @@
 import Loader from '~/components/Loader.vue';
 import PushComponent from '~/components/Notifications/PushComponent.vue';
 
+import { socket } from "~/composables/socket";
+
+const count = ref(0);
+const unread = ref([]);
+
+const messages = async () => {
+    unread.value = []
+    count.value = 0;
+
+    const options = {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('Authorization')}`,
+            "Content-Type": "application/json",
+        }
+    }
+
+    await apiDataFetch(USER_FETCH_HOST + '/messages/all', options)
+        .then(response => response.json())
+        .then(async response => {
+            const data = await response.messages;
+
+            if (data) {
+                setTimeout(async () => {
+                    unread.value = await data.filter((item: any) => item.isViewed === 0);
+                    count.value = unread.value.length;
+                }, 500);
+            }
+
+
+        })
+}
 
 const loader = ref(true)
 
@@ -89,6 +126,24 @@ const logout = async () => {
     }, 300);
 }
 
+socket.on("chat message", async () => {
+    count.value = 0;
+    await messages();
+});
+
+onMounted(async () => {
+    const $router = useRouter();
+    await messages();
+
+    $router.afterEach(async (to, from) => {
+        await messages();
+    })
+
+
+})
+
+
+
 onMounted(() => {
     useRouter().afterEach(() => {
         loader.value = false
@@ -96,6 +151,15 @@ onMounted(() => {
             loader.value = true
         }, 400)
     })
+
+    const url = '../assets/ringtone.mp3';
+    const audio = document.createElement("audio");
+    audio.src = url;
+    audio.volume = 0.5;
+
+    audio.play();
+
+    document.body.appendChild(audio);
 })
 </script>
 
@@ -129,5 +193,27 @@ onMounted(() => {
     padding: 3rem;
     width: 100%;
     max-width: 100%;
+}
+
+.mail-counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+
+    & span {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        font-weight: 500;
+        color: white !important;
+        background: #18D26B;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1.2rem;
+    }
 }
 </style>

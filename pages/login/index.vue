@@ -23,6 +23,7 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { apiDataFetch, storeData, uri, getStoreData } from '../../composables/exports'
+import { setActivityMiddleware } from '~/middleware/history.activity';
 
 const $router = useRouter()
 
@@ -48,15 +49,18 @@ const login = async () => {
             .then(response => response.json())
             .then(response => {
                 const data = response;
-                const user = data.user;
 
                 if (!response.error) {
                     sessionStorage.setItem("Authorization", data.token);
+                    sessionStorage.setItem("username", data.user.username);
+                    sessionStorage.setItem("password", data.user.password);
                     setTimeout(() => {
                         location.reload();
                     }, 1000);
                 }
             })
+
+        setActivityMiddleware(`Вошел в систему`, `user_signed_up`);
     }
 
 
