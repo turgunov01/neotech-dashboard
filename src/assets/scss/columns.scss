@@ -1,0 +1,144 @@
+.blocks {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.2rem;
+    margin-bottom: 1.2rem;
+
+    &-button {
+        background: #FFA80020;
+        color: #FFA800;
+        width: 30rem;
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: unset;
+        border-radius: .4rem;
+    }
+}
+
+.block {
+    width: 100%;
+    border: .1rem solid #e5e5e5;
+    height: 7rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 300ms;
+
+    &-template {
+        display: flex;
+        flex-direction: column;
+        row-gap: 1.2rem;
+    }
+
+    &:hover {
+        height: 100%;
+    }
+
+    &.active {
+        height: 100%;
+    }
+
+    &-title {
+        font-size: 2rem;
+        padding: 2.4rem;
+        font-weight: 500;
+        width: max-content;
+    }
+
+    &-params {
+        padding: 2.4rem;
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        row-gap: 3rem;
+
+        &-media {
+            display: flex;
+            gap: 1rem;
+        }
+
+        &-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            max-width: 25rem;
+            width: 100%;
+            text-align: center;
+            padding: 1.1rem;
+            background: #EFEFEF;
+            border: .1rem solid #8A98AC;
+            border-radius: .4rem;
+
+            & span {
+                text-decoration: underline;
+            }
+        }
+
+        &-output {
+            display: flex;
+            align-items: center;
+            gap: 1.3rem;
+
+            &-content {
+                width: 11.6rem;
+                height: 11.6rem;
+                border: .1rem solid #00000050;
+            }
+
+            & img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            &-icon {
+                width: 2rem !important;
+                height: 2rem !important;
+                object-fit: initial;
+            }
+        }
+
+        &-text {
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            opacity: 0.54;
+            max-width: 19.1rem;
+            width: 100%;
+            margin-top: .8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        &-format {
+            font-size: 1.2rem;
+            line-height: 1.5rem;
+            opacity: 0.54;
+        }
+
+        &-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        &-heading {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 120%;
+            color: #365BA7;
+        }
+
+        &-description {
+            font-size: 1.7rem;
+            line-height: 135%;
+            color: #365BA7;
+        }
+
+    }
+}
+
+.burger {
+    width: 1.5rem;
+    height: 1.5rem;
+}

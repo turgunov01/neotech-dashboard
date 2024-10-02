@@ -1,0 +1,67 @@
+.stats {
+    &-container {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        padding: 2.4rem;
+        width: 100%;
+        height: 100%;
+        border: .1rem solid #e5e5e5;
+    }
+
+    &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &-button {
+            background: unset;
+            color: #000000DE;
+            border: unset;
+            padding: .8rem 1.6rem;
+            border: .1rem solid #e5e5e5;
+
+            &.active {
+                background-color: #F1F9FE;
+                color: #0054FF;
+            }
+        }
+    }
+
+    &-heading {
+        font-size: 1.6rem;
+        line-height: 2.2rem;
+        font-weight: 400;
+        color: #000000DE;
+        width: 100%;
+        max-width: 100% !important;
+    }
+
+    &-detail {
+        margin-top: 2.4rem;
+        display: flex;
+        align-items: flex-end;
+        gap: 0;
+    }
+
+    &-calculator {
+        font-size: 5.2rem;
+        line-height: 6.2rem;
+        font-weight: 500;
+
+        &-name {
+            font-size: 1.2rem;
+            padding-bottom: 1.5rem;
+        }
+    }
+
+}
+
+@import './graphics.scss';
+@import './history.scss';

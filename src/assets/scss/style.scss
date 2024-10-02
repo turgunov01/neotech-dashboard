@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 10px;
+    font-family: "Roboto", sans-serif;
+}
+
+body {
+    background: #FBFCFD;
+    font-size: 1.6rem;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.ck.ck-editor {
+    width: 100% !important;
+}
+
+
+.text-sm {
+    font-size: 1.6rem !important;
+    line-height: 130% !important;
+}
+
+.fixed[role=region] {
+    position: fixed;
+    top: 0;
+    bottom: unset;
+    width: 100%;
+    max-width: 40rem;
+    z-index: 1000;
+
+    & .p-4 {
+        padding: 2rem !important;
+    }
+
+    & .i-heroicons-check-circle {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    & .i-heroicons-x-mark-20-solid {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+.tiptap.ProseMirror {
+    border-bottom: .1rem solid #e5e5e5;
+    padding: .5rem 0;
+    margin-top: .5rem;
+}
+
+
+button input {
+    outline: none;
+    border: none;
+}
+
+label,
+button {
+    width: 4rem;
+    height: 4rem;
+    background: #EFEFEF;
+    border: unset;
+    cursor: pointer;
+    border-radius: .3rem;
+
+    &.fontSize-label {
+        width: 6rem;
+    }
+
+    & input {
+        width: inherit;
+        height: inherit;
+    }
+
+    &:hover {
+        background: #c4cbd5;
+    }
+}
+
+
+
+.tiptap {
+    font-size: 10px !important;
+}
+
+.editor {
+    &-methods {
+        display: flex;
+        align-items: center;
+        gap: .8rem;
+    }
+}
