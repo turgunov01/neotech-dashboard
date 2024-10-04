@@ -1,15 +1,14 @@
-import { Traits, type Editor } from "grapesjs";
+import { Component, Traits, type Editor } from "grapesjs";
 
-import { FormDomTrait, SwiperDomTrait } from "./traits";
+import { ButtonDomTrait, SwiperDomTrait } from "./traits";
 
 import type { TraitManagerInterface } from "../interface/traits";
 
-import { FormTraitsHandler as FormTraitController } from "./traits";
 import { customRTE } from "../config/selector";
 
 
 export function Plugins(editor: Editor) {
-    const arr = [SwiperPluginsHandler(editor), FormTraitsHandler(editor), customRTE(editor)]
+    const arr = [SwiperPluginsHandler(editor), ButtonPluginsHandler(editor), customRTE(editor)]
     return arr
 };
 
@@ -17,32 +16,7 @@ export async function SwiperPluginsHandler(editor: Editor) {
     const init = {
         type: "swiper",
         name: "Swiper",
-        label: `
-            <div class="swiper-init" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-                <p class="swiper-on">Инициализация</p>
-                <input type="checkbox" checked id="init" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
-            </div>
-        `,
-
-        // <div class="swiper-autoplay" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-        //     <div class="autoplay-init" style="display: flex; align-items: center; width: 100%; justify-content: space-between;">
-        //         <p class="swiper-autoplay">Автоскролл</p>
-        //         <input type="checkbox" checked id="autoplay" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
-        //     </div>
-        //     <div class="autoplay-delay" style="display: none; align-items: center; width: 100%; justify-content: space-between; border-top: 1px solid; padding-top: 5px;">
-        //         <p class="swiper-autoplay-delay">Задержка (ms)</p>
-        //         <input type="number" checked id="autoplay-delay" style="width: 75px !important; color: black; border-bottom: 1px solid;" name="calculate" />    
-        //     </div>
-        // </div>
-        // <div class="swiper-slidesPerView" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-        //     <p class="swiper-on">Количество слайдов</p>
-        //     <input type="number" id="slidesPerView" style="width: 50px !important; color: black; border-bottom: 1px solid;" name="calculate" />
-        // </div>
-        // <div class="swiper-navigation" style="display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 10px; flex-wrap: wrap; border: 1px solid rgba(0,0,0,0.2); padding: 5px;">
-        //     <p class="swiper-on">Навигации</p>
-        //     <input type="checkbox" id="navigation" style="width: 20px !important; color: black; border-bottom: 1px solid;" name="calculate" />
-        // </div>
-
+        label: ``,
         style: {
             display: "flex",
             "flex-direction": "column",
@@ -55,175 +29,106 @@ export async function SwiperPluginsHandler(editor: Editor) {
         noLabel: true,
 
         createInput({ trait }) {
-            // const options = traitOpts.length ? traitOpts : [
-            //     { id: 'url', label: 'URL' },
-            //     { id: 'email', label: 'Email' },
-            // ];
-
-            // const el = document.createElement('div');
-            // el.innerHTML = ``;
-
             return init.label;
         },
-
-        onEvent({ elInput, component }) {
-            const carousel = {
-                perview: 3,
-                loop: false,
-                between: 20,
-                navigation: false,
-                pagination: false,
-                autoplay: false,
-                timeout: 1000,
-            };
-
-            const device = editor.getDevice();
-            const container = ((document.querySelector(".gjs-frame") as HTMLIFrameElement).contentDocument as any).querySelector(".gjs-selected") as HTMLIFrameElement;
-            container.classList.add("swiper-initialized");
-            container.setAttribute('data-swiper', container?.id)
-
-            if (container.getBoundingClientRect().width < 1024) {
-                carousel.perview = 2;
-            }
-
-            const wrapper = container.querySelector(".swiper-wrapper") as HTMLElement;
-            const elements = wrapper?.childNodes;
-
-            function isAtPosition(element: Element, position: number) {
-                const parent = element.parentNode;  // Get the parent node
-                const children = Array.from((parent as ParentNode).childNodes).filter(node => node.nodeType === Node.ELEMENT_NODE);  // Convert childNodes to an array and filter only element nodes
-
-                if (position < 1 || position > children.length) {
-                    return false;
-                }
-
-                return element === children[position - 1];
-            }
-
-
-            elements?.forEach((element: HTMLElement | any, index: number) => {
-                const calculate = `calc(100% / ${carousel.perview})`;
-                const result = isAtPosition(element, carousel.perview);
-                element.style.flexShrink = 0;
-
-                if (!result) {
-                    element.style.marginRight = `30px`;
-                    element.style.width = `calc(100% / 3 - 30px)`
-                } else {
-                    element.style.width = calculate;
-                }
-            })
-
-            if (wrapper.childNodes) {
-                container.style.overflow = "hidden";
-                container.style.width = "100%"
-
-                wrapper.style.overflow = "visible"; /* Allow elements to overflow */
-                wrapper.style.display = "flex";
-                wrapper.style.flexWrap = "nowrap";
-            }
-        },
+        onEvent({ elInput, component }) { },
 
         onUpdate({ elInput, component }) {
-            const device = editor.getDevice();
-            const container = ((document.querySelector(".gjs-frame") as HTMLIFrameElement).contentDocument as any).querySelector(".gjs-selected") as HTMLIFrameElement;
-            container.classList.add("swiper-initialized");
-            container.setAttribute('data-swiper', container?.id)
-            const carousel = {
-                perview: 3,
-                loop: false,
-                between: 20,
-                navigation: false,
-                pagination: false,
-                autoplay: false,
-                timeout: 1000,
-            };
+            const selected = editor.getSelected()?.toJSON();
+            const device = editor.DeviceManager.getSelected()?.toJSON().priority;
 
-            const wrapper = container.querySelector(".swiper-wrapper") as HTMLElement;
-            const elements = wrapper?.childNodes;
-
-            function isAtPosition(element: Element, position: number) {
-                const parent = element.parentNode;  // Get the parent node
-                const children = Array.from((parent as ParentNode).childNodes).filter(node => node.nodeType === Node.ELEMENT_NODE);  // Convert childNodes to an array and filter only element nodes
-
-                if (position < 1 || position > children.length) {
-                    return false;
-                }
-
-                return element === children[position - 1];
+            const props = {
+                count: device == 0 ? 3 : device <= 1000 ? 2 : 1,
+                spaceBetween: 30,
             }
 
+            if (selected?.type === init.type) {
+                const element = editor.Components.getById(selected?.attributes?.id);
+                const wrapper = element.components().toJSON();
+                const components = wrapper[0].components.toJSON();
 
-            elements?.forEach((element: HTMLElement | any, index: number) => {
-                const calculate = `calc(100% / ${carousel.perview})`;
-                const result = isAtPosition(element, carousel.perview);
-                element.style.flexShrink = 0;
-
-                if (!result) {
-                    element.style.marginRight = `30px`;
-                    element.style.width = `calc(100% / 3 - 30px)`
-                } else {
-                    element.style.width = calculate;
-                }
-            })
-
-            if (wrapper.childNodes) {
-                container.style.overflow = "hidden";
-                container.style.width = "100%"
-
-                wrapper.style.overflow = "visible"; /* Allow elements to overflow */
-                wrapper.style.display = "flex";
-                wrapper.style.flexWrap = "nowrap";
+                components.forEach((cmp: Component, index: number) => {
+                    const element = editor.Components.getById(cmp.attributes.id);
+                    element.removeStyle("width")
+                    element.addStyle({ width: `calc((100% / ${props.count}) - ${props.spaceBetween / 2}px)` })
+                })
             }
+
 
 
         }
     })
 }
 
-export function FormTraitsHandler(editor: Editor) {
-    const form = {
-        type: "input",
-        name: "INPUT",
-        label: `
-            <div class="form-sender-input" style="width: 100%;">
-                 <p class="form-sender-title" style="opacity: 0.5;">CRM Url</p>
-                 <input type="text" id="crm-nest" value="${uri}/api/messages" placeholder="${uri}/api/messages" class="input-crm-url" style="width: 100% !important; color: black; border-bottom: 1px solid;" name="calculate" />
-            </div>
-            <div class="form-sender-input" style="width: 100%;">
-                 <p class="form-sender-title" style="font-size: 18px; opacity: 0.5;">Кастомизация кнопки</p>
-                <div class="button-handler-events">
-                    <label for="buttonHasEvent" class="button-handler-event" style="display: flex; align-items: center; padding: 10px 0; border-top: 1px solid black; border-bottom: 1px solid black;">
-                        <p class="button-clip-title" style="line-height: 100%;">Событие отправки включить/выключить</p>
-                        <input type="checkbox" id="buttonHasEvent" class="button-clip-event" />
-                    </label>
+export async function ButtonPluginsHandler(editor: Editor) {
+    const routes = [] as any;
+    const options = await {
+        method: "GET",
+        headers: {
+            "Content-Language": "ru-RU",
+            Authorization: `${sessionStorage.getItem("Authorization")}`,
+        }
+    }
+
+    await apiDataFetch(`${uri}/constructor/web`, options)
+        .then(response => response.json())
+        .then(response => {
+            response.forEach((item: any) => {
+                routes.push({ name: item.name, value: item.route })
+            })
+        })
+
+    const init = {
+        type: "button",
+        name: "Button",
+        label: `<div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 15px;">
+                    <p style="width: 100%; height: 100%;">Ссылка</p>
+                    <select class="link-select" style="width: 100%; height: 100%; border: 1px solid black; text-align: center; color: black!important;">
+                        ${routes.map((option: any) => `<option value="${option.value}">${option.name}</option>`).join('')}
+                    </select>
                 </div>
-            </div>
         `,
-        style: {
-            display: "flex",
-            "flex-direction": "column",
-            "row-gap": "20px"
-        },
-    } as TraitManagerInterface
+    } as TraitManagerInterface;
 
-    editor.DomComponents.addType('input', FormDomTrait(form));
+    editor.DomComponents.addType(init.type, ButtonDomTrait(init));
 
-    editor.TraitManager.addType("input", {
+    editor.TraitManager.addType(init.type, {
         noLabel: true,
 
         createInput({ trait }) {
-            return new FormTraitController(form, editor).createInput({ trait })
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = init.label;
+            return wrapper;
         },
 
         onEvent({ elInput, component }) {
-            return new FormTraitController(form, editor).onEvent({ elInput, component })
         },
 
-        onUpdate({ elInput, component }) {
-            return new FormTraitController(form, editor).onUpdate({ elInput, component })
-        }
-    })
+        async onUpdate({ elInput, component }) {
+            const selector = elInput.querySelector('.link-select') as HTMLInputElement;
 
-    return form
+            if (selector) {
+                const button = editor.getSelected()?.getEl();
+
+                if (button && button.hasAttribute("link")) {
+                    const link = button.getAttribute("link") as string;
+                    const options = selector.childNodes;
+
+                    options.forEach((option: any) => {
+                        if (option.value === link) {
+                            option.setAttribute("selected", "true")
+                        }
+                    })
+                }
+
+                selector.addEventListener("input", () => {
+                    const link = selector.value;
+
+                    // button?.setAttribute("link", link)
+                    const element = editor.getSelected();
+                    element?.setAttributes({ link: link })
+                })
+            }
+        },
+    });
 }

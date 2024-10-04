@@ -2,7 +2,6 @@ import type { Editor } from "grapesjs"
 import { EditorPublish } from "../methods/sync/publish"
 import type { Container } from "../interface/container"
 import { translation } from "../i18n/locales"
-import { getSwipersConfigs } from "../model/traits/events"
 
 
 async function AssetManager(editor: Editor) {
@@ -115,7 +114,6 @@ function buttonPublishHandler(editor: Editor) {
 }
 
 export async function run(editor: Editor) {
-    getSwipersConfigs(editor);
     await buildEditor(editor)
     buttonPublishHandler(editor)
     editor.I18n.setMessages(translation)
@@ -127,7 +125,7 @@ export async function run(editor: Editor) {
             img.src = asset.get('src'); // Получаем ссылку на изображение
 
             img.onload = () => {
-                if (img.width > 300) {
+                if (img.width > 400) {
                     // Удаляем изображение из asset manager, если его ширина > 300px
                     editor.AssetManager.remove(asset);
                     alert('Изображение слишком широкое. Максимальная ширина — 300px.');
@@ -135,4 +133,8 @@ export async function run(editor: Editor) {
             };
         }
     });
+
+    // editor.on("component:selected", (model) => {
+    //     console.log(model.toJSON().tagName)
+    // })
 }
