@@ -16,21 +16,17 @@ export const component = ref({
         default: []
     },
     plugins: [Plugins],
+    canvas: {
+        scripts: [
+            "https://unpkg.com/swiper/swiper-bundle.min.js"
+        ],
+        styles: [
+            'https://unpkg.com/swiper/swiper-bundle.min.css'
+        ]
+    },
+    allowScripts: true,
 } as EditorConfig)
 
-const object = {
-    id: 11,
-    tagName: 'section',
-    label: `<p>Test</p>`,
-    removable: true,
-    draggable: true,
-    copyable: true,
-    content: `<p>Test</p>`,
-    style: {},
-    attributes: {},
-    javascript: [],
-    category: 'Шаблоны'
-}
 
 // Initialize the parameters for the Grapejs API
 export async function init() {

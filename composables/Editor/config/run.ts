@@ -1,5 +1,5 @@
 import type { Editor } from "grapesjs"
-import { EditorPublish } from "../methods/sync/publish"
+import { EditorPublish } from "../methods/publish"
 import type { Container } from "../interface/container"
 import { translation } from "../i18n/locales"
 
@@ -134,7 +134,13 @@ export async function run(editor: Editor) {
         }
     });
 
-    // editor.on("component:selected", (model) => {
-    //     console.log(model.toJSON().tagName)
-    // })
+    editor.on('component:add', (model) => {
+        if (model.get('script')) {
+            const script = model.get('script');
+            if (typeof script === 'function') {
+                script.call(model.view.el);
+            }
+        }
+    });
+
 }

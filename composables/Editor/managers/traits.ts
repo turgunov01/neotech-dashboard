@@ -2,7 +2,7 @@
 import type { DomTraitsInterface, FormManagerHandler, TraitManagerInterface } from "../interface/traits";
 import type { Editor } from "grapesjs";
 import { createElement } from "./createElement";
-import { TraitsModelHandler } from "./traits/handler";
+import { TraitsModelHandler } from "../config/traits.handler";
 
 
 export function SwiperDomTrait(options: DomTraitsInterface) {
@@ -21,8 +21,8 @@ export function ButtonDomTrait(options: TraitManagerInterface) {
         isComponent: (element: { tagName: string }) => element.tagName === 'BUTTON',
         model: {
             defaults: {
-                traits: [TraitsModelHandler(options)]
-            }
+                traits: [TraitsModelHandler(options)],
+            },
         }
     }
 }

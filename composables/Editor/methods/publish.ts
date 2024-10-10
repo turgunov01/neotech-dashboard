@@ -1,8 +1,8 @@
 import type { GlobalInterface } from "~/interface/global/global.interfaces"
 import type { Editor } from "grapesjs";
 
-import { cipher } from "~/composables/cipher/cipher";
 import { setActivityMiddleware } from "~/middleware/history.activity";
+import { FailedAlert, PushNotification } from "~/composables/Notification/handler";
 
 function extraction(editor: Editor) {
     const container = editor as Editor
@@ -50,13 +50,17 @@ async function publish(model: GlobalInterface) {
     await apiDataFetch(`${uri}/constructor/update/${useRouter().currentRoute.value.query.id}`, options)
         .then(res => res.json())
         .then(async res => {
-            await PushNotification(res.message)
+
+            if (res.message) {
+                await PushNotification(res.message)
+            } else if (res.error) {
+                await FailedAlert(res.error);
+            }
 
             setTimeout(() => {
                 location.reload();
-            }, 3000);
+            }, 3500);
 
-            console.log(res)
         })
         .catch((err) => {
             console.log(err);

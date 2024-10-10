@@ -10,7 +10,6 @@
                 <div class="nav-media-router" @click="$router.back()">
                     <img src="/assets/tick.svg" alt="">
                 </div>
-                <input type="text" placeholder="Neotech Веб-сайт" value="Neotech Веб-сайт">
                 <select name="pages" class="pages-select" @change="choose($event)">
                     <option :value="page.id"
                         :selected="page.id === useRouter().currentRoute.value.query.id ? true : false"
@@ -38,13 +37,10 @@
         </nav>
         <div class="main">
             <div class="wrapper" style="margin-top: 0 !important;">
-                <aside class="aside" style="position: relative;">
-                    <ConstructorSidebarElements />
-                </aside>
                 <div class="demo">
                     <div class="demo-page">
                         <div class="demo-container">
-                            <Constructor />
+                            <LazyConstructor />
                         </div>
                     </div>
                 </div>
@@ -67,7 +63,6 @@
 
 <script lang="ts" setup>
 import Constructor from '~/components/Constructor.vue';
-import ConstructorSidebarElements from '../../components/Models/ConstructorSidebarElements.vue'
 
 import 'grapesjs/dist/css/grapes.min.css';
 import "swiper/css";
@@ -81,7 +76,6 @@ interface Page {
     sections: Array<any>,
     html: string,
     css: string,
-    cipher: string,
 }
 
 const new_name = ref("");

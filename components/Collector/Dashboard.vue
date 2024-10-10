@@ -60,6 +60,8 @@ import UsersBrowsersCounter from '../Dashboard/UsersBrowsersCounter.vue';
 import UsersRouteActivity from '../Dashboard/UsersRouteActivity.vue';
 import DoughnutCard from '../Templates/DoughnutCard.vue';
 
+
+
 import { USER_FETCH_HOST } from '#imports';
 
 const $router = useRouter();
@@ -114,14 +116,11 @@ const all = async () => {
                 response.forEach((el: any) => {
                     analytics.views = response.length;
 
-                    // Добавляем пользователя
                     setUsers.add(el.ip);
                     analytics.users = setUsers.size;
 
-                    // Увеличиваем время
                     time.value += el.timeout;
 
-                    // Увеличиваем количество посещений региона или добавляем новый
                     if (regionsMap.has(el.region)) {
                         regionsMap.set(el.region, regionsMap.get(el.region)! + 1);
                     } else {
@@ -129,10 +128,8 @@ const all = async () => {
                     }
                 });
 
-                // Преобразуем карту в массив для последующего использования
                 const regions = Array.from(regionsMap, ([region, visits]) => ({ region, visits }));
 
-                // Если regions требуется в объекте analytics
                 analytics.regions = regions as any;
 
                 analytics.time = formatSecondsToMinutes(time.value);

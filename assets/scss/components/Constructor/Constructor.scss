@@ -293,9 +293,16 @@
     &-block {
         padding: unset !important;
         width: 100% !important;
-        max-width: 49.5% !important;
-        min-width: 40% !important;
-        margin: .25rem 0 !important;
+        max-width: calc(100% / 3) !important;
+        min-height: 35px !important;
+        margin: 0 !important;
+        border: unset !important;
+        box-shadow: 0 0 0 !important;
+        border: .1rem solid #e5e5e5 !important;
+
+        &:hover {
+            background: #e4e4e4 !important;
+        }
 
         & * {
             font-family: Arial, Helvetica, sans-serif !important;
@@ -322,6 +329,23 @@
                 width: 100% !important;
             }
         }
+
+        &-category {
+            border: 0 !important;
+
+            & .gjs-title {
+                display: flex;
+                flex-direction: row-reverse;
+                justify-content: space-between;
+                background: white !important;
+                border: .1rem solid rgba(0, 0, 0, 0.2);
+                text-transform: capitalize;
+            }
+        }
+
+        &-categories {
+            row-gap: 1rem;
+        }
     }
 
     &-blocks {
@@ -334,12 +358,15 @@
 
             & * {
                 color: black;
-                border-radius: .4rem !important;
+                border-radius: 0 !important;
 
                 & i {
-                    width: 15px !important;
-                    height: 15px !important;
+                    width: 20px !important;
+                    height: 20px !important;
                     transition: 300ms;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
 
                     &::before,
                     &::after {
@@ -368,6 +395,12 @@
             background: white !important;
             overflow: hidden !important;
             max-height: 7rem !important;
+        }
+
+        &-btn {
+            &.fa-eye {
+                display: none;
+            }
         }
 
         &-views {
@@ -561,7 +594,14 @@
     &-frame {
         overflow: hidden !important;
 
-        & html {
+
+        .nav-list {
+            &.mobile {
+                z-index: 9999 !important;
+            }
+        }
+
+        * & html {
             background: red;
         }
     }

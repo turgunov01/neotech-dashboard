@@ -54,7 +54,7 @@ export async function SwiperPluginsHandler(editor: Editor) {
                 })
             }
 
-
+            editor.getSelected()?.setAttributes({ style: "overflow: hidden" });
 
         }
     })

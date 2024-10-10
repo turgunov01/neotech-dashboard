@@ -1,14 +1,13 @@
 <template>
     <div class="aside-container">
-        <div class="aside-buttons">
-            <button class="aside-button" title="Refresh" :class="activeElementType == 1 ? '' : 'active'"
-                @click="toggle(0)">
-                <p class="aside-button-name">Шаблоны</p>
-            </button>
-            <!-- <button class="aside-button changeBlockManager" :class="activeElementType == 0 ? '' : 'active'" @click="toggle(1)">
+        <!-- <div class="aside-buttons">
+            <button class="aside-button" title="Refresh">
                 <p class="aside-button-name">Блоки</p>
-            </button> -->
-        </div>
+            </button>
+            <button class="aside-button changeBlockManager">
+                <p class="aside-button-name">Layouts</p>
+            </button>
+        </div> -->
         <div class="aside-content">
             <Loader v-if="!loaded" :height="'10rem'" />
             <div class="insert" :style="{
