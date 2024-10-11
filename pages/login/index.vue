@@ -22,8 +22,9 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { apiDataFetch, storeData, uri, getStoreData } from '../../composables/exports'
+import { apiDataFetch, uri } from '~/composables/exports'
 import { setActivityMiddleware } from '~/middleware/history.activity';
+import { FailedAlert, PushNotification } from '~/composables/Notification/list';
 
 const $router = useRouter()
 
@@ -35,7 +36,7 @@ const user = ref({
 const login = async () => {
 
     if (!user.value.username || !user.value.password) {
-        return alert("Заполните все поля!")
+        return FailedAlert("Заполните все поля!")
     } else {
         const options = {
             method: "POST",
@@ -54,6 +55,10 @@ const login = async () => {
                     sessionStorage.setItem("Authorization", data.token);
                     sessionStorage.setItem("username", data.user.username);
                     sessionStorage.setItem("password", data.user.password);
+
+                    if (response.message) {
+                        PushNotification(response.message);
+                    }
                     setTimeout(() => {
                         location.reload();
                     }, 1000);
@@ -62,8 +67,6 @@ const login = async () => {
 
         setActivityMiddleware(`Вошел в систему`, `user_signed_up`);
     }
-
-
 }
 
 

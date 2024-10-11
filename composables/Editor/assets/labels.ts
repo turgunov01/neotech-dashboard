@@ -1,9 +1,7 @@
 export async function getLabels(component: any) {
     (component as any).blockManager = {
-        // appendTo: '.insert-cards',
         blocks: []
     }
-
 
     const options = {
         method: "GET",

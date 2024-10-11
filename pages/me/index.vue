@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts" setup>
-import HistoryActivity from '~/components/User/UserHistoryActivity.vue';
 import UsersInfo from '~/components/Models/UsersProfileInfo.vue';
 
 

@@ -40,7 +40,7 @@
                 <div class="demo">
                     <div class="demo-page">
                         <div class="demo-container">
-                            <LazyConstructor />
+                            <Constructor />
                         </div>
                     </div>
                 </div>

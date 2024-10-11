@@ -8,8 +8,6 @@ export function apiDataFetch(url: string, options: RequestInit) {
     return fetch(url, options)
 }
 
-
-
 export async function storeData(name: string, value: any) {
     sessionStorage.setItem(name, value)
 }
@@ -17,12 +15,6 @@ export async function removeStoreData(name: string) {
     sessionStorage.removeItem(name)
 }
 
-export function getStoreData(name: string) {
-    const local = sessionStorage.getItem(name)
-
-    if (!local) return false
-    return true
-}
 
 export function showStoreData(name: string) {
     const local = sessionStorage.getItem(name)

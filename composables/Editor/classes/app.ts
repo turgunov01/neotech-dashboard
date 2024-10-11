@@ -1,7 +1,6 @@
-import grapesjs, { Editor } from "grapesjs";
+import grapesjs from "grapesjs";
 
-import { run } from "./Editor/config/run";
-import { translation } from "./Editor/i18n/locales";
+import { run } from "../config/run";
 
 import type { GrapesInitInterface } from "~/interface/grapejs";
 
@@ -17,10 +16,9 @@ export class EditorApp {
                 Authorization: `${sessionStorage.getItem("Authorization")}`,
             }
         };
-        // this.plugin = {} as DomTraitsInterface;
     }
 
-    async buildEditor(/* plugin: any */) {
+    async buildEditor() {
         const container = await grapesjs.init(this.component);
         await run(container);
 
