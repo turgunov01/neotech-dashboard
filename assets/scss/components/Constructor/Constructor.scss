@@ -142,45 +142,6 @@
 
 }
 
-.insert {
-    &-cards {
-        display: flex;
-        flex-direction: column;
-        row-gap: 1.2rem;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-top: 1.6rem;
-    }
-
-    &-card {
-        width: 100%;
-        background: #F6F6F6;
-        padding: .6rem;
-        border-radius: .5rem;
-        pointer-events: visible;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &-title {
-            font-size: 1.4rem;
-            font-weight: 500;
-            line-height: 1.503rem;
-            text-align: center;
-            padding: 1rem 0 .6rem;
-        }
-
-        &-image {
-            width: 100%;
-
-            & img {
-                width: 100%;
-            }
-        }
-    }
-}
-
 .demo {
     width: 100%;
     max-width: 100%;
@@ -231,6 +192,13 @@
         }
     }
 
+    &-off {
+        &-prv {
+            width: 100%;
+            height: 7rem !important;
+            background: white !important;
+        }
+    }
 
     &-layer {
         &.gjs-selected {
@@ -270,17 +238,6 @@
             width: 100%;
             height: 90vh !important;
             overflow: hidden;
-        }
-    }
-
-    &-cv {
-        &-canvas {
-            top: 7rem !important;
-            width: 80% !important;
-            height: unset !important;
-            margin-bottom: 2rem !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
         }
     }
 
@@ -388,19 +345,12 @@
         }
     }
 
-
     &-pn {
         &-panel {
             padding: 2rem .5rem !important;
             background: white !important;
             overflow: hidden !important;
             max-height: 7rem !important;
-        }
-
-        &-btn {
-            &.fa-eye {
-                display: none;
-            }
         }
 
         &-views {
@@ -416,6 +366,12 @@
             &>div {
                 justify-content: center !important;
                 gap: 1rem !important;
+            }
+        }
+
+        &-btn {
+            &.fa-eye {
+                // display: none !important;
             }
         }
 
@@ -594,6 +550,8 @@
     &-frame {
         overflow: hidden !important;
 
+        display: none Im !important;
+
 
         .nav-list {
             &.mobile {
@@ -603,6 +561,23 @@
 
         * & html {
             background: red;
+        }
+    }
+
+    &-cv {
+        &-canvas {
+            top: 7rem !important;
+            width: 80% !important;
+            height: unset !important;
+            margin-bottom: 2rem !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            transition: .5s;
+
+            &.fullwidth {
+                width: 100% !important;
+                z-index: 99999;
+            }
         }
     }
 }

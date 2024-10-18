@@ -20,15 +20,6 @@
                 <button class="create-page delete" @click="deletePage">Delete</button>
             </div>
             <div class="nav-event">
-                <!-- <div class="backward">
-                    <img src="/assets/constructor/backward.svg" alt="">
-                </div>
-                <div class="forward">
-                    <img src="/assets/constructor/forward.svg" alt="">
-                </div>
-                <div class="frame" @click="iframe(true)">
-                    <img src="/assets/constructor/play.svg" alt="">
-                </div> -->
                 <button class="frame publish" @click="load" style="position: relative;">
                     <Loader :height="'100%'" :curved="'.8rem'" v-if="clicked" />
                     Опубликовать
@@ -40,6 +31,7 @@
                 <div class="demo">
                     <div class="demo-page">
                         <div class="demo-container">
+                            <Loader v-if="loaded" :has-background="true" :height="'100%'" />
                             <Constructor />
                         </div>
                     </div>
@@ -65,8 +57,8 @@
 import Constructor from '~/components/Constructor.vue';
 
 import 'grapesjs/dist/css/grapes.min.css';
-import "swiper/css";
 import { setActivityMiddleware } from '~/middleware/history.activity';
+import { FailedAlert, PushNotification } from '~/composables/Notification/list';
 
 interface Page {
     id: string,
@@ -172,7 +164,6 @@ const load = () => {
 
     setTimeout(() => {
         clicked.value = false
-        // location.reload()
     }, 1500);
 }
 
@@ -211,10 +202,13 @@ const createPage = async () => {
 onMounted(async () => {
     setActivityMiddleware(`Зашел в конструктор`, `constructor_opened`);
 
-    loaded.value = false
+
     init()
 
     await getList();
+    setTimeout(() => {
+        loaded.value = false
+    }, 2000);
 })
 
 

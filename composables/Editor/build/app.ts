@@ -1,5 +1,6 @@
 import type { Editor } from "grapesjs";
 import { FailedAlert } from "~/composables/Notification/list";
+import { eventPanel } from "../generator/panels";
 
 export async function buildEditor(editor: Editor) {
     const options = {
@@ -59,4 +60,6 @@ export async function buildEditor(editor: Editor) {
             }, 3000);
         }
     }, 1000);
+
+    eventPanel(editor);
 }

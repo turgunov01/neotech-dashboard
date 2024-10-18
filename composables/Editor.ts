@@ -6,14 +6,12 @@ import { Plugins } from './Editor/plugins/app';
 import { canvasProps } from './Editor/generator/scripts';
 import { getLabels } from './Editor/assets/labels';
 
-import { storageManager as store } from './Editor/store/manager';
 
 export const component = ref({
     container: '#gjs',
     fromElement: true,
     height: '100%',
     width: '100%',
-    storageManager: store(),
     plugins: [Plugins],
     canvas: { ...canvasProps().scripts, ...canvasProps().styles },
     allowScripts: true,

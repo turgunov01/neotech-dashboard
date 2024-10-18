@@ -14,6 +14,8 @@ export async function publish(model: GlobalInterface) {
         },
         body: JSON.stringify(model)
     }
+    
+    console.log(model.sections)
 
     await apiDataFetch(`${uri}/constructor/update/${useRouter().currentRoute.value.query.id}`, options)
         .then(res => res.json())

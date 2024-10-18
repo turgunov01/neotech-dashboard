@@ -6,9 +6,7 @@ export interface GrapesInitInterface {
     height: string,
     width: string,
     storageManager: boolean | false,
-    panels: {
-        default: Array<any> | []
-    },
+    panels: {},
     traits: Array<any> | null,
     plugins: any,
 }
