@@ -67,8 +67,8 @@ const username = ref(false)
 const password = ref(false)
 
 const user = ref({
-    username: sessionStorage.getItem("username"),
-    password: sessionStorage.getItem("password"),
+    username: localStorage.getItem("username"),
+    password: localStorage.getItem("password"),
     new_username: "",
     new_password: ""
 })
@@ -78,7 +78,7 @@ const getUser = async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`
         },
         body: JSON.stringify({
             username: user.value.username,
@@ -91,7 +91,7 @@ const getUser = async () => {
         .then(response => {
 
             if (response === false) {
-                sessionStorage.removeItem("Authorization");
+                localStorage.removeItem("Authorization");
                 const Toast = Swal.mixin({
                     toast: true,
                     position: "top-end",
@@ -123,7 +123,7 @@ const changeData = async () => {
     const options = {
         method: "PATCH",
         headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
+            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -139,8 +139,8 @@ const changeData = async () => {
             const data = response;
 
             if (data.token) {
-                sessionStorage.removeItem("Authorization");
-                sessionStorage.setItem("Authorization", data.token);
+                localStorage.removeItem("Authorization");
+                localStorage.setItem("Authorization", data.token);
 
                 setTimeout(() => {
                     location.reload();
@@ -153,7 +153,7 @@ const changePassword = async () => {
     const options = {
         method: "PATCH",
         headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
+            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -169,8 +169,8 @@ const changePassword = async () => {
             const data = response;
 
             if (data.token) {
-                sessionStorage.removeItem("Authorization");
-                sessionStorage.setItem("Authorization", data.token);
+                localStorage.removeItem("Authorization");
+                localStorage.setItem("Authorization", data.token);
 
                 setTimeout(() => {
                     location.reload();

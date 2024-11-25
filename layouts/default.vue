@@ -88,12 +88,11 @@ const unread = ref([]);
 
 const messages = async () => {
     unread.value = []
-    count.value = 0;
 
     const options = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('Authorization')}`,
+            Authorization: `Bearer ${localStorage.getItem('Authorization')}`,
             "Content-Type": "application/json",
         }
     }
@@ -101,14 +100,15 @@ const messages = async () => {
     await apiDataFetch(USER_FETCH_HOST + '/messages/all', options)
         .then(response => response.json())
         .then(async response => {
-            const data = await response.messages;
+            const data = await response;
 
-            if (data) {
-                setTimeout(async () => {
-                    unread.value = await data.filter((item: any) => item.isViewed === 0);
-                    count.value = unread.value.length;
-                }, 500);
-            }
+            count.value = data.length;
+
+            data.forEach((item: any) => {
+                if (!item.events.read) {
+                    count.value += 1;
+                }
+            })
 
 
         })

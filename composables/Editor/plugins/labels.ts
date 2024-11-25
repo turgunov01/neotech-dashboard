@@ -12,7 +12,7 @@ export async function ButtonPluginsHandler(editor: Editor) {
         method: "GET",
         headers: {
             "Content-Language": "ru-RU",
-            Authorization: `${sessionStorage.getItem("Authorization")}`,
+            Authorization: `${localStorage.getItem("Authorization")}`,
         }
     }
 

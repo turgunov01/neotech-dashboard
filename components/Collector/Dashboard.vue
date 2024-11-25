@@ -2,22 +2,14 @@
     <div class="dash-blocks">
         <div class="dash-block">
             <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersViewStats :views="analytics.views" :style="{
+            <DashboardUsersViewStats :views="stats.views" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
             }" />
         </div>
         <div class="dash-block">
             <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersCalculate :count="analytics.users" :style="{
-                opacity: loaded ? 1 : 0,
-                transition: 'all 500ms ease',
-                transitionDelay: '100ms'
-            }" />
-        </div>
-        <div class="dash-block">
-            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersTImerStats :time="analytics.time" :style="{
+            <DashboardUsersCalculate :count="stats.users" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
                 transitionDelay: '100ms'
@@ -25,7 +17,15 @@
         </div>
         <div class="dash-block">
             <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersFormCount :messages="analytics.messages" :style="{
+            <DashboardUsersTImerStats :time="stats.time" :style="{
+                opacity: loaded ? 1 : 0,
+                transition: 'all 500ms ease',
+                transitionDelay: '100ms'
+            }" />
+        </div>
+        <div class="dash-block">
+            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <DashboardUsersFormCount :messages="stats.messages" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
                 transitionDelay: '100ms'
@@ -36,19 +36,19 @@
     <div class="dash-blocks">
         <div class="dash-block screen50">
             <div class="dash-block-nest">
-                <UsersBrowsersCounter v-if="loaded" :agents="analytics.browsers" />
+                <UsersBrowsersCounter v-if="loaded" :agents="stats.browsers" />
             </div>
             <div class="dash-block-nest">
                 <h4 class="dash-block-nest-title">Устройства</h4>
-                <DoughnutCard />
+                <DoughnutCard :data="stats.devices" v-if="loaded" />
             </div>
         </div>
         <div class="dash-block screen50">
-            <div class="dash-block-nest">
+            <!-- <div class="dash-block-nest">
                 <UsersRouteActivity v-if="loaded" />
-            </div>
+            </div> -->
             <div class="dash-block-nest">
-                <DashboardRegionController v-if="loaded" :statistics="analytics.regions" />
+                <DashboardRegionController v-if="loaded" :statistics="[]" />
             </div>
         </div>
     </div>
@@ -60,135 +60,138 @@ import UsersBrowsersCounter from '../Dashboard/UsersBrowsersCounter.vue';
 import UsersRouteActivity from '../Dashboard/UsersRouteActivity.vue';
 import DoughnutCard from '../Templates/DoughnutCard.vue';
 
-
-
-import { USER_FETCH_HOST } from '#imports';
-
 const $router = useRouter();
 const loaded = ref(false);
 
-const query = $router.currentRoute.value.query.filter || $router.currentRoute.value.query.devices ? true : false;
-
-function formatSecondsToMinutes(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-}
-
-interface Browser {
-    name: string,
-    value: 0,
-    color: string
-}
-
-const analytics = {
+const stats = {
     views: 0,
-    time: "00:00",
-    browsers: [],
-    routes: [],
-    messages: [],
     users: 0,
-    regions: [],
+    time: "0",
+    messages: [],
+    browsers: [] as { browser: string; visits: number; percentage: string, color: string }[],
+    devices: [] as any,
 }
 
 const all = async () => {
     const options = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
+            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + `/stats/all${query ? $router.currentRoute.value.fullPath : ''}`, options)
+    await apiDataFetch(USER_FETCH_HOST + `/stats/all?date=${$router.currentRoute.value.query.date}`, options)
         .then(response => response.json())
         .then(response => {
-            const time = ref(0);
-            const regionsMap = new Map<string, number>();
-            const setUsers = new Set();
+            const data = response;
+            var time = 0;
 
-            if (response.error) {
-                FailedAlert(response.error)
-            }
+            // Views
 
-            if (response) {
-                response.forEach((el: any) => {
-                    analytics.views = response.length;
+            stats.views += data.length;
 
-                    setUsers.add(el.ip);
-                    analytics.users = setUsers.size;
+            // Users
+            const users = new Set();
 
-                    time.value += el.timeout;
+            data.forEach((item: any) => {
+                users.add(item.unique_id);
 
-                    if (regionsMap.has(el.region)) {
-                        regionsMap.set(el.region, regionsMap.get(el.region)! + 1);
-                    } else {
-                        regionsMap.set(el.region, 1);
-                    }
-                });
-
-                const regions = Array.from(regionsMap, ([region, visits]) => ({ region, visits }));
-
-                analytics.regions = regions as any;
-
-                analytics.time = formatSecondsToMinutes(time.value);
-            }
-        })
-}
-
-
-const messages = async () => {
-    const options = {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
-        }
-    }
-
-    await apiDataFetch(USER_FETCH_HOST + `/messages/all${query ? $router.currentRoute.value.fullPath : ''}`, options)
-        .then(response => response.json())
-        .then(response => {
-            if (response.messages.length > 0) {
-                response.messages.forEach((msg: any) => {
-                    analytics.messages.push(msg as never)
-                })
-            } else {
-                analytics.messages = response.messages;
-            }
-        })
-}
-
-const browsers = async () => {
-    const options = {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
-        }
-    }
-
-    await apiDataFetch(USER_FETCH_HOST + `/stats/browsers${query ? '?filter=' + $router.currentRoute.value.query.filter : ''}`, options)
-        .then(response => response.json())
-        .then(response => {
-            response.devices.forEach((item: any) => {
-                analytics.browsers.push(item as never)
+                time += item.timeout;
             })
+
+            // Timeline 
+            stats.time = numbersToDateString(time);
+
+            stats.users += users.size;
+
+            // Browser
+
+            const browserCounts: Record<string, number> = {};
+
+            data.forEach((item: { browser: string }) => {
+                const browserName = item.browser;
+                browserCounts[browserName] = (browserCounts[browserName] || 0) + 1;
+            });
+
+            const totalVisits = Object.values(browserCounts).reduce((sum, count) => sum + count, 0);
+            const getRandomHexColor = () =>
+                `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`;
+
+
+            Object.entries(browserCounts).forEach(([browser, visits]) => {
+                stats.browsers.push({
+                    browser,
+                    visits,
+                    percentage: ((visits / totalVisits) * 100).toFixed(2) + "%",
+                    color: getRandomHexColor()
+                });
+            });
+
+            // Devices
+
+            const deviceCounts: Record<string, number> = {};
+
+            data.forEach((item: { device: string }) => {
+                const deviceName = item.device;
+                deviceCounts[deviceName] = (deviceCounts[deviceName] || 0) + 1;
+            });
+
+            const totalDevices = Object.values(deviceCounts).reduce((sum, count) => sum + count, 0);
+
+            Object.entries(deviceCounts).forEach(([device, visits]) => {
+                stats.devices.push({
+                    device,
+                    visits,
+                    percentage: ((visits / totalDevices) * 100),
+                    color: getRandomHexColor()
+                });
+            });
+
+        })
+
+    await apiDataFetch(USER_FETCH_HOST + "/messages/all", options)
+        .then(response => response.json())
+        .then(response => {
+            const data = response;
+            data.forEach((item: any) => {
+                stats.messages.push(item as never);
+            });
         })
 }
+
+
+// const messages = async () => {
+//     const options = {
+//         method: "GET",
+//         headers: {
+//             Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
+//         }
+//     }
+
+//     await apiDataFetch(USER_FETCH_HOST + `/messages/all${query ? $router.currentRoute.value.fullPath : ''}`, options)
+//         .then(response => response.json())
+//         .then(response => {
+//             if (response.messages.length > 0) {
+//                 response.messages.forEach((msg: any) => {
+//                     analytics.messages.push(msg as never)
+//                 })
+//             } else {
+//                 analytics.messages = response.messages;
+//             }
+//         })
+// }
 
 
 
 onMounted(async () => {
-    if (!query) {
-        await $router.push({ query: { filter: "today" } });
-        location.reload();
+    if (!$router.currentRoute.value.query.date) {
+        $router.push({ path: '/', query: { date: "today" } });
     }
+
     await setTimeout(async () => {
         await all();
         // await timeline();
-        await messages();
-        await browsers();
-        // await users();
+        // await messages();
 
         setTimeout(() => {
             loaded.value = true;

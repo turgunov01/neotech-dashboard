@@ -46,22 +46,19 @@ const login = async () => {
             body: JSON.stringify(user.value)
         }
 
-        await apiDataFetch(`${uri}/users/verify`, options)
+        await apiDataFetch(`${uri}/users/signin`, options)
             .then(response => response.json())
-            .then(response => {
+            .then(async response => {
                 const data = response;
 
                 if (!response.error) {
-                    sessionStorage.setItem("Authorization", data.token);
-                    sessionStorage.setItem("username", data.user.username);
-                    sessionStorage.setItem("password", data.user.password);
+                    localStorage.setItem("Authorization", data.user.token);
+                    localStorage.setItem("username", data.user.username);
+                    localStorage.setItem("password", data.user.password);
 
                     if (response.message) {
-                        PushNotification(response.message);
+                        await PushNotification(response.message);
                     }
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
                 }
             })
 

@@ -36,4 +36,8 @@ export function PushNotification(msg: string) {
         icon: "warning",
         title: msg
     });
+
+    setTimeout(() => {
+        location.reload();
+    }, 6000);
 }

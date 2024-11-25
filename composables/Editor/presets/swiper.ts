@@ -2,7 +2,7 @@ import type { Editor } from "grapesjs";
 import Swiper from "../config/swiper/scripts";
 
 
-export function events(editor: Editor) {
+export function swiperPreset(editor: Editor) {
     editor.on('canvas:frame:load', () => {
         const swiperContainers = editor.Canvas.getDocument().querySelectorAll('.swiper');
 

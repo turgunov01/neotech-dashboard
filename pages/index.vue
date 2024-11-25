@@ -58,7 +58,7 @@ const onTap = (event: any) => {
     const attribute = event.target.getAttribute('data-filter');
 
     if (attribute) {
-        $router.push({ query: { filter: attribute, devices: $router.currentRoute.value.query.devices } })
+        $router.push({ query: { date: attribute, devices: $router.currentRoute.value.query.devices } })
         setTimeout(() => {
             location.reload();
         }, 1000);

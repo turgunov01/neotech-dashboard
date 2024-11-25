@@ -10,7 +10,7 @@ export async function publish(model: GlobalInterface) {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("Authorization")}`,
+            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
         },
         body: JSON.stringify(model)
     }

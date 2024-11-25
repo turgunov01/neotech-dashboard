@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const token = sessionStorage.getItem("Authorization")
+    const token = localStorage.getItem("Authorization")
     if (token) {
         if (to.name === "login") return { path: "/" };
         return true

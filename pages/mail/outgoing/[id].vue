@@ -106,7 +106,7 @@ const request = async () => {
     await apiDataFetch(`${uri}/messages/all`, {
         method: "GET",
         headers: {
-            Authorization: "Bearer " + sessionStorage.getItem("Authorization")
+            Authorization: "Bearer " + localStorage.getItem("Authorization")
         },
     })
         .then(response => response.json())
@@ -119,7 +119,7 @@ const request = async () => {
         });
 
     (currentMessage as any).value = await messages.value.find(msg => msg.id === Number($router.params["id"]));
-    await apiDataFetch(`${uri}/messages/single/${currentMessage?.value?.reply_to}`, { method: "GET", headers: { Authorization: `Bearer ${sessionStorage.getItem("Authorization")}` } })
+    await apiDataFetch(`${uri}/messages/single/${currentMessage?.value?.reply_to}`, { method: "GET", headers: { Authorization: `Bearer ${localStorage.getItem("Authorization")}` } })
         .then(response => response.json())
         .then(response => {
             selectedMessage.value = response.message;
@@ -130,7 +130,7 @@ const like = async () => {
     const options = {
         method: "PATCH",
         headers: {
-            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`,
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
             "Content-type": "application/json"
         }
     }

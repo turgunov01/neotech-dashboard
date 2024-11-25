@@ -25,6 +25,13 @@ Chart.register(DoughnutController, ArcElement, Tooltip, Legend)
 const canvas = ref();
 const loaded = ref(false);
 
+const props = defineProps({
+    data: {
+        type: Array,
+        required: true
+    }
+})
+
 const config = {
     type: 'doughnut',
     data: {
@@ -39,64 +46,30 @@ const config = {
 } as ChartConfiguration
 
 interface Device {
-    device_type: string;
-    visits: number;
+    device_type: string,
+    percentage: number,
+    visits: number,
     color: string
 }
 
 const calculations = ref([])
 
 const getDevices = async () => {
-    function countUniqueIPs(dataArray: any) {
-        const uniqueIPs = new Set();
-
-        dataArray.forEach((item: any) => {
-            uniqueIPs.add(item.ip);
-        });
-
-        return uniqueIPs.size;
-    }
-
-    function calculateDeviceTypePercentages(dataArray: { device_type: string; visits: number, color: string }[]) {
-        // Step 1: Calculate the total number of visits
-        const totalVisits = dataArray.reduce((sum, item) => sum + item.visits, 0);
-
-        // Step 2: Calculate the percentage for each device type
-        dataArray.forEach(item => {
-            (item as any).percent = ((item.visits * 100) / totalVisits).toFixed(2) + '%';
-        });
-
-        return dataArray;
-    }
-
-    const options = {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem("Authorization")}`,
-        }
-    }
-
-    await apiDataFetch(`${uri}/stats/devices`, options)
-        .then(response => response.json())
-        .then(async response => {
-            const devices = calculateDeviceTypePercentages(response?.devices)
-
-            config.data.labels = devices.map((device: any) => device.device_type);
-
-            for (let i = 0; i < devices.length; i++) {
-                const color = getRandomColor();
-                (((config as ChartConfiguration).data.datasets as any)[0].backgroundColor[i]) = color;
-                devices[i].color = color;
-
-                config.data.datasets[0].data.push(devices[i].visits);
-
-                calculations.value.push(devices[i] as never)
-            }
+    const devices: Device[] = props.data.map((item: any) => ({
+        device_type: item.device,
+        percentage: item.percentage,
+        visits: item.visits,
+        color: item.color,
+    }))
 
 
-        })
-
+    devices.forEach((item: any, index: number) => {
+        config.data.datasets[0].data.push(item.percentage);
+        config.data.labels?.push(item.device_type);
+        (config.data.datasets[0] as any).backgroundColor.push(item.color);
+        console.log(config.data.datasets[0], item.color)
+        calculations.value.push(item as never);
+    })
 }
 
 

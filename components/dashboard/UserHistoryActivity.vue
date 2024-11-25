@@ -40,7 +40,7 @@ const getLogs = async () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessionStorage.getItem("Authorization")}`,
+            "Authorization": `Bearer ${localStorage.getItem("Authorization")}`,
         }
     }
     await apiDataFetch(USER_FETCH_HOST + "/activity/all", options)
@@ -48,7 +48,7 @@ const getLogs = async () => {
         .then(response => {
             const data = response;
 
-            const username = sessionStorage.getItem("username");
+            const username = localStorage.getItem("username");
 
             data.forEach((log: any) => {
                 if (log.data.user.role === 0) {
@@ -65,7 +65,7 @@ const getLogs = async () => {
 }
 
 onMounted(async () => {
-    await getLogs();
+    // await getLogs();
     setActivityMiddleware("Вход в профиль", "profile");
 })
 

@@ -84,7 +84,7 @@ const getList = async () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessionStorage.getItem('Authorization')}`,
+            "Authorization": `Bearer ${localStorage.getItem('Authorization')}`,
         }
     }
 

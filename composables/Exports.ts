@@ -1,6 +1,6 @@
 export const PORT = 5003
-// export const USER_FETCH_HOST = 'http://localhost:5003'
-export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz';
+export const USER_FETCH_HOST = 'http://localhost:5003'
+// export const USER_FETCH_HOST = 'https://api-neotech-landing.neotech.uz';
 
 export const uri = `${USER_FETCH_HOST}`
 
@@ -9,15 +9,15 @@ export function apiDataFetch(url: string, options: RequestInit) {
 }
 
 export async function storeData(name: string, value: any) {
-    sessionStorage.setItem(name, value)
+    localStorage.setItem(name, value)
 }
 export async function removeStoreData(name: string) {
-    sessionStorage.removeItem(name)
+    localStorage.removeItem(name)
 }
 
 
 export function showStoreData(name: string) {
-    const local = sessionStorage.getItem(name)
+    const local = localStorage.getItem(name)
     return local
 }
 
@@ -75,6 +75,17 @@ export async function updateStructure(options: any) {
     })
 }
 
+export function numbersToDateString(seconds: number) {
+    // const days = Math.floor(seconds / 86400);
+    // seconds %= 86400;
+    const hours = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    const minutes = Math.floor(seconds / 60);
+    seconds %= 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+
 export default {
     PORT,
     USER_FETCH_HOST,
@@ -83,5 +94,6 @@ export default {
     isRequestPopular,
     uri,
     updateStructure,
-    getRandomColor
+    getRandomColor,
+    numbersToDateString
 }

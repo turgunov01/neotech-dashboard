@@ -13,7 +13,7 @@ export class EditorApp {
             method: "GET",
             headers: {
                 "Content-Language": "ru-RU",
-                Authorization: `${sessionStorage.getItem("Authorization")}`,
+                Authorization: `${localStorage.getItem("Authorization")}`,
             }
         };
     }

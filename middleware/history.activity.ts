@@ -1,6 +1,6 @@
 export const setActivityMiddleware = async (message: string, route: string) => {
 
-    const already = sessionStorage.getItem(route);
+    const already = localStorage.getItem(route);
 
     if (!already) {
         const ip = ref('')
@@ -16,7 +16,7 @@ export const setActivityMiddleware = async (message: string, route: string) => {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + sessionStorage.getItem("Authorization"),
+                "Authorization": "Bearer " + localStorage.getItem("Authorization"),
             },
             body: JSON.stringify({
                 user: {
@@ -28,14 +28,14 @@ export const setActivityMiddleware = async (message: string, route: string) => {
             })
         }
 
-        await apiDataFetch(USER_FETCH_HOST + "/activity/new", options)
-            .then(response => response.json())
-            .then(response => {
-                const data = response;
-                console.log(data);
+        // await apiDataFetch(USER_FETCH_HOST + "/activity/new", options)
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         const data = response;
+        //         console.log(data);
 
-                sessionStorage.setItem(route, "true");
-            })
+        //         localStorage.setItem(route, "true");
+        //     })
     }
 
 }

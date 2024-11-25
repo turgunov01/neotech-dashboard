@@ -142,7 +142,7 @@ onMounted(async () => {
     const options = {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${sessionStorage.getItem('Authorization')}`,
+            Authorization: `Bearer ${localStorage.getItem('Authorization')}`,
             Accept: "application/json",
         }
     }
