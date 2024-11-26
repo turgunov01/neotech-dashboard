@@ -15,7 +15,7 @@
                         </span>
                         <p class="nav-item-name">Дашбоард</p>
                     </nuxt-link>
-                    <nuxt-link class="mail-links" :to="`/mail/`">
+                    <nuxt-link class="mail-links" :to="`/messages/`">
                         <div class="origin mail">
                             <div class="origin-star">
                                 <span>
@@ -27,18 +27,18 @@
                             </div>
                             <div class="mail-counter">
                                 <img class="mail-tick" src="../assets/tick.svg" alt="">
-                                <span>{{ count }}</span>
+                                <span>{{ unread.length }}</span>
                             </div>
                         </div>
                         <span>
                             <ul class="sub-menu">
                                 <li class="sub-menu-item"
                                     :class="$router.currentRoute.value.path.includes('incoming') ? 'active' : ''">
-                                    <nuxt-link :to="`/mail`">Входящие</nuxt-link>
+                                    <nuxt-link :to="`/messages/`">Входящие</nuxt-link>
                                 </li>
                                 <li class="sub-menu-item"
                                     :class="$router.currentRoute.value.path.includes('outgoing') ? 'active' : ''">
-                                    <nuxt-link :to="`/mail/outgoing`">Отправленные</nuxt-link>
+                                    <nuxt-link :to="`/messages/outgoing`">Отправленные</nuxt-link>
                                 </li>
                             </ul>
                         </span>
@@ -106,11 +106,9 @@ const messages = async () => {
 
             data.forEach((item: any) => {
                 if (!item.events.read) {
-                    count.value += 1;
+                    unread.value.push(item as never);
                 }
             })
-
-
         })
 }
 

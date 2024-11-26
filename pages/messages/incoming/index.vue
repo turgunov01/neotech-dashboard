@@ -8,6 +8,8 @@
 </template>
 
 <script lang="ts" setup>
+import { FailedAlert } from '~/composables/Notification/list';
+
 
 onMounted(async () => {
     const options = {
@@ -22,14 +24,14 @@ onMounted(async () => {
         .then(response => response.json())
         .then(response => {
 
-            if (response.messages.length === 0) {
+            if (response.length === 0) {
                 FailedAlert("No messages were found!");
                 setTimeout(() => {
                     useRouter().push("/")
                     location.reload();
                 }, 3000);
             } else {
-                useRouter().push("/mail/incoming/1")
+                useRouter().push("/messages/incoming/1")
             }
 
 

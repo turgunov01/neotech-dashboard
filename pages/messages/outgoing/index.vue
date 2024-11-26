@@ -1,14 +1,15 @@
 <template>
-    <div></div>
+    <div> {{ index }} </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'
+import { FailedAlert } from '~/composables/Notification/list';
 
 const $router = useRouter()
 
-const param = $router.currentRoute.value.params.id
+const param = $router.currentRoute.value.params.id;
 
 // Template messages array
 // const messages = {
@@ -138,6 +139,8 @@ const param = $router.currentRoute.value.params.id
 //     ],
 // }
 
+const index = ref(0)
+
 onMounted(async () => {
     const options = {
         method: "GET",
@@ -151,7 +154,7 @@ onMounted(async () => {
         .then(response => response.json())
         .then(response => {
 
-            if (response.messages.length === 0) {
+            if (response.length === 0) {
                 FailedAlert("No messages were found!");
                 setTimeout(() => {
                     $router.push("/")
@@ -159,14 +162,14 @@ onMounted(async () => {
                 }, 3000);
             }
 
-            response.messages.forEach((message: any) => {
-                if (message.type === 2) {
-                    return $router.push(`/mail/outgoing/${message.id}`)
-                }
-            })
-
+            index.value = response.find((message: any) => message.to && message.to.name && message.to.surname);
+            $router.push({ path: `/messages/outgoing/${(index.value as any).id}` })
         })
 })
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+div {
+    color: black;
+}
+</style>
