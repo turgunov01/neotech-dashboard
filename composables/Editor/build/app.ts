@@ -3,6 +3,7 @@ import { FailedAlert } from "~/composables/Notification/list";
 import { eventPanel } from "../generator/panels";
 
 export async function buildEditor(editor: Editor) {
+    const $router = useRouter();
     const options = {
         method: "GET",
         headers: {
@@ -11,55 +12,20 @@ export async function buildEditor(editor: Editor) {
         }
     }
 
-    const $router = useRouter().currentRoute.value;
+    await apiDataFetch(USER_FETCH_HOST + `/constructor/projects?url=${$router.currentRoute.value.query.url}`, options)
+        .then(response => response.json())
+        .then(response => {
+            const data = response;
+            const uid = $router.currentRoute.value.query.page_id;
 
-    await setTimeout(async () => {
-        try {
-            if ($router.query.id) {
-                await apiDataFetch(`${uri}/constructor/single/${$router.query.id}`, options)
-                    .then(response => response.json())
-                    .then(response => {
-                        const page = {
-                            id: response.id,
-                            name: response.name,
-                            route: response.route,
-                            sections: response.sections,
-                            html: response.html,
-                            css: response.css,
-                        }
+            const currentpage = data.pages.find((p: any) => p.uid == uid);
+            if (!currentpage) return FailedAlert("Invalid uid for page!");
 
-                        editor.setComponents(page.sections);
-                        editor.Css.addRules(page.css);
-                        return;
-                    })
-            } else {
-                await apiDataFetch(`${uri}/constructor/web`, options)
-                    .then(response => response.json())
-                    .then(response => {
-                        const page = {
-                            id: response[0].id,
-                            name: response[0].name,
-                            route: response[0].route,
-                            sections: response[0].sections,
-                            html: response[0].html,
-                            css: response[0].css,
-                        }
+            editor.Components.destroy();
 
-                        useRouter().push({ query: { id: page.id } })
-
-                        editor.setComponents(page.sections);
-                        editor.Css.addRules(page.css);
-                        return;
-                    })
-            }
-
-        } catch (err: Error | any) {
-            FailedAlert(err.message);
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-        }
-    }, 1000);
+            editor.setComponents(currentpage.sections);
+            editor.Css.addRules(currentpage.css);
+        })
 
     eventPanel(editor);
 }

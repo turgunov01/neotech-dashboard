@@ -2,26 +2,23 @@
     <div class="constructor">
         <nav class="nav">
             <Loader :height="'7rem'" v-if="loaded" />
-            <div class="nav-media" :style="{
-                opacity: !loaded ? '1' : '0',
-                transition: '1s'
-            }">
+            <div class="nav-media">
                 <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
                 <div class="nav-media-router" @click="$router.back()">
                     <img src="/assets/tick.svg" alt="">
                 </div>
-                <select name="pages" class="pages-select" @change="choose($event)">
-                    <option :value="page.id"
-                        :selected="page.id === useRouter().currentRoute.value.query.id ? true : false"
+                <select name="pages" class="pages-select">
+                    <option :value="page.uid"
+                        :selected="page.uid === useRouter().currentRoute.value.query.page_id ? true : false"
                         v-for="page in pages">{{ page.name?.toUpperCase() }}
                     </option>
                 </select>
-                <button class="create-page" @click="abilityCreatePage = true">Создать</button>
-                <button class="create-page delete" @click="deletePage">Delete</button>
+                <!-- <button class="create-page" @click="abilityCreatePage = true">Создать</button> -->
+                <!-- <button class="create-page delete" @click="deletePage">Delete</button> -->
             </div>
             <div class="nav-event">
-                <button class="frame publish" @click="load" style="position: relative;">
-                    <Loader :height="'100%'" :curved="'.8rem'" v-if="clicked" />
+                <button class="frame publish" style="position: relative;">
+                    <Loader :height="'100%'" :curved="'.8rem'" v-if="loaded" />
                     Опубликовать
                 </button>
             </div>
@@ -31,7 +28,7 @@
                 <div class="demo">
                     <div class="demo-page">
                         <div class="demo-container">
-                            <Loader v-if="loaded" :has-background="true" :height="'100%'" />
+                            <!-- <Loader v-if="loaded" :has-background="true" :height="'100%'" /> -->
                             <Constructor />
                         </div>
                     </div>
@@ -47,7 +44,7 @@
                 <p class="form-create-title">Имя</p>
                 <input type="text" id="name" ref="new_name" placeholder="Название страницы">
             </label>
-            <button class="create-page submit" @click="createPage">Создать</button>
+            <button class="create-page submit">Создать</button>
         </div>
     </div>
 
@@ -57,18 +54,10 @@
 import Constructor from '~/components/Constructor.vue';
 
 import 'grapesjs/dist/css/grapes.min.css';
-import { setActivityMiddleware } from '~/middleware/history.activity';
 import { FailedAlert, PushNotification } from '~/composables/Notification/list';
 
-interface Page {
-    id: string,
-    name?: string,
-    route: string,
-    length: number | 0,
-    sections: Array<any>,
-    html: string,
-    css: string,
-}
+const $router = useRouter();
+const loaded = ref(false);
 
 const new_name = ref("");
 const abilityCreatePage = ref(false);
@@ -77,7 +66,7 @@ const closeModalWindow = () => {
     abilityCreatePage.value = !abilityCreatePage.value;
 }
 
-const pages = ref([] as Page[])
+const pages = ref([] as any[])
 
 const getList = async () => {
     const options = {
@@ -88,121 +77,19 @@ const getList = async () => {
         }
     }
 
-    await apiDataFetch(`${uri}/constructor/web`, options)
+    await apiDataFetch(`${USER_FETCH_HOST}/constructor/projects?url=${$router.currentRoute.value.query.url}`, options)
         .then(response => response.json())
         .then(response => {
-            response.forEach((item: any) => {
+            const data = response;
+            data.pages.forEach((item: any) => {
                 pages.value.push(item);
-            });
+            })
         })
 
-}
 
-const choose = (event: any) => {
-    const uid = event.target.value;
-
-    const element = pages.value.find(page => page.id === uid);
-
-    useRouter().push({ query: { id: uid } })
-    setTimeout(() => {
-        location.reload();
-    }, 300);
-}
-
-const loaded = ref(true)
-const clicked = ref(false)
-
-const deletePage = async () => {
-    const query = useRouter().currentRoute.value.query.id;
-    const exact = pages.value.find(page => page.id === query);
-
-    console.log(pages.value.length)
-
-    if (pages.value.length === 1) {
-        FailedAlert("The default page can not be removed!")
-    } else {
-        const isDeleted = confirm("Are you sure to delete " + exact?.name + " page");
-
-        const options = {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
-            }
-        }
-
-        if (isDeleted === true) {
-            await apiDataFetch(`${uri}/constructor/delete/${query}`, options)
-                .then(response => response.json())
-                .then(response => {
-                    if (response.message) {
-                        PushNotification(response.message);
-                    }
-
-                    if (response.error) {
-                        FailedAlert(response.error);
-                    }
-
-                    useRouter().push({ query: {} })
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
-                })
-        } else {
-            PushNotification("Operation canceled")
-        }
-    }
-
-
-
-
-}
-
-const load = () => {
-    clicked.value = true;
-
-    setTimeout(() => {
-        clicked.value = false
-    }, 1500);
-}
-
-const createPage = async () => {
-    const options = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("Authorization")}`,
-        },
-        body: JSON.stringify({
-            name: (new_name.value as any).value,
-            html: "",
-            css: "",
-            sections: []
-        })
-    };
-
-    await apiDataFetch(`${uri}/constructor/new`, options)
-        .then(res => res.json())
-        .then(res => {
-            const data = res;
-            if (data.message) {
-                PushNotification(data.message);
-            }
-
-            if (data.error) {
-                FailedAlert(data.error);
-            }
-        });
-
-    (new_name.value as any).value = "";
-    closeModalWindow()
 }
 
 onMounted(async () => {
-    setActivityMiddleware(`Зашел в конструктор`, `constructor_opened`);
-
-
     init()
 
     await getList();

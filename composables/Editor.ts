@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-import { EditorApp } from "./Editor/classes/app";
+import { EditorApp } from './Editor/classes/app.build';
 import { Plugins } from './Editor/plugins/app';
 
 import { canvasProps } from './Editor/generator/scripts';

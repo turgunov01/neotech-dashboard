@@ -10,7 +10,7 @@ export class Publish {
         this.editor = editor as Editor;
 
         const element = {
-            name: useRouter().currentRoute.value.query.id as string,
+            name: $router.query.id as string,
             html: (extract(editor) as any).html,
             css: (extract(editor) as any).css as string,
             sections: editor.getComponents() as any,

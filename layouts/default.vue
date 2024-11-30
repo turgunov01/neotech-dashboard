@@ -43,7 +43,7 @@
                             </ul>
                         </span>
                     </nuxt-link>
-                    <nuxt-link :to="`/constructor`">
+                    <nuxt-link :to="`/projects`">
                         <span>
                             <img src="/assets/icons/navigation/pages.svg" alt="">
                         </span>
@@ -82,6 +82,8 @@ import Loader from '~/components/Loader.vue';
 import PushComponent from '~/components/Notifications/PushComponent.vue';
 
 import { socket } from "~/composables/socket";
+
+const $router = useRouter();
 
 const count = ref(0);
 const unread = ref([]);

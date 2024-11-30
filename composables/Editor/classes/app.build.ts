@@ -1,26 +1,18 @@
 import grapesjs from "grapesjs";
 
-import { run } from "../config/run";
-
 import type { GrapesInitInterface } from "~/interface/grapejs";
+import { canvas } from "../build/canvas";
 
 export class EditorApp {
     [variable: string]: any;
 
     constructor(component: any) {
         this.component = component as GrapesInitInterface;
-        this.options = {
-            method: "GET",
-            headers: {
-                "Content-Language": "ru-RU",
-                Authorization: `${localStorage.getItem("Authorization")}`,
-            }
-        };
     }
 
     async buildEditor() {
         const container = await grapesjs.init(this.component);
-        await run(container);
+        await canvas(container);
 
         const wrapper = container.getWrapper()
         wrapper?.addStyle({ 'overflow': 'hidden' })

@@ -16,13 +16,13 @@ export async function ButtonPluginsHandler(editor: Editor) {
         }
     }
 
-    await apiDataFetch(`${uri}/constructor/web`, options)
-        .then(response => response.json())
-        .then(response => {
-            response.forEach((item: any) => {
-                routes.value.push({ name: item.name, value: item.route })
-            })
-        })
+    // await apiDataFetch(`${uri}/constructor/web`, options)
+    //     .then(response => response.json())
+    //     .then(response => {
+    //         response.forEach((item: any) => {
+    //             routes.value.push({ name: item.name, value: item.route })
+    //         })
+    //     })
 
     const init = {
         type: "button",
