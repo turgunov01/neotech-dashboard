@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="project-components">
+    <div class="project-components" @click.self="toggle()">
         <EditorComponents />
     </div>
 
@@ -68,6 +68,11 @@ const abilityCreatePage = ref(false);
 
 const closeModalWindow = () => {
     abilityCreatePage.value = !abilityCreatePage.value;
+}
+
+const toggle = () => {
+    const components = document.querySelector('.project-components') as HTMLElement;
+    components.classList.toggle('active');
 }
 
 const pages = ref([] as any[])

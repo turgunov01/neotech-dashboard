@@ -30,7 +30,7 @@ class CustomPanels {
     }
 
     components() {
-        // this._editor.Panels.removeButton("views", "open-blocks");
+        this._editor.Panels.removeButton("views", "open-blocks");
         // const exportButton = this._editor.Panels.addButton("views", {
         //     id: "open-blocks",
         //     dragdrop: false,

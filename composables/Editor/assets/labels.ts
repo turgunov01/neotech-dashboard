@@ -12,26 +12,44 @@ export async function getLabels(component: any) {
     }
 
     try {
-        // const response = await apiDataFetch(`${uri}/components/types`, options);
-        // const data = await response.json();
+        const options = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("Authorization")}`
+            }
+        }
 
-        // for (const item of data) {
-        //     const type = item.replace("components/", "");
+        // await apiDataFetch(USER_FETCH_HOST + "/components/", options)
+        //     .then(response => response.json())
+        //     .then(response => {
+        //         const data = response;
+        //         console.log(data)
+        //         data.forEach((item: any) => {
+        //             if (item.components.length) {
+        //                 item.components.forEach((cmp: any, cmpIndex: number) => {
 
-        //     const categoryResponse = await apiDataFetch(`${uri}/components/category/${type}`, options);
-        //     const cmps = await categoryResponse.json();
+        //                     const blockId = `${item.name}-${cmpIndex}`;
 
-        //     for (const cmp of cmps) {
-        //         const componentItem = {
-        //             tagName: cmp.tagName,
-        //             label: `<img src="${uri}/uploads/${cmp.label}">`,
-        //             content: cmp.content,
-        //             category: cmp.category
-        //         };
+        //                     cmp.label = `
+        //                         <div class="components-card-preview" style="background: black; border-top-left-radius: 4px; border-top-right-radius: 4px; display: flex; flex-direction: column; align-items: center; padding: 10px; gap: 2px;">
+        //                             <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        //                                 <div class="components-card-icons" style="display: flex; align-items: center; justify-content: space-between; gap: 2px;">
+        //                                     <i style="width: 5px !important; height: 5px !important; background: white; border-radius: 50% !important; display: flex; align-items: center; justify-content: center;"></i>
+        //                                     <i style="width: 5px !important; height: 5px !important; background: white; border-radius: 50% !important; display: flex; align-items: center; justify-content: center;"></i>
+        //                                     <i style="width: 5px !important; height: 5px !important; background: white; border-radius: 50% !important; display: flex; align-items: center; justify-content: center;"></i>
+        //                                 </div>
+        //                                 <span class="components-card-title text-sm" style="color: white !important; font-size: 12px !important;">header:${cmpIndex + 1}</span>
+        //                             </div>
+        //                             <img src="${cmp.label}" alt="">
+        //                         </div>
+        //                     `;
 
-        //         component.blockManager.blocks.push(componentItem);
-        //     }
-        // }
+        //                     (component as any).blockManager.blocks.push(cmp)
+        //                 });
+        //             }
+        //         });
+        //     })
     } catch (error) {
         console.error("Error fetching data:", error);
     }

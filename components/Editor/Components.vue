@@ -63,8 +63,7 @@ onMounted(async () => {
                 }">
                     <h3 class="components-card-title text-sm">Компонент: {{ item.name }}</h3>
                     <div class="components-card-main">
-                        <div class="components-card" @click="removeContainer(cmp)"
-                            v-for="(cmp, cmpIndex) in item.components">
+                        <div class="components-card" v-for="(cmp, cmpIndex) in item.components">
                             <div class="components-card-preview">
                                 <div class="components-card-icons">
                                     <i></i><i></i><i></i>
