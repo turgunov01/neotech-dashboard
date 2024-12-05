@@ -48,6 +48,10 @@
         </div>
     </div>
 
+    <div class="project-components">
+        <EditorComponents />
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -231,6 +235,31 @@ span {
         border-radius: 5px;
         padding: 5px 10px;
         appearance: none;
+    }
+}
+
+.project {
+    &-components {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 300ms;
+        transform: scale(0);
+
+        &.active {
+            transform: scale(1);
+        }
+
+        &.logged {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(2px);
+        }
     }
 }
 </style>

@@ -1,6 +1,7 @@
 import type { Editor } from "grapesjs";
 import { FailedAlert } from "~/composables/Notification/list";
-import { eventPanel } from "../generator/panels";
+import CustomPanels from "../generator/panels";
+import Calculate from "../classes/app.calculate";
 
 export async function buildEditor(editor: Editor) {
     const $router = useRouter();
@@ -27,5 +28,7 @@ export async function buildEditor(editor: Editor) {
             editor.Css.addRules(currentpage.css);
         })
 
-    eventPanel(editor);
+    new CustomPanels(editor).width();
+    new CustomPanels(editor).components();
+    new Calculate(editor).activate();
 }
