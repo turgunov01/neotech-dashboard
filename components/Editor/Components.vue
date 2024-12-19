@@ -61,9 +61,9 @@ onMounted(async () => {
                 <div class="components-cards" v-for="item in components" :style="{
                     display: item.components.length ? 'flex' : 'none'
                 }">
-                    <h3 class="components-card-title text-sm">Компонент: {{ item.name }}</h3>
+                    <h3 class="components-card-name text-sm">{{ item.name }}</h3>
                     <div class="components-card-main">
-                        <div class="components-card" v-for="(cmp, cmpIndex) in item.components">
+                        <div class="components-card" :data-html="cmp.content" v-for="(cmp, cmpIndex) in item.components">
                             <div class="components-card-preview">
                                 <div class="components-card-icons">
                                     <i></i><i></i><i></i>
@@ -88,7 +88,6 @@ onMounted(async () => {
     border-radius: .8rem;
     box-shadow: 0 0 2rem rgba(0, 0, 0, 0.3);
     padding: 0;
-    display: flex;
     flex-direction: column;
     overflow: hidden;
 }
@@ -119,6 +118,7 @@ onMounted(async () => {
     &-main {
         display: flex;
         gap: .4rem;
+        overflow: hidden;
     }
 
     &-aside {
@@ -136,12 +136,23 @@ onMounted(async () => {
         margin-left: auto;
         margin-right: auto;
         padding-top: 1.2rem;
+        overflow: scroll;
     }
 
     &-cards {
         display: flex;
         align-items: center;
         flex-direction: column;
+
+        & > h3 {
+            margin-bottom: 1.6rem;
+            font-size: 2.4rem;
+            font-weight: 500;
+            line-height: 1.25;
+            color: black !important;
+            width: 100%;
+            text-align: start;
+        }
     }
 
     &-card {
@@ -154,7 +165,7 @@ onMounted(async () => {
 
         &-main {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             flex-wrap: wrap;
             column-gap: 3.2rem;
             row-gap: 2.4rem;

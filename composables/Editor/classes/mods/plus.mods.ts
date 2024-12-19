@@ -1,28 +1,7 @@
 import type { Editor } from "grapesjs";
-import { plusButtonConfig } from "../config/components";
+import { plusButtonConfig } from "../../config/components";
 
-function toggle() {
-    const component = document.querySelector(".project-components") as HTMLElement;
-    const container = component.querySelector(".container") as HTMLElement;
-
-    component.classList.add('active');
-
-    container.onmouseenter = () => {
-        component.classList.add('logged');
-    }
-
-    container.onmouseleave = () => {
-        component.classList.remove('logged');
-    }
-
-    component.onclick = (e: any) => {
-        if (e.target.classList.contains('project-components')) {
-            component.classList.remove('active');
-        }
-    }
-}
-
-class Calculate {
+class PlusAddon {
     private _editor: Editor;
 
     constructor(editor: Editor) {
@@ -82,11 +61,6 @@ class Calculate {
 
 
     }
-
-
-
-
-
 }
 
-export default Calculate;
+export default PlusAddon;

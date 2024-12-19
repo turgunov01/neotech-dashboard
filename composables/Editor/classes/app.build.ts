@@ -8,6 +8,7 @@ export class EditorApp {
 
     constructor(component: any) {
         this.component = component as GrapesInitInterface;
+        this.buildEditor();
     }
 
     async buildEditor() {

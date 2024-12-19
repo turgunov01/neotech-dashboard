@@ -20,7 +20,7 @@ export const component = ref({
 export async function init() {
     await getLabels(component.value);
 
-    const editor = new EditorApp(component.value).buildEditor();
+    const editor = new EditorApp(component.value);
     return editor;
 }
 
