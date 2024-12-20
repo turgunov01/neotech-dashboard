@@ -1,13 +1,13 @@
 import type { Editor } from "grapesjs";
-import { FailedAlert } from "~/composables/Notification/list";
+
 import { translation } from "../i18n/locales";
 import { buildEditor } from "./app";
+import Runner from "../classes/app.runner";
 
 export async function canvas(editor: Editor) {
     // canvas builder is running
-    buildEditor(editor)
+    await buildEditor(editor);
 
-    // translations of the editor
     editor.I18n.setMessages(translation)
     editor.I18n.setLocale('ru');
 }

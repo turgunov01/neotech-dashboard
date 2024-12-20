@@ -13,10 +13,10 @@ class Runner {
     }
 
     async up() {
-        await new PlusAddon(this.editor).activate();
+        // await new PlusAddon(this.editor).activate();
         await new PanelsMods(this.editor);
         await new ButtonMods(this.editor);
-        await new ComponentHandlerMods(this.editor);
+        await new ComponentHandlerMods(this.editor).init();
     }
 }
 

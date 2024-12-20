@@ -1,9 +1,10 @@
 import type { Editor } from "grapesjs";
 import { FailedAlert } from "~/composables/Notification/list";
-
 import Runner from "../classes/app.runner";
 
 export async function buildEditor(editor: Editor) {
+    editor.Components.destroy();
+
     const $router = useRouter();
     const options = {
         method: "GET",
@@ -22,12 +23,12 @@ export async function buildEditor(editor: Editor) {
             const currentpage = data.pages.find((p: any) => p.uid == uid);
             if (!currentpage) return FailedAlert("Invalid uid for page!");
 
-            editor.Components.destroy();
 
             editor.setComponents(currentpage.sections);
             editor.Css.addRules(currentpage.css);
         })
 
-
-    new Runner(editor);
+    setTimeout(() => {
+        new Runner(editor);
+    }, 200);
 }

@@ -3,17 +3,15 @@ import type { Editor } from "grapesjs";
 class ComponentHandlerMods {
     constructor(private editor: Editor) {
         this.editor = editor;
-        this.init();
     }
 
     async init() {
         const children = document?.querySelectorAll(".components-card");
+        for (let index = 0; index < children.length; index++) {
+            await children[index].addEventListener("click", async () => {
+                const html = children[index].getAttribute("data-html") as string;
 
-        for (const element of children) {
-            element.addEventListener("click", () => {
-                const html = element.getAttribute("data-html");
-
-                this.editor.addComponents(html as string);
+                await this.editor.addComponents(html);
                 this.toggle();
             })
         }

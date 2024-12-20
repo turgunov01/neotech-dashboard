@@ -145,13 +145,17 @@ onMounted(async () => {
         flex-direction: column;
 
         & > h3 {
-            margin-bottom: 1.6rem;
+            margin: 2.4rem 0 1.6rem 0;
             font-size: 2.4rem;
             font-weight: 500;
             line-height: 1.25;
             color: black !important;
             width: 100%;
             text-align: start;
+
+            &:nth-of-type(1) {
+                margin-top: 0;
+            }
         }
     }
 
