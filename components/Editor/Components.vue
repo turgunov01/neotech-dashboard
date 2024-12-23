@@ -49,7 +49,8 @@ onMounted(async () => {
         <div class="components-main">
             <aside class="components-aside">
                 <ul class="components-list">
-                    <li class="components-item" v-for="item in components">
+                    <li class="components-item" v-for="item in components"
+                        :style="{ display: item.id === 'defaults' ? 'none' : 'block' }">
                         <button @click="categoryFilter($event)" :data-category="item.id"
                             class="components-linker bg-transparent text-stone-950 opacity-50 w-full text-xl text-start pt-4 pb-4 pl-6 pr-6">
                             {{ item.name }}
@@ -59,11 +60,12 @@ onMounted(async () => {
             </aside>
             <div class="components-content">
                 <div class="components-cards" v-for="item in components" :style="{
-                    display: item.components.length ? 'flex' : 'none'
+                    display: item.components.length && item.id !== 'defaults' ? 'flex' : 'none'
                 }">
-                    <h3 class="components-card-name text-sm">{{ item.name }}</h3>
+                    <h3 class="components-card-name mt-2 text-sm">{{ item.name }}</h3>
                     <div class="components-card-main">
-                        <div class="components-card" :data-html="cmp.content" v-for="(cmp, cmpIndex) in item.components">
+                        <div class="components-card" :data-html="cmp.content"
+                            v-for="(cmp, cmpIndex) in item.components">
                             <div class="components-card-preview">
                                 <div class="components-card-icons">
                                     <i></i><i></i><i></i>
@@ -90,6 +92,12 @@ onMounted(async () => {
     padding: 0;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
+
+    @media(max-width: 1200px) {
+        max-width: 95vw;
+        height: 95vh;
+    }
 }
 
 .components {
@@ -125,6 +133,10 @@ onMounted(async () => {
         width: 20%;
         border-right: .1rem solid rgba(0, 0, 0, 0.1);
         height: 100vh;
+
+        @media(max-width: 770px) {
+            width: 40%;
+        }
     }
 
     &-linker:hover {
@@ -137,24 +149,45 @@ onMounted(async () => {
         margin-right: auto;
         padding-top: 1.2rem;
         overflow: scroll;
+
+        @media(max-width: 770px) {
+            width: 60%;
+            padding: 0 1rem;
+        }
     }
 
     &-cards {
         display: flex;
         align-items: center;
+        margin: 2.4rem 0 1.6rem 0;
         flex-direction: column;
 
-        & > h3 {
-            margin: 2.4rem 0 1.6rem 0;
+        @media(max-width: 770px) {
+            border-top: .1rem solid #f1f1f1;
+            padding: 0;
+        }
+
+        &:nth-of-type(1) {
+            margin-top: 0;
+
+            @media(max-width: 770px) {
+                border-top: unset;
+            }
+        }
+
+        &>h3 {
             font-size: 2.4rem;
             font-weight: 500;
             line-height: 1.25;
             color: black !important;
             width: 100%;
             text-align: start;
+            margin-bottom: .4rem;
 
-            &:nth-of-type(1) {
-                margin-top: 0;
+            @media(max-width: 770px) {
+                padding: 0;
+                text-align: center;
+                font-size: 3rem;
             }
         }
     }
@@ -167,12 +200,27 @@ onMounted(async () => {
         transition: 300ms;
         max-width: calc(100% / 3 - 2.4rem);
 
+        @media(max-width: 1200px) {
+            max-width: calc(100% / 2 - 2.4rem);
+        }
+
+        @media(max-width: 770px) {
+            max-width: calc(100%);
+        }
+
         &-main {
             display: flex;
             align-items: flex-start;
             flex-wrap: wrap;
             column-gap: 3.2rem;
             row-gap: 2.4rem;
+
+            @media(max-width: 770px) {
+                flex-wrap: nowrap;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         &:active {
