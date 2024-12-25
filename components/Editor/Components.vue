@@ -59,12 +59,6 @@ const categoryFilter = (e: Event) => {
     });
 };
 
-
-// const removeContainer = (item: any) => {
-//     const data = document.querySelector(".project-components");
-//     data?.classList.remove("active");
-// }
-
 onMounted(async () => {
     await getComponents();
 })

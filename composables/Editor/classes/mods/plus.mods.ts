@@ -12,7 +12,6 @@ class PlusAddon {
         const container = this._editor.Canvas.getDocument().body;
 
         container?.addEventListener("mouseenter", () => {
-            console.log(true)
         })
     }
 }

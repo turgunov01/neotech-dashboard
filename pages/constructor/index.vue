@@ -52,6 +52,10 @@
         <EditorComponents />
     </div>
 
+    <div class="project-subcomponents" @click.self="toggle()">
+        <EditorSubComponents />
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -244,10 +248,10 @@ span {
 }
 
 .project {
-    &-components {
+    &-components, &-subcomponents {
         position: fixed;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100vh;
         left: 0;
         top: 0;
         z-index: 9999;

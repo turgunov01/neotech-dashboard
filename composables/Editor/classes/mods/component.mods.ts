@@ -19,6 +19,13 @@ class ComponentHandlerMods {
             await children[index].addEventListener("click", async () => {
                 const html = children[index].getAttribute("data-html") as string;
 
+                const selected = this.editor.getSelected();
+                if (selected) {
+                    selected.append(html);
+                    this.toggle();
+                    return;
+                }
+
                 await this.editor.addComponents(html);
                 this.toggle();
             })
@@ -39,7 +46,9 @@ class SubComponentHandlerMods {
     }
 
     init() {
-
+        const components = document.querySelector(".project-subcomponents");
+        const cards = components?.querySelectorAll(".components-card");
+        console.log(cards);
     }
 }
 
