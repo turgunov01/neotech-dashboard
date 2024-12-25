@@ -28,16 +28,15 @@ class PlusAddon {
                 const canvasRect = canvasDoc.documentElement.getBoundingClientRect();
                 const hoverRegion = this.getHoverRegion(event, rect);
 
-                // Ensure the button only appears on valid components
                 if (this.isInsideWrapper(target)) {
                     if (hoverRegion === "top") {
-                        button.style.top = `${rect.top - canvasRect.top}px`; // Offset above
+                        button.style.top = `${rect.top - canvasRect.top}px`;
                         button.style.left = `${rect.left - canvasRect.left + rect.width / 2}px`;
                         button.style.display = "flex";
                         currentTarget = target;
                         currentRegion = "top";
                     } else if (hoverRegion === "bottom") {
-                        button.style.top = `${rect.bottom - canvasRect.top}px`; // Offset below
+                        button.style.top = `${rect.bottom - canvasRect.top}px`;
                         button.style.left = `${rect.left - canvasRect.left + rect.width / 2}px`;
                         button.style.display = "flex";
                         currentTarget = target;
@@ -68,13 +67,14 @@ class PlusAddon {
             button.style.display = "none";
         });
 
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (e: MouseEvent) => {
             if (currentTarget && currentRegion) {
-                const projectSubcomponents = document.querySelector(".project-subcomponents");
+                const projectSubcomponents = document.querySelector(".project-subcomponents") as HTMLElement;
+                projectSubcomponents.style["top"] = `${e.clientY / 2 + 15}px`;
+                projectSubcomponents.style["left"] = `${e.clientX + button.offsetWidth + 20}px`;
 
                 if (projectSubcomponents && !projectSubcomponents.classList.contains("active")) {
                     projectSubcomponents.classList.add("active");
-
                     const cards = document.querySelectorAll(".project-subcomponents .components-card");
 
                     cards.forEach((card: any) => {
@@ -148,7 +148,6 @@ class PlusAddon {
     }
 
     private isHoverable(target: HTMLElement): boolean {
-        // Ensure the button does not appear over buttons or similar
         return !target.closest("button");
     }
 

@@ -52,7 +52,7 @@
         <EditorComponents />
     </div>
 
-    <div class="project-subcomponents" @click.self="toggle()">
+    <div class="project-subcomponents" @click.self="toggle2()">
         <EditorSubComponents />
     </div>
 
@@ -76,7 +76,12 @@ const closeModalWindow = () => {
 
 const toggle = () => {
     const components = document.querySelector('.project-components') as HTMLElement;
-    components.classList.toggle('active');
+    components.classList.remove('active');
+}
+
+const toggle2 = () => {
+    const subcomponents = document.querySelector('.project-subcomponents') as HTMLElement;
+    subcomponents.classList.remove('active');
 }
 
 const pages = ref([] as any[])
@@ -277,5 +282,6 @@ span {
         width: 740px;
         height: 740px;
     }
+
 }
 </style>

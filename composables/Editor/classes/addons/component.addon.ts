@@ -50,6 +50,7 @@ class SubComponentHandlerMods {
         const cards = components?.querySelectorAll(".components-card");
         console.log(cards);
     }
+
 }
 
 export default ComponentsAddons;

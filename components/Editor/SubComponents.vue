@@ -19,6 +19,11 @@ const getComponents = async () => {
         })
 }
 
+const toggle = () => {
+    const components = document.querySelector(".project-subcomponents");
+    components?.classList.toggle("active");
+}
+
 
 onMounted(async () => {
     await getComponents();
@@ -35,6 +40,11 @@ onMounted(async () => {
                         Базовые
                     </button>
                 </li>
+
+                <div class="components-header-icon" @click="toggle">
+                    <i></i>
+                    <i></i>
+                </div>
             </ul>
         </div>
         <div class="components-main">
@@ -92,6 +102,33 @@ onMounted(async () => {
         background: #ffffff;
         padding: 1rem 2rem;
         color: black;
+        position: relative;
+
+        &-icon {
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2rem;
+            height: 2rem;
+
+            & i {
+                background: #000000;
+                width: 100%;
+                height: .15rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transform: rotate(-45deg);
+                position: absolute;
+                left: 0;
+                top: 50%;
+
+                &:last-of-type {
+                    transform: rotate(45deg);
+                }
+            }
+        }
 
         &-list {
             display: flex;
