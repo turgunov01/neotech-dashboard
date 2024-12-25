@@ -1,5 +1,13 @@
 import type { Editor } from "grapesjs";
 
+class ComponentsAddons {
+    constructor(private editor: Editor) {
+        this.editor = editor;
+        new ComponentHandlerMods(this.editor).init();
+        new SubComponentHandlerMods(this.editor).init();
+    }
+}
+
 class ComponentHandlerMods {
     constructor(private editor: Editor) {
         this.editor = editor;
@@ -22,6 +30,17 @@ class ComponentHandlerMods {
         const projectComponents = document.querySelector(".project-components");
         projectComponents?.classList.toggle("active");
     }
+
 }
 
-export default ComponentHandlerMods;
+class SubComponentHandlerMods {
+    constructor(private editor: Editor) {
+        this.editor = editor;
+    }
+
+    init() {
+
+    }
+}
+
+export default ComponentsAddons;

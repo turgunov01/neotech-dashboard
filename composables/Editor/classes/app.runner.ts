@@ -3,7 +3,7 @@ import type { Editor } from "grapesjs";
 import PlusAddon from "./mods/plus.mods";
 import PanelsMods from "./mods/panels.mods";
 import ButtonMods from "./mods/button.mods";
-import ComponentHandlerMods from "./mods/component.mods";
+import ComponentsAddons from "./mods/component.mods";
 
 
 class Runner {
@@ -16,7 +16,7 @@ class Runner {
         await new PlusAddon(this.editor).activate();
         await new PanelsMods(this.editor);
         await new ButtonMods(this.editor);
-        await new ComponentHandlerMods(this.editor).init();
+        await new ComponentsAddons(this.editor);
     }
 }
 
