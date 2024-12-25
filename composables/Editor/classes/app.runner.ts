@@ -1,9 +1,9 @@
 import type { Editor } from "grapesjs";
 
-import PlusAddon from "./mods/plus.mods";
-import PanelsMods from "./mods/panels.mods";
-import ButtonMods from "./mods/button.mods";
-import ComponentsAddons from "./mods/component.mods";
+import PlusAddon from "./addons/plus.addon";
+import PanelsMods from "./addons/panels.addon";
+import ButtonMods from "./addons/button.addon";
+import ComponentsAddons from "./addons/component.addon";
 
 
 class Runner {

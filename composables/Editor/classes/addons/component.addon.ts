@@ -14,7 +14,7 @@ class ComponentHandlerMods {
     }
 
     async init() {
-        const children = document?.querySelectorAll(".components-card");
+        const children = document?.querySelectorAll(".project-components .components-card");
         for (let index = 0; index < children.length; index++) {
             await children[index].addEventListener("click", async () => {
                 const html = children[index].getAttribute("data-html") as string;
