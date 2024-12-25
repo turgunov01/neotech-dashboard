@@ -19,15 +19,51 @@ const getComponents = async () => {
         })
 }
 
-const categoryFilter = (e: any) => {
-    const category = e.target.dataset.category;
-    console.log(category);
-}
+const categoryFilter = (e: Event) => {
+    const target = e.target as HTMLElement;
+    const category = target?.dataset.category;
 
-const removeContainer = (item: any) => {
-    const data = document.querySelector(".project-components");
-    data?.classList.remove("active");
-}
+    const buttons = document.querySelectorAll(".components-linker");
+    buttons.forEach((button: any) => {
+        button.classList.remove("active");
+    })
+
+    target.classList.add("active");
+
+    if (!category) {
+        console.warn("Category data attribute is missing.");
+        return;
+    }
+
+    const item = document.querySelector(`#${category}`);
+    if (!item) {
+        console.warn(`Element with id "${category}" not found.`);
+        return;
+    }
+
+    const rect = item.getBoundingClientRect();
+    const components = document.querySelector(".components-content");
+
+    if (!components) {
+        console.warn('Element with class ".components-content" not found.');
+        return;
+    }
+
+    const currentScroll = components.scrollTop;
+    const componentsRect = components.getBoundingClientRect();
+    const offsetTop = currentScroll + rect.top - componentsRect.top;
+
+    components.scrollTo({
+        top: offsetTop,
+        behavior: "smooth",
+    });
+};
+
+
+// const removeContainer = (item: any) => {
+//     const data = document.querySelector(".project-components");
+//     data?.classList.remove("active");
+// }
 
 onMounted(async () => {
     await getComponents();
@@ -50,7 +86,8 @@ onMounted(async () => {
             <aside class="components-aside">
                 <ul class="components-list">
                     <li class="components-item" v-for="item in components"
-                        :style="{ display: item.id === 'defaults' ? 'none' : 'block' }">
+                        :style="{ display: item.id === 'defaults' || item.components.length == 0 ? 'none' : 'block', color: 'black' }"
+                        :hidden="!item.components">
                         <button @click="categoryFilter($event)" :data-category="item.id"
                             class="components-linker bg-transparent text-stone-950 opacity-50 w-full text-xl text-start pt-4 pb-4 pl-6 pr-6">
                             {{ item.name }}
@@ -59,7 +96,7 @@ onMounted(async () => {
                 </ul>
             </aside>
             <div class="components-content">
-                <div class="components-cards" v-for="item in components" :style="{
+                <div class="components-cards" :id="item.id" v-for="item in components" :style="{
                     display: item.components.length && item.id !== 'defaults' ? 'flex' : 'none'
                 }">
                     <h3 class="components-card-name mt-2 text-sm">{{ item.name }}</h3>
@@ -139,8 +176,15 @@ onMounted(async () => {
         }
     }
 
-    &-linker:hover {
-        opacity: 1;
+    &-linker {
+        &:hover {
+            opacity: 1;
+        }
+
+        &.active {
+            opacity: 1 !important;
+            background: #f1f1f1;
+        }
     }
 
     &-content {
