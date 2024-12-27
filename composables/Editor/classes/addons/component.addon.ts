@@ -4,7 +4,6 @@ class ComponentsAddons {
     constructor(private editor: Editor) {
         this.editor = editor;
         new ComponentHandlerMods(this.editor).init();
-        new SubComponentHandlerMods(this.editor).init();
     }
 }
 
@@ -36,19 +35,6 @@ class ComponentHandlerMods {
     toggle() {
         const projectComponents = document.querySelector(".project-components");
         projectComponents?.classList.toggle("active");
-    }
-
-}
-
-class SubComponentHandlerMods {
-    constructor(private editor: Editor) {
-        this.editor = editor;
-    }
-
-    init() {
-        const components = document.querySelector(".project-subcomponents");
-        const cards = components?.querySelectorAll(".components-card");
-        console.log(cards);
     }
 
 }

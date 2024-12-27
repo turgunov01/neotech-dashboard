@@ -1,4 +1,5 @@
 import type { Editor } from "grapesjs";
+import subComponentHandlerMods from "./subcomponent.addon";
 
 class PlusAddon {
     private _editor: Editor;
@@ -75,51 +76,9 @@ class PlusAddon {
 
                 if (projectSubcomponents && !projectSubcomponents.classList.contains("active")) {
                     projectSubcomponents.classList.add("active");
-                    const cards = document.querySelectorAll(".project-subcomponents .components-card");
+                    const cards = document.querySelectorAll(".components-card") as unknown as HTMLCollection;
 
-                    cards.forEach((card: any) => {
-                        const isAlreadySet = card.dataset.listenerSet === "true";
-                        if (!isAlreadySet) {
-                            card.addEventListener(
-                                "click",
-                                () => {
-                                    const htmlContent = card.getAttribute("data-html");
-                                    if (htmlContent) {
-                                        const blockId = currentTarget?.getAttribute("id");
-                                        const components = this._editor.getWrapper()?.find(`#${blockId}`);
-
-                                        if (components?.length) {
-                                            const component = components[0];
-
-                                            if (currentRegion === "top") {
-                                                component.collection.add(
-                                                    {
-                                                        tagName: "div",
-                                                        attributes: { class: "new-block" },
-                                                        content: htmlContent,
-                                                    },
-                                                    { at: component.index() }
-                                                );
-                                            } else if (currentRegion === "bottom") {
-                                                component.collection.add(
-                                                    {
-                                                        tagName: "div",
-                                                        attributes: { class: "new-block" },
-                                                        content: htmlContent,
-                                                    },
-                                                    { at: component.index() + 1 }
-                                                );
-                                            }
-                                        }
-
-                                        projectSubcomponents.classList.remove("active");
-                                    }
-                                },
-                                { once: true }
-                            );
-                            card.dataset.listenerSet = "true";
-                        }
-                    });
+                    new subComponentHandlerMods(this._editor, { currentRegion: currentRegion, currentTarget: currentTarget }).init(projectSubcomponents, cards);
                 }
             }
         });
