@@ -65,7 +65,8 @@ onMounted(async () => {
                     display: item.components.length && item.id === 'defaults' ? 'flex' : 'none'
                 }">
                     <div class="components-card-main">
-                        <div class="components-card" :data-html="cmp.content" v-for="(cmp, cmpIndex) in item.components"
+                        <div class="components-card" :data-html="cmp.content" :area-id="`/default/${cmp.id}`"
+                            v-for="(cmp, cmpIndex) in item.components"
                             :style="{ display: cmpIndex !== 3 ? 'block' : 'none' }">
                             <div class="components-card-preview">
                                 <div class="components-card-icons">

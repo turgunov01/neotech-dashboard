@@ -1,10 +1,9 @@
-import type { Editor } from "grapesjs";
+import type { Component, Components, Editor } from "grapesjs";
 
 class subComponentHandlerMods {
     constructor(private _editor: Editor, private current: { currentRegion: string, currentTarget: HTMLElement }) {
         this._editor = _editor;
         this.current = current;
-
     }
 
     init(projectSubcomponents: HTMLElement, cards: HTMLCollection) {
@@ -17,33 +16,29 @@ class subComponentHandlerMods {
                         const htmlContent = card.getAttribute("data-html");
                         if (htmlContent) {
                             const blockId = this.current.currentTarget?.getAttribute("id");
-                            const components = this._editor.getWrapper()?.find(`#${blockId}`);
+                            const components = this._editor.getWrapper()?.find(`#${blockId}`) as any;
 
                             if (components?.length) {
-                                const component = components[0];
+                                const component = components[0] as Component;
 
-                                if (this.current.currentRegion === "top") {
-                                    component.collection.add(
-                                        {
-                                            tagName: "div",
-                                            attributes: { class: "new-block" },
-                                            content: htmlContent,
-                                        },
-                                        { at: component.index() }
-                                    );
-                                } else if (this.current.currentRegion === "bottom") {
-                                    component.collection.add(
-                                        {
-                                            tagName: "div",
-                                            attributes: { class: "new-block" },
-                                            content: htmlContent,
-                                        },
-                                        { at: component.index() + 1 }
-                                    );
-                                }
+
+                                // component.parent()?.collection.add(
+                                //     {
+                                //         content: htmlContent,
+                                //         draggable: true,
+                                //         copyable: true,
+                                //         removable: true,
+                                //         editable: true,
+                                //     },
+                                //     { at: component.index() + (this.current.currentRegion === 'bottom' ? 1 : 0) }
+                                // );
+
+                                component.parent()?.append(htmlContent)[component.index() + (this.current.currentRegion === 'bottom' ? 1 : 0)];
+
                             }
 
                             projectSubcomponents.classList.remove("active");
+
                         }
                     },
                     { once: true }

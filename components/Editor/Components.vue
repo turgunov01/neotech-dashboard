@@ -95,8 +95,8 @@ onMounted(async () => {
                 }">
                     <h3 class="components-card-name mt-2 text-sm">{{ item.name }}</h3>
                     <div class="components-card-main">
-                        <div class="components-card" :data-html="cmp.content"
-                            v-for="(cmp, cmpIndex) in item.components">
+                        <div class="components-card" :data-html="cmp.content" v-for="(cmp, cmpIndex) in item.components"
+                            :style="{ display: /\d/.test(cmp.label) ? 'block' : 'none', color: 'black' }">
                             <div class="components-card-preview">
                                 <div class="components-card-icons">
                                     <i></i><i></i><i></i>
