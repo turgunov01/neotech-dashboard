@@ -7,7 +7,7 @@
                 <div class="nav-media-router" @click="$router.back()">
                     <img src="/assets/tick.svg" alt="">
                 </div>
-                <select name="pages" class="pages-select">
+                <select name="pages" class="pages-select" @change="select">
                     <option :value="page.uid"
                         :selected="page.uid === useRouter().currentRoute.value.query.page_id ? true : false"
                         v-for="page in pages">{{ page.name?.toUpperCase() }}
@@ -69,6 +69,11 @@ const loaded = ref(false);
 
 const new_name = ref("");
 const abilityCreatePage = ref(false);
+
+const select = (e: any) => {
+    $router.push({ query: { url: $router.currentRoute.value.query.url, page_id: e.target.value } });
+    PushNotification("Redirecting to...");
+}
 
 const closeModalWindow = () => {
     abilityCreatePage.value = !abilityCreatePage.value;
