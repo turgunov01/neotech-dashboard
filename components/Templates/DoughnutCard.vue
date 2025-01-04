@@ -1,6 +1,6 @@
 <template>
     <div class="dash-canvas">
-        <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
+        <UiLoader :height="'100%'" :has-background="false" v-if="!loaded" />
         <canvas class="dougnut-card" ref="canvas"></canvas>
     </div>
     <div class="dash-results" v-if="loaded">

@@ -1,7 +1,7 @@
 <template>
     <div class="constructor">
         <nav class="nav">
-            <Loader :height="'7rem'" v-if="loaded" />
+            <UiLoader :height="'7rem'" v-if="loaded" />
             <div class="nav-media">
                 <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
                 <div class="nav-media-router" @click="$router.back()">
@@ -18,7 +18,7 @@
             </div>
             <div class="nav-event">
                 <button class="frame publish" style="position: relative;">
-                    <Loader :height="'100%'" :curved="'.8rem'" v-if="loaded" />
+                    <UiLoader :height="'100%'" :curved="'.8rem'" v-if="loaded" />
                     Опубликовать
                 </button>
             </div>
@@ -28,7 +28,7 @@
                 <div class="demo">
                     <div class="demo-page">
                         <div class="demo-container">
-                            <!-- <Loader v-if="loaded" :has-background="true" :height="'100%'" /> -->
+                            <!-- <UiLoader v-if="loaded" :has-background="true" :height="'100%'" /> -->
                             <Constructor />
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 <template>
     <div id="gjs">
-        <Loader :height="'100%'" v-if="loaded" />
+        <UiLoader :height="'100%'" v-if="loaded" />
     </div>
 </template>
 

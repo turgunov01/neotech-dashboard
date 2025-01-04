@@ -19,10 +19,10 @@
                 <ul class="hst-list">
                     <li class="hst-item" v-for="(hst, index) in history">
                         <div class="hst-item-info">
-                            <img :src="hst.flag" width="30" height="15" alt="">
-                            <p class="hst-item-name">{{ hst.country }}</p>
+                            <img :src="(hst as any).flag" width="30" height="15" alt="">
+                            <p class="hst-item-name">{{ (hst as any).country }}</p>
                         </div>
-                        <p class="hst-item-views">{{ hst.visitors }}</p>
+                        <p class="hst-item-views">{{ (hst as any).visitors }}</p>
                     </li>
                 </ul>
             </section>
@@ -49,8 +49,8 @@ const regions = async () => {
         .then(response => {
             const data = response.data;
 
-            const result = data.reduce((acc, curr) => {
-                const existingCountry = acc.find(item => item.country === curr.country);
+            const result = data.reduce((acc: any, curr: any) => {
+                const existingCountry = acc.find((item: any) => item.country === curr.country);
 
                 if (existingCountry) {
                     existingCountry.visitors += 1;
@@ -65,8 +65,8 @@ const regions = async () => {
                 return acc;
             }, []);
 
-            result.forEach(item => {
-                history.value.push(item)
+            result.forEach((item: any) => {
+                history.value.push(item as never)
             })
 
             console.log(result)

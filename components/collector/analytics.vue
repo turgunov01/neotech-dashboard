@@ -1,31 +1,31 @@
 <template>
     <div class="dash-blocks">
         <div class="dash-block">
-            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersViewStats :views="stats.views" :style="{
+            <UiLoader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <UsersViewStats :views="stats.views" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
             }" />
         </div>
         <div class="dash-block">
-            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersCalculate :count="stats.users" :style="{
-                opacity: loaded ? 1 : 0,
-                transition: 'all 500ms ease',
-                transitionDelay: '100ms'
-            }" />
-        </div>
-        <div class="dash-block">
-            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersTImerStats :time="stats.time" :style="{
+            <UiLoader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <UsersCalculate :count="stats.users" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
                 transitionDelay: '100ms'
             }" />
         </div>
         <div class="dash-block">
-            <Loader :height="'100%'" :has-background="false" v-if="!loaded" />
-            <DashboardUsersFormCount :messages="stats.messages" :style="{
+            <UiLoader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <UsersTImerStats :time="stats.time" :style="{
+                opacity: loaded ? 1 : 0,
+                transition: 'all 500ms ease',
+                transitionDelay: '100ms'
+            }" />
+        </div>
+        <div class="dash-block">
+            <UiLoader :height="'100%'" :has-background="false" v-if="!loaded" />
+            <UsersFormCount :messages="stats.messages" :style="{
                 opacity: loaded ? 1 : 0,
                 transition: 'all 500ms ease',
                 transitionDelay: '100ms'
@@ -48,7 +48,7 @@
                 <UsersRouteActivity v-if="loaded" />
             </div> -->
             <div class="dash-block-nest">
-                <DashboardRegionController v-if="loaded" :statistics="[]" />
+                <RegionController v-if="loaded" :statistics="[]" />
             </div>
         </div>
     </div>
@@ -56,9 +56,15 @@
 
 
 <script lang="ts" setup>
-import UsersBrowsersCounter from '../Dashboard/UsersBrowsersCounter.vue';
-import UsersRouteActivity from '../Dashboard/UsersRouteActivity.vue';
+import RegionController from '../analytics/user/regions.vue';
+import UsersBrowsersCounter from '../analytics/user/browser.vue';
+import UsersCalculate from '../analytics/user/user.vue';
+import UsersFormCount from '../analytics/user/form.vue';
+import UsersTImerStats from '../analytics/user/timer.vue';
+import UsersViewStats from '../analytics/user/views.vue';
 import DoughnutCard from '../Templates/DoughnutCard.vue';
+
+import Loader from '../ui/loader.vue';
 
 const $router = useRouter();
 const loaded = ref(false);

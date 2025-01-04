@@ -1,6 +1,6 @@
 <template>
-    <Loader :height="'100%'" v-if="!loader" />
-    <div class="wrapper" v-if="!$router.currentRoute.value.path.includes('constructor')">
+    <UiLoader :height="'100%'" v-if="!loader" />
+    <div class="wrapper">
         <div class="nav-wrapper">
             <div class="nav">
                 <div class="nav-logo">
@@ -71,14 +71,11 @@
             <slot />
         </div>
     </div>
-    <div class="wrapper" v-else>
-        <slot />
-    </div>
     <PushComponent />
 </template>
 
 <script lang="ts" setup>
-import Loader from '~/components/Loader.vue';
+import Loader from '~/components/ui/loader.vue';
 import PushComponent from '~/components/Notifications/PushComponent.vue';
 
 import { socket } from "~/composables/socket";

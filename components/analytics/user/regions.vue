@@ -77,7 +77,7 @@ onMounted(() => {
                 left: tooltip.left + 'px',
                 top: tooltip.top + 'px',
             }">
-                <Loader :height="'100%'" v-if="tooltip.counter === 0" />
+                <UiLoader :height="'100%'" v-if="tooltip.counter === 0" />
                 <p class="regions-tooltip-title">{{ tooltip.content }}</p>
                 <p class="regions-tooltip-percentage" v-if="tooltip.counter !== 0">
                     {{ tooltip.counter }}

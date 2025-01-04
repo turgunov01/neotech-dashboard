@@ -24,13 +24,12 @@
                 </div>
             </div>
         </div>
-        <Dashboard />
+        <DashboardComponent />
     </div>
 </template>
 
 
 <script lang="ts" setup>
-import Dashboard from '~/components/Collector/Dashboard.vue';
 
 import laptop from '@/assets/laptop.svg?raw';
 import phone from '@/assets/phone.svg?raw'
