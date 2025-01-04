@@ -13,7 +13,7 @@
                         v-for="page in pages">{{ page.name?.toUpperCase() }}
                     </option>
                 </select>
-                <!-- <button class="create-page" @click="abilityCreatePage = true">Создать</button> -->
+                <button class="create-page" @click="abilityCreatePage = true">Создать</button>
                 <!-- <button class="create-page delete" @click="deletePage">Delete</button> -->
             </div>
             <div class="nav-event">
@@ -44,7 +44,7 @@
                 <p class="form-create-title">Имя</p>
                 <input type="text" id="name" ref="new_name" placeholder="Название страницы">
             </label>
-            <button class="create-page submit">Создать</button>
+            <button class="create-page submit" @click="">Создать</button>
         </div>
     </div>
 

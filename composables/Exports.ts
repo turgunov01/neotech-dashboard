@@ -15,7 +15,6 @@ export async function removeStoreData(name: string) {
     localStorage.removeItem(name)
 }
 
-
 export function showStoreData(name: string) {
     const local = localStorage.getItem(name)
     return local
