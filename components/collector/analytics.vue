@@ -40,7 +40,7 @@
             </div>
             <div class="dash-block-nest">
                 <h4 class="dash-block-nest-title">Устройства</h4>
-                <DoughnutCard :data="stats.devices" v-if="loaded" />
+                <Doughnut :data="stats.devices" v-if="loaded" />
             </div>
         </div>
         <div class="dash-block screen50">
@@ -62,9 +62,8 @@ import UsersCalculate from '../analytics/user/user.vue';
 import UsersFormCount from '../analytics/user/form.vue';
 import UsersTImerStats from '../analytics/user/timer.vue';
 import UsersViewStats from '../analytics/user/views.vue';
-import DoughnutCard from '../Templates/DoughnutCard.vue';
 
-import Loader from '../ui/loader.vue';
+import Doughnut from '../ui/doughnut.vue';
 
 const $router = useRouter();
 const loaded = ref(false);

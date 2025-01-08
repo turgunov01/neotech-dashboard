@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <DashboardComponent />
+        <CollectorAnalytics />
     </div>
 </template>
 

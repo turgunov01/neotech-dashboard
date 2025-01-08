@@ -71,14 +71,14 @@
             <slot />
         </div>
     </div>
-    <PushComponent />
+    <SocketChannel />
 </template>
 
 <script lang="ts" setup>
 import Loader from '~/components/ui/loader.vue';
-import PushComponent from '~/components/Notifications/PushComponent.vue';
 
 import { socket } from "~/composables/socket";
+import SocketChannel from '~/components/notifications/socket.channel.vue';
 
 const $router = useRouter();
 

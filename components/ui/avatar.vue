@@ -9,6 +9,6 @@ const props = defineProps({
 
 <template>
     <div :class="class">
-        <img src="https://picsum.photos/200" alt="">
+        <img src="https://picsum.photos/200" alt="Avatar image">
     </div>
 </template>

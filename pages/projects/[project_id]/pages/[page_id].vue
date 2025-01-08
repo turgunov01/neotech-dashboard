@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import Constructor from '~/components/Constructor.vue';
+import Constructor from '~/components/constructor.vue';
 
 import 'grapesjs/dist/css/grapes.min.css';
 import { FailedAlert, PushNotification } from '~/composables/Notification/list';

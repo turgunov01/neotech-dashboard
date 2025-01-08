@@ -14,7 +14,7 @@ import icon from '@/assets/tick.svg'
                         </nuxt-link>
                     </li>
                     <li class="projects-header-item">
-                        <nuxt-link to="/projects" class="projects-header-link title">Сайты</nuxt-link>
+                        <nuxt-link to="/projects" class="projects-header-link title">Страницы</nuxt-link>
                     </li>
                 </ul>
                 <ul class="projects-header-list">
