@@ -22,7 +22,7 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { apiDataFetch, uri } from '~/composables/exports'
+import { apiDataFetch, uri } from '~/composables/Exports'
 import { setActivityMiddleware } from '~/middleware/history.activity';
 import { FailedAlert, PushNotification } from '~/composables/Notification/list';
 
@@ -52,9 +52,9 @@ const login = async () => {
                 const data = response;
 
                 if (!response.error) {
-                    localStorage.setItem("Authorization", data.user.token);
-                    localStorage.setItem("username", data.user.username);
-                    localStorage.setItem("password", data.user.password);
+                    localStorage.setItem("Authorization", data.token);
+                    localStorage.setItem("username", data.username);
+                    localStorage.setItem("password", data.password);
 
                     if (response.message) {
                         await PushNotification(response.message);

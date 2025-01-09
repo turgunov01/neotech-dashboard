@@ -2,6 +2,7 @@ import { setActivityMiddleware } from "~/middleware/history.activity";
 import { publish } from "../events/publish";
 import type { Editor } from "grapesjs";
 import { extract } from "../events/extract";
+const $router = useRouter();
 
 export class Publish {
     [variable: string]: any;
@@ -10,7 +11,7 @@ export class Publish {
         this.editor = editor as Editor;
 
         const element = {
-            name: $router.query.id as string,
+            name: $router.currentRoute.value.query.id as string,
             html: (extract(editor) as any).html,
             css: (extract(editor) as any).css as string,
             sections: editor.getComponents() as any,

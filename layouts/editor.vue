@@ -1,5 +1,15 @@
 <script lang="ts" setup>
-import icon from '@/assets/tick.svg'
+import icon from '@/assets/tick.svg';
+
+const $router = useRouter();
+const page = ref({});
+const params = ref({
+    path: $router.currentRoute.value.path,
+})
+
+onMounted(() => {
+    
+})
 
 </script>
 
@@ -9,12 +19,9 @@ import icon from '@/assets/tick.svg'
             <header class="projects-header">
                 <ul class="projects-header-list back">
                     <li class="projects-header-item">
-                        <nuxt-link to="/" class="projects-header-link back">
-                            <img :src="icon" alt="">
+                        <nuxt-link to="/projects" class="projects-header-link title">
+
                         </nuxt-link>
-                    </li>
-                    <li class="projects-header-item">
-                        <nuxt-link to="/projects" class="projects-header-link title">Страницы</nuxt-link>
                     </li>
                 </ul>
                 <ul class="projects-header-list">
@@ -44,7 +51,7 @@ import icon from '@/assets/tick.svg'
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 2rem 1.5rem;
+        padding: .5rem 2rem;
         background: black;
 
         &-list {
@@ -66,8 +73,8 @@ import icon from '@/assets/tick.svg'
             &.back {
                 background: rgba(255, 255, 255);
                 border-radius: .4rem;
-                width: 3rem;
-                height: 3rem;
+                width: 2rem;
+                height: 2rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;

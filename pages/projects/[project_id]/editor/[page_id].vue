@@ -1,28 +1,5 @@
 <template>
     <div class="constructor">
-        <nav class="nav">
-            <UiLoader :height="'7rem'" v-if="loaded" />
-            <div class="nav-media">
-                <img src="/assets/mini-logo.svg" class="nav-media-logo" alt="">
-                <div class="nav-media-router" @click="$router.back()">
-                    <img src="/assets/tick.svg" alt="">
-                </div>
-                <select name="pages" class="pages-select" @change="select">
-                    <option :value="page.uid"
-                        :selected="page.uid === useRouter().currentRoute.value.query.page_id ? true : false"
-                        v-for="page in pages">{{ page.name?.toUpperCase() }}
-                    </option>
-                </select>
-                <button class="create-page" @click="abilityCreatePage = true">Создать</button>
-                <!-- <button class="create-page delete" @click="deletePage">Delete</button> -->
-            </div>
-            <div class="nav-event">
-                <button class="frame publish" style="position: relative;">
-                    <UiLoader :height="'100%'" :curved="'.8rem'" v-if="loaded" />
-                    Опубликовать
-                </button>
-            </div>
-        </nav>
         <div class="main">
             <div class="wrapper" style="margin-top: 0 !important;">
                 <div class="demo">
@@ -37,23 +14,12 @@
         </div>
     </div>
 
-    <div class="form-wrapper" :class="abilityCreatePage ? 'active' : ''" @click.self="closeModalWindow">
-        <div class="form-container">
-            <h4 class="form-create">Новая страница</h4>
-            <label for="name">
-                <p class="form-create-title">Имя</p>
-                <input type="text" id="name" ref="new_name" placeholder="Название страницы">
-            </label>
-            <button class="create-page submit" @click="">Создать</button>
-        </div>
-    </div>
-
     <div class="project-components" @click.self="toggle()">
-        <EditorComponents />
+        <editor-models-components />
     </div>
 
     <div class="project-subcomponents" @click.self="toggle2()">
-        <EditorSubComponents />
+        <editor-models-sub-components />
     </div>
 
 </template>
@@ -108,9 +74,11 @@ const getList = async () => {
                 pages.value.push(item);
             })
         })
-
-
 }
+
+definePageMeta({
+    layout: "editor"
+})
 
 onMounted(async () => {
     init()

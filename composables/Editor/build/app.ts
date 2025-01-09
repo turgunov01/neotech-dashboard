@@ -14,19 +14,11 @@ export async function buildEditor(editor: Editor) {
         }
     }
 
-    await apiDataFetch(USER_FETCH_HOST + `/constructor/projects?url=${$router.currentRoute.value.query.url}`, options)
-        .then(response => response.json())
-        .then(response => {
-            const data = response;
-            const uid = $router.currentRoute.value.query.page_id;
-
-            const currentpage = data.pages.find((p: any) => p.uid == uid);
-            if (!currentpage) return FailedAlert("Invalid uid for page!");
-
-
-            editor.setComponents(currentpage.sections);
-            editor.Css.addRules(currentpage.css);
-        })
+    const response = await apiDataFetch(`${USER_FETCH_HOST}/projects/${$router.currentRoute.value.params.project_id}/pages/${$router.currentRoute.value.params.page_id}`, options)
+    const data = await response.json();
+    if (data.error) return FailedAlert(data.error);
+    editor.setComponents(data.sections);
+    editor.Css.addRules(data.css)
 
     setTimeout(() => {
         new Runner(editor);

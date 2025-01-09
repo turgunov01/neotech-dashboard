@@ -1,9 +1,16 @@
 <script lang="ts" setup>
 import ProjectPages from '~/components/cards/projects/pages.vue';
 
+const modalPage = ref(false);
+
 definePageMeta({
     layout: "pages",
 })
+
+const toggleModalPage = () => {
+    modalPage.value = !modalPage.value;
+}
+
 </script>
 
 <template>
@@ -13,7 +20,9 @@ definePageMeta({
                 <h1>Все страницы</h1>
                 <ul class="project-section-list">
                     <li class="project-section-item">
-                        <button class="project-section-button" data-event="publish">Создать страницу</button>
+                        <button @click="toggleModalPage" class="project-section-button" data-event="publish">
+                            Создать страницу
+                        </button>
                     </li>
                 </ul>
             </header>
@@ -22,6 +31,8 @@ definePageMeta({
             </main>
         </div>
     </section>
+
+    <ui-modals-pages :class="modalPage ? 'active' : ''" @close="toggleModalPage" @self="toggleModalPage"/>
 </template>
 
 <style lang="scss" scoped>

@@ -18,13 +18,6 @@ class ComponentHandlerMods {
             await children[index].addEventListener("click", async () => {
                 const html = children[index].getAttribute("data-html") as string;
 
-                const selected = this.editor.getSelected();
-                if (selected) {
-                    selected.append(html);
-                    this.toggle();
-                    return;
-                }
-
                 await this.editor.addComponents(html);
                 this.toggle();
             })

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import logo from '@/assets/mini-logo.svg';
 import dropdown from '@/assets/tick.svg';
+import { FailedAlert } from '~/composables/Notification/list';
 
 const projects = ref([]);
 const loader = ref(true);
@@ -14,19 +15,23 @@ const getProjects = async () => {
         }
     }
 
-    const response = await apiDataFetch(`${USER_FETCH_HOST}/constructor/all`, options);
+    const response = await apiDataFetch(`${USER_FETCH_HOST}/projects/`, options);
     const data = await response.json() as any;
-    const details = data;
 
-    await details.forEach((detail: any) => {
-        detail.projects.forEach((project: any) => {
-            projects.value.push(project as never);
+    if (data.length > 0) {
+
+        await data.forEach((item: any) => {
+            projects.value.push(item as never);
         })
-    })
 
-    setTimeout(() => {
-        loader.value = false;
-    }, 3000);
+        setTimeout(() => {
+            loader.value = false;
+        }, 3000);
+
+        return;
+    } else {
+        FailedAlert("No projects found!");
+    }
 }
 
 onMounted(() => {
@@ -51,7 +56,7 @@ onMounted(() => {
             <nuxt-link class="project-card-main" :to="`/projects/${(card as any).project_id}`">
                 <ui-loader :has-background="true" :height="'100%'" v-if="loader" />
                 <!-- <img src="https://picsum.photos/200" alt=""> -->
-                <img :src="`https://api.screenshotone.com/take?access_key=Hm3GgEaIePutLw&url=${(card as any).url}&ignore_host_errors=true&format=jpg&block_ads=true&block_cookie_banners=true&block_banners_by_heuristics=false&block_trackers=true&delay=2&timeout=60&response_type=by_format&image_quality=80`"
+                <img :src="`https://api.screenshotone.com/take?access_key=Hm3GgEaIePutLw&url=${(card as any).nest}&ignore_host_errors=true&format=jpg&block_ads=true&block_cookie_banners=true&block_banners_by_heuristics=false&block_trackers=true&delay=2&timeout=60&response_type=by_format&image_quality=80`"
                     alt="">
                 <span class="project-card-main-redirect">Перейти</span>
             </nuxt-link>

@@ -15,7 +15,4 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-#gjs {
-    border: 3px solid #444;
-}
 </style>

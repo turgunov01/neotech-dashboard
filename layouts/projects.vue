@@ -51,12 +51,12 @@ import icon from '@/assets/tick.svg'
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 2rem;
 
             &.back {
                 gap: 1rem;
             }
 
-            gap: 2rem;
         }
 
         &-link {

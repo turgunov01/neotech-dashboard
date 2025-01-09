@@ -103,7 +103,9 @@ onMounted(async () => {
                                 </div>
                                 <span class="components-card-title text-sm">header:{{ cmpIndex + 1 }}</span>
                             </div>
-                            <img :src="cmp.label" alt="">
+                            <img v-if="cmp.label"
+                                :src="cmp.label.replace('https://api-neotech-landing.neotech.uz', 'http://localhost:5003')"
+                                alt="">
                         </div>
                     </div>
                 </div>
