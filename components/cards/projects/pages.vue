@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import logo from '@/assets/mini-logo.svg';
-import dropdown from '@/assets/tick.svg';
 import { FailedAlert } from '~/composables/Notification/list';
 
 const projects = ref([]);
@@ -66,7 +64,11 @@ onMounted(() => {
                             </div>
                             {{ (page as any).title ? (page as any).title : 'Укажите название сайта' }}
                         </td>
-                        <td>{{ (page as any).path ? (page as any).path : 'Путь не подключен' }}</td>
+                        <td>
+                            <a target="_blank" :href="`http://${(page as any).project_id}.landing.neotech.uz/#${(page as any).path}`">
+                                {{ (page as any).path ? (page as any).path : 'Путь не подключен' }}
+                            </a>
+                        </td>
                         <td> {{ (() => {
                             const date = new Date((page as any).updated_at);
 

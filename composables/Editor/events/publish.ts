@@ -47,7 +47,7 @@ export async function publish(editor: Editor, is_product?: number) {
         }
     }
 
-    // return PushNotification(data.message);
+    return PushNotification(data.message);
 }
 
 
