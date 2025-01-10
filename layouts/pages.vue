@@ -44,7 +44,7 @@ import icon from '@/assets/tick.svg'
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 2rem 1.5rem;
+        padding: .5rem 1rem;
         background: black;
 
         &-list {

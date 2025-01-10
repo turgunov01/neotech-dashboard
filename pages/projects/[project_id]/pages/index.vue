@@ -32,7 +32,7 @@ const toggleModalPage = () => {
         </div>
     </section>
 
-    <ui-modals-pages :class="modalPage ? 'active' : ''" @close="toggleModalPage" @self="toggleModalPage"/>
+    <ui-modals-pages :class="modalPage ? 'active' : ''" @close="toggleModalPage" @self="toggleModalPage" />
 </template>
 
 <style lang="scss" scoped>
