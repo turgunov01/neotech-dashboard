@@ -42,7 +42,8 @@ const create_page = async (event: any) => {
 
     const response = await apiDataFetch(`${USER_FETCH_HOST}/projects/${params.project_id}/pages/new-page`, options);
     const data = await response.json();
-    if (data.error) return FailedAlert(data.error.message);
+    if (data.error) return FailedAlert(data.error);
+    if(data.error && data.error.message) return FailedAlert(data.error.message);
 
     emits('close');
     PushNotification(data.message);

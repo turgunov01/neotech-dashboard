@@ -1,23 +1,55 @@
 import type { Editor } from "grapesjs";
-import { publish } from "../../events/publish";
+import { Publish } from "../app.publish";
 
 class ButtonMods {
     constructor(private editor: Editor) {
         this.editor = editor;
-        this.init();
+        setTimeout(() => {
+            this.publish();
+            this.save();
+        }, 100);
     }
 
-    init() {
-        const button = document.querySelector(".frame.publish")
+    publish() {
+        const button = document.querySelector(".projects-header-button.publish");
 
-        button?.addEventListener("click", async () => {
-            const components = this.editor.getComponents().toJSON()
+        if (!button) return;
 
-            if (components.length === 0) return alert("You can't publish empty page!")
+        const handler = async () => {
+            const components = this.editor.getComponents().toJSON();
 
-            publish(this.editor);
-        })
+            if (components.length === 0) {
+                alert("You can't publish an empty page!");
+            } else {
+                new Publish(this.editor).publish();
+            }
+
+            button.removeEventListener("click", handler);
+        };
+
+        button.addEventListener("click", handler);
     }
+
+    save() {
+        const button = document.querySelector(".projects-header-button.save");
+
+        if (!button) return;
+
+        const handler = async () => {
+            const components = this.editor.getComponents().toJSON();
+
+            if (components.length === 0) {
+                alert("You can't save an empty page!");
+            } else {
+                new Publish(this.editor).save();
+            }
+
+            button.removeEventListener("click", handler);
+        };
+
+        button.addEventListener("click", handler);
+    }
+
 }
 
 export default ButtonMods;
